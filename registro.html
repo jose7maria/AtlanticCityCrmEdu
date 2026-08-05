@@ -1,22 +1,161 @@
+
+Claude terminó la respuesta
+
+Diagnosticó problemas de rutas relativas y conflictos de configuración
+Diagnosticó problemas de rutas relativas y conflictos de configuración
+Esto es muy probable que sea el problema clásico de GitHub Pages con rutas absolutas.
+
+Como tu repo se publica en una subcarpeta (https://jose7maria.github.io/AtlanticCityCrmEdu/) y no en la raíz del dominio, cualquier ruta que empiece con / se rompe.
+
+Por ejemplo, si en tu HTML tienes algo así:
+
+html
+<link rel="stylesheet" href="/css/styles.css">
+<script src="/js/app.js"></script>
+<a href="/pages/ti/index.html">
+Eso el navegador lo va a buscar en:
+
+https://jose7maria.github.io/css/styles.css   ❌ (no existe ahí)
+en vez de:
+
+https://jose7maria.github.io/AtlanticCityCrmEdu/css/styles.css   ✅
+La solución: cambiar todas esas rutas para que sean relativas (sin el / al inicio):
+
+html
+<link rel="stylesheet" href="css/styles.css">
+<script src="js/app.js"></script>
+<a href="pages/ti/index.html">
+¿Cómo revisar esto rápido?
+
+Abre tu página publicada, dale clic derecho → "Inspeccionar" → pestaña Console o Network, y fíjate si hay errores en rojo tipo 404 Not Found en los archivos CSS/JS — eso confirma que es justo este problema.
+
+¿Quieres que revisemos tus archivos HTML para corregir todas las rutas de una vez? Si me compartes uno de los archivos (por ejemplo index.html) puedo ver exactamente qué rutas tienes y corregirlas.
+
+
+Identificó problemas de sensibilidad de mayúsculas y errores de sintaxis
+Identificó problemas de sensibilidad de mayúsculas y errores de sintaxis
+¡Ahí está el problema! No es lo de rutas absolutas — tus rutas ya son relativas (bien). El problema es mayúsculas vs minúsculas:
+
+Tu carpeta en GitHub se llama CLIENTE (en mayúsculas, como se ve en el árbol de archivos a la izquierda), pero en tu HTML las imágenes y el JS los estás llamando en minúsculas:
+
+html
+<link rel="stylesheet" href="CLIENTE/css/styles.css">   ✅ esta sí está bien (coincide)
+
+<img src="cliente/img/hero-million-city.png">           ❌ "cliente" en minúscula
+<script src="cliente/js/app.js"></script>                ❌ "cliente" en minúscula
+¿Por qué esto rompe todo en GitHub Pages pero no en tu compu?
+
+Windows no distingue mayúsculas de minúsculas en nombres de carpeta, así que en tu compu cliente y CLIENTE son "lo mismo" y todo funciona. Pero GitHub Pages corre en Linux, donde cliente ≠ CLIENTE — son carpetas totalmente distintas. Por eso el CSS del <link> sí carga (porque ahí sí pusiste CLIENTE bien), pero todas las imágenes y el app.js no cargan (porque los escribiste en minúscula).
+
+Solución: cambia todos los cliente/ a CLIENTE/ en este archivo. Son estas líneas:
+
+html
+<img src="CLIENTE/img/hero-million-city.png" alt="Promoción Millón City 2">
+...
+<article class="promo-card"><img src="CLIENTE/img/promo-combo.png" alt="Combo de bienvenida"></article>
+<article class="promo-card"><img src="CLIENTE/img/promo-hattrick.png" alt="Hat Trick de bienvenida"></article>
+<article class="promo-card"><img src="CLIENTE/img/promo-crazy-chips.png" alt="Crazy Chips"></article>
+<article class="promo-card"><img src="CLIENTE/img/promo-combo.png" alt="Promoción de puntos"></article>
+...
+<img src="CLIENTE/img/games/game-1.png" alt="Royal 2">
+<img src="CLIENTE/img/games/game-2.png" alt="Fortune Kids">
+<img src="CLIENTE/img/games/game-3.png" alt="Perú Atlanticland">
+<img src="CLIENTE/img/games/game-4.png" alt="Cuby Cash">
+<img src="CLIENTE/img/games/game-5.png" alt="Blazing Double">
+<img src="CLIENTE/img/games/game-6.png" alt="Crown 18">
+<img src="CLIENTE/img/games/game-7.png" alt="Fire Links">
+...
+<img src="CLIENTE/img/login-visual.png" alt="">
+...
+<script src="CLIENTE/js/app.js"></script>
+También noté un typo extra: tienes una doble barra cliente/img//promo-hattrick.png (dos //), que hay que corregir al mismo tiempo.
+
+Truco rápido en VS Code: usa "Buscar y reemplazar" (Ctrl+H) en ese archivo:
+
+Buscar: cliente/
+Reemplazar: CLIENTE/
+Dale a "Reemplazar todo"
+Solo ten cuidado de revisar que no te toque nada que no debas (como texto visible tipo "cliente" en el contenido). En este archivo debería ser seguro porque cliente/ como ruta solo aparece en esos src=.
+
+¿Quieres que revise si tus otros archivos (registro.html, pages/ti/*.html, etc.) tienen el mismo problema de mayúsculas/minúsculas?
+
+
+<!DOCTYPE html> <html lang="es"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <meta name="description" content="Prototipo académico del portal cliente Atlantic City V2"> <title>Atlantic City | Portal Cliente V2</title> <link re
+
+pasted
+
+corrigemelo
+
+
+Orchestrated file corrections and formatting standardization
+Orchestrated file corrections and formatting standardization
+Aquí está corregido, con todos los cliente/ cambiados a CLIENTE/ (para que coincida con el nombre real de la carpeta en GitHub) y arreglado el doble // en la línea de "promo-hattrick":
+
+
+Creó un archivo, archivo leído
+Creó un archivo, archivo leído
+Listo, ahí tienes el index.html corregido — todos los cliente/ cambiados a CLIENTE/ (mayúsculas, para que coincida con la carpeta real en tu repo) y arreglado el doble // en la imagen de "promo-hattrick".
+
+Para subir el cambio:
+
+Reemplaza tu index.html local con este
+En la terminal:
+git add index.html
+git commit -m "fix: corregir rutas CLIENTE en mayúsculas"
+git push
+Espera 1-2 minutos y refresca https://jose7maria.github.io/AtlanticCityCrmEdu/
+¿Quieres que revisemos también registro.html, recuperar.html, index-cmr.html y los archivos dentro de pages/ por si tienen el mismo problema de cliente/ vs CLIENTE/?
+
+
+Index
+Código · HTML 
+
+<!DOCTYPE html> <html lang="es"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Registro | Atlantic City V2</title> <link rel="stylesheet" href="cliente/css/styles.css"> </head> <body class="register-page"> <div class="a
+
+pasted
+
+ahora esto
+
+
+Orchestrated systematic text replacement operation
+Orchestrated systematic text replacement operation
+Ahí está registro.html corregido — cambié las 3 rutas (css/styles.css, img/registro-visual.png, js/register.js) de cliente/ a CLIENTE/.
+
+Sube este junto con el index.html que ya te di, y me pasas los demás archivos (recuperar.html, index-cmr.html, crear-contrasena.html, recuperacion-exitosa.html, y los de pages/ti/) para revisarlos igual — así los corregimos todos de una vez antes de hacer el push final.
+
+
+Registro
+Código · HTML 
+
+¿Quieres recibir una notificación cuando Claude responda?
+
+
+
+
+
+Claude es IA y puede cometer errores. Por favor, verifica nuevamente las respuestas.
+
+
+Registro · HTML
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro | Atlantic City V2</title>
-  <link rel="stylesheet" href="cliente/css/styles.css">
+  <link rel="stylesheet" href="CLIENTE/css/styles.css">
 </head>
 <body class="register-page">
   <div class="academic-strip">DATOS GUARDADOS SOLO EN ESTE NAVEGADOR</div>
   <main class="register-layout">
     <section class="register-visual">
-      <img src="cliente/img/registro-visual.png" alt="Promoción Atlantic City">
+      <img src="CLIENTE/img/registro-visual.png" alt="Promoción Atlantic City">
       <div class="register-promo-copy">
         <h1>¡REGÍSTRATE Y APROVECHA NUESTROS TRES BONOS DE BIENVENIDA!</h1>
         <ul><li>Casino Online: bono demostrativo de bienvenida.</li><li>Apuestas Deportivas: flujo visual para exposición académica.</li></ul>
       </div>
     </section>
-
+ 
     <section class="register-form-area">
       <header class="register-header"><a class="brand white" href="index.html"><strong>ATLANTIC CITY</strong><small>CASINO ◈ SPORTS</small></a></header>
       <div class="register-body">
@@ -35,7 +174,7 @@
               <input id="regEmail" type="email" placeholder="Correo electrónico" data-required>
             </div>
           </section>
-
+ 
           <section class="step-pane" data-step="2">
             <div class="register-title-row"><div><h2>Datos de acceso</h2><p>Crea los datos para ingresar a tu cuenta:</p></div><div class="stepper"><span class="done">1</span><i></i><span class="active">2</span><i></i><span>3</span></div></div>
             <div class="register-fields access-fields">
@@ -48,7 +187,7 @@
               <label class="check-line"><input id="regMarketing" type="checkbox"><span>Deseo recibir promociones y novedades demostrativas.</span></label>
             </div>
           </section>
-
+ 
           <section class="step-pane" data-step="3">
             <div class="register-title-row"><div><h2>Confirmación</h2><p>Revisa y confirma la creación de tu cuenta:</p></div><div class="stepper"><span class="done">1</span><i></i><span class="done">2</span><i></i><span class="active">3</span></div></div>
             <div class="confirmation-box"><div class="confirmation-icon">✓</div><h3>Tu registro está casi listo</h3><div id="registerSummary"></div><p>La cuenta se guardará localmente para la demostración y podrás iniciar sesión inmediatamente.</p></div>
@@ -58,6 +197,13 @@
       <footer class="register-footer"><button class="register-back" type="button">ATRÁS</button><button class="register-next" type="button" disabled>SIGUIENTE</button><p>¿Ya tienes una cuenta? <a href="index.html?login=1">Inicia sesión</a></p></footer>
     </section>
   </main>
-  <script src="cliente/js/register.js"></script>
+  <script src="CLIENTE/js/register.js"></script>
 </body>
 </html>
+ 
+
+
+
+
+
+
