@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Campañas</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head>
+<body data-role="MARKETING">
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html">
+        <span class="mark">AC</span>
+        <span>
+          <strong>ATLANTIC CITY</strong>
+          <small>Gestión de clientes</small>
+        </span>
+      </a>
+      <div class="user">
+        <strong data-user-name>Usuario</strong>
+        <span data-user-area>Marketing</span>
+      </div>
+      <p class="nav-label">MENÚ DEL ÁREA</p>
+      <nav class="nav">
+        <a href="index.html" class=""><i>⌂</i><span>Resumen</span></a>
+        <a href="segmentos.html" class=""><i>◫</i><span>Segmentos</span></a>
+        <a href="promociones.html" class=""><i>★</i><span>Promociones</span></a>
+        <a href="campanias.html" class="active"><i>◆</i><span>Campañas</span></a>
+        <a href="categorias.html" class=""><i>♛</i><span>Categorías</span></a>
+        <a href="abandono.html" class=""><i>!</i><span>Alertas de abandono</span></a>
+        <a href="canales.html" class=""><i>✉</i><span>Canales digitales</span></a>
+      </nav>
+      <button class="logout" data-logout>Cerrar sesión</button>
+    </aside>
+   <main class="main-content">
+
+    <section class="page-section">
+
+        <div class="section-header">
+            <div>
+                <span class="eyebrow">MARKETING</span>
+                <h1>Campañas de marketing</h1>
+                <p>Planificación, seguimiento y control de campañas dirigidas a segmentos de clientes.</p>
+            </div>
+
+            <button class="btn-primary" id="btnNuevaCampania">
+                Nueva campaña
+            </button>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <span>Campañas activas</span>
+                <h3 id="campActivas">0</h3>
+                <p>Campañas actualmente en ejecución.</p>
+            </div>
+
+            <div class="card">
+                <span>Programadas</span>
+                <h3 id="campProgramadas">0</h3>
+                <p>Campañas listas para iniciar.</p>
+            </div>
+
+            <div class="card">
+                <span>Finalizadas</span>
+                <h3 id="campFinalizadas">0</h3>
+                <p>Campañas cerradas y evaluadas.</p>
+            </div>
+
+            <div class="card danger">
+                <span>Con baja respuesta</span>
+                <h3 id="campBaja">0</h3>
+                <p>Campañas que requieren revisión.</p>
+            </div>
+        </div>
+
+        <div class="filters-box">
+            <input type="text" id="buscarCampania" placeholder="Buscar campaña, segmento o responsable...">
+
+            <select id="filtroEstadoCampania">
+                <option value="Todos">Todos los estados</option>
+                <option value="Activa">Activa</option>
+                <option value="Programada">Programada</option>
+                <option value="Finalizada">Finalizada</option>
+                <option value="En revisión">En revisión</option>
+            </select>
+
+            <select id="filtroSegmentoCampania">
+                <option value="Todos">Todos los segmentos</option>
+                <option value="Clientes VIP">Clientes VIP</option>
+                <option value="Clientes frecuentes">Clientes frecuentes</option>
+                <option value="Clientes inactivos">Clientes inactivos</option>
+                <option value="Alto gasto">Alto gasto</option>
+            </select>
+        </div>
+
+        <div class="table-panel">
+            <table class="crm-table">
+                <thead>
+                    <tr>
+                        <th>Campaña</th>
+                        <th>Segmento</th>
+                        <th>Canal</th>
+                        <th>Fecha inicio</th>
+                        <th>Fecha fin</th>
+                        <th>Estado</th>
+                        <th>Respuesta</th>
+                        <th>Responsable</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaCampanias">
+                    <!-- Se llena con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script>
+const campaniasMarketing = [
+    {
+        id: 1,
+        nombre: "Campaña Bono Cumpleaños",
+        segmento: "Clientes VIP",
+        canal: "WhatsApp",
+        fechaInicio: "01/08/2026",
+        fechaFin: "15/08/2026",
+        estado: "Activa",
+        respuesta: "76%",
+        responsable: "Diego Salazar"
+    },
+    {
+        id: 2,
+        nombre: "Noche de Ruleta",
+        segmento: "Clientes frecuentes",
+        canal: "Email",
+        fechaInicio: "08/08/2026",
+        fechaFin: "20/08/2026",
+        estado: "Programada",
+        respuesta: "0%",
+        responsable: "Marketing"
+    },
+    {
+        id: 3,
+        nombre: "Recuperación de Clientes",
+        segmento: "Clientes inactivos",
+        canal: "SMS",
+        fechaInicio: "25/07/2026",
+        fechaFin: "05/08/2026",
+        estado: "En revisión",
+        respuesta: "32%",
+        responsable: "Diego Salazar"
+    },
+    {
+        id: 4,
+        nombre: "Campaña Poker Premium",
+        segmento: "Alto gasto",
+        canal: "WhatsApp",
+        fechaInicio: "15/07/2026",
+        fechaFin: "30/07/2026",
+        estado: "Finalizada",
+        respuesta: "84%",
+        responsable: "Marketing"
+    }
+];
+
+const tablaCampanias = document.getElementById("tablaCampanias");
+const buscarCampania = document.getElementById("buscarCampania");
+const filtroEstadoCampania = document.getElementById("filtroEstadoCampania");
+const filtroSegmentoCampania = document.getElementById("filtroSegmentoCampania");
+const btnNuevaCampania = document.getElementById("btnNuevaCampania");
+
+function claseEstadoCampania(estado) {
+    if (estado === "Activa") return "success";
+    if (estado === "Programada") return "warning";
+    if (estado === "Finalizada") return "blue";
+    if (estado === "En revisión") return "danger";
+    return "blue";
+}
+
+function porcentajeNumero(valor) {
+    return parseInt(valor.replace("%", ""));
+}
+
+function cargarResumenCampanias() {
+    document.getElementById("campActivas").textContent =
+        campaniasMarketing.filter(c => c.estado === "Activa").length;
+
+    document.getElementById("campProgramadas").textContent =
+        campaniasMarketing.filter(c => c.estado === "Programada").length;
+
+    document.getElementById("campFinalizadas").textContent =
+        campaniasMarketing.filter(c => c.estado === "Finalizada").length;
+
+    document.getElementById("campBaja").textContent =
+        campaniasMarketing.filter(c => porcentajeNumero(c.respuesta) < 40).length;
+}
+
+function cargarTablaCampanias(lista = campaniasMarketing) {
+    tablaCampanias.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaCampanias.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron campañas con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(campania => {
+        const fila = document.createElement("tr");
+        const respuestaNum = porcentajeNumero(campania.respuesta);
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${campania.nombre}</strong>
+                    <span>ID campaña: ${campania.id}</span>
+                </div>
+            </td>
+
+            <td>${campania.segmento}</td>
+
+            <td>
+                <span class="badge blue">${campania.canal}</span>
+            </td>
+
+            <td>${campania.fechaInicio}</td>
+
+            <td>${campania.fechaFin}</td>
+
+            <td>
+                <span class="badge ${claseEstadoCampania(campania.estado)}">
+                    ${campania.estado}
+                </span>
+            </td>
+
+            <td>
+                <strong>${campania.respuesta}</strong>
+                <div class="effect-bar">
+                    <div class="effect-fill" style="width:${respuestaNum}%;"></div>
+                </div>
+            </td>
+
+            <td>${campania.responsable}</td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verCampania(${campania.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="activarCampania(${campania.id})">Activar</button>
+                <button class="btn-action btn-delete" onclick="revisarCampania(${campania.id})">Revisar</button>
+            </td>
+        `;
+
+        tablaCampanias.appendChild(fila);
+    });
+}
+
+function filtrarCampanias() {
+    const texto = buscarCampania.value.toLowerCase();
+    const estado = filtroEstadoCampania.value;
+    const segmento = filtroSegmentoCampania.value;
+
+    const resultado = campaniasMarketing.filter(campania => {
+        const coincideTexto =
+            campania.nombre.toLowerCase().includes(texto) ||
+            campania.segmento.toLowerCase().includes(texto) ||
+            campania.responsable.toLowerCase().includes(texto);
+
+        const coincideEstado =
+            estado === "Todos" || campania.estado === estado;
+
+        const coincideSegmento =
+            segmento === "Todos" || campania.segmento === segmento;
+
+        return coincideTexto && coincideEstado && coincideSegmento;
+    });
+
+    cargarTablaCampanias(resultado);
+}
+
+function verCampania(id) {
+    const campania = campaniasMarketing.find(c => c.id === id);
+
+    if (!campania) return;
+
+    alert(
+        `Campaña: ${campania.nombre}\n` +
+        `Segmento: ${campania.segmento}\n` +
+        `Canal: ${campania.canal}\n` +
+        `Estado: ${campania.estado}\n` +
+        `Respuesta: ${campania.respuesta}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function activarCampania(id) {
+    const campania = campaniasMarketing.find(c => c.id === id);
+
+    if (!campania) return;
+
+    campania.estado = "Activa";
+
+    cargarResumenCampanias();
+    cargarTablaCampanias();
+
+    alert(`Campaña "${campania.nombre}" activada correctamente. Acción mockeada.`);
+}
+
+function revisarCampania(id) {
+    const campania = campaniasMarketing.find(c => c.id === id);
+
+    if (!campania) return;
+
+    campania.estado = "En revisión";
+
+    cargarResumenCampanias();
+    cargarTablaCampanias();
+
+    alert(`Campaña "${campania.nombre}" enviada a revisión. Acción mockeada.`);
+}
+
+btnNuevaCampania.addEventListener("click", () => {
+    const nueva = {
+        id: campaniasMarketing.length + 1,
+        nombre: "Nueva campaña personalizada",
+        segmento: "Clientes frecuentes",
+        canal: "WhatsApp",
+        fechaInicio: "10/08/2026",
+        fechaFin: "25/08/2026",
+        estado: "Programada",
+        respuesta: "0%",
+        responsable: "Marketing"
+    };
+
+    campaniasMarketing.push(nueva);
+
+    cargarResumenCampanias();
+    cargarTablaCampanias();
+
+    alert("Nueva campaña creada correctamente. Acción mockeada.");
+});
+
+buscarCampania.addEventListener("input", filtrarCampanias);
+filtroEstadoCampania.addEventListener("change", filtrarCampanias);
+filtroSegmentoCampania.addEventListener("change", filtrarCampanias);
+
+cargarResumenCampanias();
+cargarTablaCampanias();
+</script>
+  <script src="../../js/app.js"></script>
+</body>
+</html>

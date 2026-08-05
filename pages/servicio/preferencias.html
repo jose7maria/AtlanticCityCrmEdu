@@ -1,0 +1,373 @@
+<!doctype html><html lang="es">
+    
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Preferencias del cliente</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head>
+
+
+<body data-role="SERVICIO_CLIENTE"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Servicio al Cliente</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="clientes.html" class=""><i>♙</i><span>Clientes</span></a><a href="perfil-360.html" class=""><i>◎</i><span>Perfil 360°</span></a><a href="interacciones.html" class=""><i>✉</i><span>Interacciones</span></a><a href="incidencias.html" class=""><i>!</i><span>Incidencias</span></a><a href="reservas.html" class=""><i>◈</i><span>Reservas y eventos</span></a><a href="preferencias.html" class="active"><i>♡</i><span>Preferencias</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside>
+
+
+
+<main class="main-content">
+
+    <section class="page-section">
+
+        <div class="section-header">
+            <div>
+                <span class="eyebrow">SERVICIO AL CLIENTE</span>
+                <h1>Preferencias del cliente</h1>
+                <p>Registro de gustos, canales preferidos, juegos favoritos y autorización para recibir promociones.</p>
+            </div>
+
+            <button class="btn-primary" id="btnNuevaPreferencia">
+                Nueva preferencia
+            </button>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <span>Preferencias registradas</span>
+                <h3 id="prefTotal">0</h3>
+                <p>Clientes con gustos y canales identificados.</p>
+            </div>
+
+            <div class="card">
+                <span>Canal WhatsApp</span>
+                <h3 id="prefWhatsapp">0</h3>
+                <p>Clientes que prefieren contacto por WhatsApp.</p>
+            </div>
+
+            <div class="card">
+                <span>Promociones aceptadas</span>
+                <h3 id="prefPromos">0</h3>
+                <p>Clientes que aceptan recibir campañas.</p>
+            </div>
+
+            <div class="card danger">
+                <span>Sin consentimiento</span>
+                <h3 id="prefSinConsentimiento">0</h3>
+                <p>Clientes que no autorizan promociones.</p>
+            </div>
+        </div>
+
+        <div class="filters-box">
+            <input type="text" id="buscarPreferencia" placeholder="Buscar cliente, DNI, juego o canal...">
+
+            <select id="filtroJuegoPreferido">
+                <option value="Todos">Todos los juegos</option>
+                <option value="Ruleta">Ruleta</option>
+                <option value="Tragamonedas">Tragamonedas</option>
+                <option value="Blackjack">Blackjack</option>
+                <option value="Poker">Poker</option>
+                <option value="Apuestas deportivas">Apuestas deportivas</option>
+            </select>
+
+            <select id="filtroConsentimiento">
+                <option value="Todos">Todos los consentimientos</option>
+                <option value="Acepta">Acepta promociones</option>
+                <option value="No acepta">No acepta promociones</option>
+            </select>
+        </div>
+
+        <div class="table-panel">
+            <table class="crm-table">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>DNI</th>
+                        <th>Juego preferido</th>
+                        <th>Canal preferido</th>
+                        <th>Horario recomendado</th>
+                        <th>Promociones</th>
+                        <th>Observación</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaPreferencias">
+                    <!-- Se llena con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+
+
+
+
+</div><div class="toast" id="toast"></div>
+
+
+<script>
+const preferenciasServicio = [
+    {
+        id: 1,
+        cliente: "Carlos Ramírez",
+        dni: "45678912",
+        correo: "carlos.ramirez@gmail.com",
+        juego: "Ruleta",
+        canal: "WhatsApp",
+        horario: "Noche",
+        consentimiento: "Acepta",
+        observacion: "Cliente VIP interesado en beneficios exclusivos."
+    },
+    {
+        id: 2,
+        cliente: "Ana Torres",
+        dni: "74258963",
+        correo: "ana.torres@gmail.com",
+        juego: "Tragamonedas",
+        canal: "Email",
+        horario: "Tarde",
+        consentimiento: "Acepta",
+        observacion: "Prefiere campañas de tragamonedas y bonos frecuentes."
+    },
+    {
+        id: 3,
+        cliente: "Luis Gómez",
+        dni: "65897412",
+        correo: "luis.gomez@gmail.com",
+        juego: "Blackjack",
+        canal: "SMS",
+        horario: "Noche",
+        consentimiento: "Acepta",
+        observacion: "Cliente nuevo en seguimiento."
+    },
+    {
+        id: 4,
+        cliente: "María Fernández",
+        dni: "48596712",
+        correo: "maria.fernandez@gmail.com",
+        juego: "Poker",
+        canal: "WhatsApp",
+        horario: "Noche",
+        consentimiento: "Acepta",
+        observacion: "Cliente premium con preferencia por eventos especiales."
+    },
+    {
+        id: 5,
+        cliente: "Jorge Salazar",
+        dni: "78965412",
+        correo: "jorge.salazar@gmail.com",
+        juego: "Apuestas deportivas",
+        canal: "SMS",
+        horario: "Mañana",
+        consentimiento: "No acepta",
+        observacion: "No autoriza promociones actualmente."
+    }
+];
+
+const tablaPreferencias = document.getElementById("tablaPreferencias");
+const buscarPreferencia = document.getElementById("buscarPreferencia");
+const filtroJuegoPreferido = document.getElementById("filtroJuegoPreferido");
+const filtroConsentimiento = document.getElementById("filtroConsentimiento");
+const btnNuevaPreferencia = document.getElementById("btnNuevaPreferencia");
+
+function claseCanalPreferencia(canal) {
+    if (canal === "WhatsApp") return "success";
+    if (canal === "Email") return "blue";
+    if (canal === "SMS") return "warning";
+    return "blue";
+}
+
+function claseConsentimiento(consentimiento) {
+    if (consentimiento === "Acepta") return "success";
+    if (consentimiento === "No acepta") return "danger";
+    return "blue";
+}
+
+function claseJuegoPreferido(juego) {
+    if (juego === "Ruleta") return "vip";
+    if (juego === "Tragamonedas") return "success";
+    if (juego === "Blackjack") return "blue";
+    if (juego === "Poker") return "warning";
+    if (juego === "Apuestas deportivas") return "danger";
+    return "blue";
+}
+
+function cargarResumenPreferencias() {
+    document.getElementById("prefTotal").textContent = preferenciasServicio.length;
+
+    document.getElementById("prefWhatsapp").textContent =
+        preferenciasServicio.filter(p => p.canal === "WhatsApp").length;
+
+    document.getElementById("prefPromos").textContent =
+        preferenciasServicio.filter(p => p.consentimiento === "Acepta").length;
+
+    document.getElementById("prefSinConsentimiento").textContent =
+        preferenciasServicio.filter(p => p.consentimiento === "No acepta").length;
+}
+
+function cargarTablaPreferencias(lista = preferenciasServicio) {
+    tablaPreferencias.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaPreferencias.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron preferencias con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(pref => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${pref.cliente}</strong>
+                    <span>${pref.correo}</span>
+                </div>
+            </td>
+
+            <td>${pref.dni}</td>
+
+            <td>
+                <span class="badge ${claseJuegoPreferido(pref.juego)}">
+                    ${pref.juego}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${claseCanalPreferencia(pref.canal)}">
+                    ${pref.canal}
+                </span>
+            </td>
+
+            <td>${pref.horario}</td>
+
+            <td>
+                <span class="badge ${claseConsentimiento(pref.consentimiento)}">
+                    ${pref.consentimiento}
+                </span>
+            </td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${pref.observacion}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verPreferencia(${pref.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="aceptarPromos(${pref.id})">Aceptar</button>
+                <button class="btn-action btn-delete" onclick="rechazarPromos(${pref.id})">Bloquear</button>
+            </td>
+        `;
+
+        tablaPreferencias.appendChild(fila);
+    });
+}
+
+function filtrarPreferencias() {
+    const texto = buscarPreferencia.value.toLowerCase();
+    const juego = filtroJuegoPreferido.value;
+    const consentimiento = filtroConsentimiento.value;
+
+    const resultado = preferenciasServicio.filter(pref => {
+        const coincideTexto =
+            pref.cliente.toLowerCase().includes(texto) ||
+            pref.dni.includes(texto) ||
+            pref.juego.toLowerCase().includes(texto) ||
+            pref.canal.toLowerCase().includes(texto);
+
+        const coincideJuego =
+            juego === "Todos" || pref.juego === juego;
+
+        const coincideConsentimiento =
+            consentimiento === "Todos" || pref.consentimiento === consentimiento;
+
+        return coincideTexto && coincideJuego && coincideConsentimiento;
+    });
+
+    cargarTablaPreferencias(resultado);
+}
+
+function verPreferencia(id) {
+    const pref = preferenciasServicio.find(p => p.id === id);
+
+    if (!pref) return;
+
+    alert(
+        `Cliente: ${pref.cliente}\n` +
+        `DNI: ${pref.dni}\n` +
+        `Juego preferido: ${pref.juego}\n` +
+        `Canal preferido: ${pref.canal}\n` +
+        `Horario recomendado: ${pref.horario}\n` +
+        `Promociones: ${pref.consentimiento}\n\n` +
+        `Observación: ${pref.observacion}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function aceptarPromos(id) {
+    const pref = preferenciasServicio.find(p => p.id === id);
+
+    if (!pref) return;
+
+    pref.consentimiento = "Acepta";
+
+    cargarResumenPreferencias();
+    cargarTablaPreferencias();
+
+    alert(`El cliente "${pref.cliente}" ahora acepta promociones. Acción mockeada.`);
+}
+
+function rechazarPromos(id) {
+    const pref = preferenciasServicio.find(p => p.id === id);
+
+    if (!pref) return;
+
+    const confirmar = confirm(`¿Deseas bloquear promociones para "${pref.cliente}"?`);
+
+    if (confirmar) {
+        pref.consentimiento = "No acepta";
+
+        cargarResumenPreferencias();
+        cargarTablaPreferencias();
+
+        alert("Preferencia actualizada correctamente. Acción mockeada.");
+    }
+}
+
+btnNuevaPreferencia.addEventListener("click", () => {
+    const nueva = {
+        id: preferenciasServicio.length + 1,
+        cliente: "Nuevo Cliente",
+        dni: "00000000",
+        correo: "nuevo.cliente@gmail.com",
+        juego: "Tragamonedas",
+        canal: "WhatsApp",
+        horario: "Tarde",
+        consentimiento: "Acepta",
+        observacion: "Registro mockeado de una nueva preferencia."
+    };
+
+    preferenciasServicio.push(nueva);
+
+    cargarResumenPreferencias();
+    cargarTablaPreferencias();
+
+    alert("Nueva preferencia registrada correctamente. Acción mockeada.");
+});
+
+buscarPreferencia.addEventListener("input", filtrarPreferencias);
+filtroJuegoPreferido.addEventListener("change", filtrarPreferencias);
+filtroConsentimiento.addEventListener("change", filtrarPreferencias);
+
+cargarResumenPreferencias();
+cargarTablaPreferencias();
+</script>
+
+<script src="../../js/app.js"></script></body></html>

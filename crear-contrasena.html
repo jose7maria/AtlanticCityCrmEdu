@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear nueva contraseña | Atlantic City V2</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body class="reset-page">
+  <div class="academic-strip">PROTOTIPO ACADÉMICO · CAMBIO LOCAL DE CONTRASEÑA</div>
+  <header class="topbar"><div class="topbar-left"><a class="icon-button back-home" href="index.html">☰</a><a class="brand" href="index.html"><strong>ATLANTIC CITY</strong><small>CASINO ◈ SPORTS</small></a></div></header>
+  <main class="reset-shell">
+    <section class="reset-card" aria-labelledby="resetTitle">
+      <div class="reset-visual"><div class="lock-illustration">🔓</div><h2>Protege tu cuenta</h2><p>Crea una contraseña segura para continuar usando el portal cliente.</p></div>
+      <div class="reset-panel">
+        <a class="brand white" href="index.html"><strong>ATLANTIC CITY</strong><small>CASINO ◈ SPORTS</small></a>
+        <h1 id="resetTitle">Crear nueva contraseña</h1>
+        <p>Este panel es solo un poco más amplio que el login, tal como la referencia solicitada.</p>
+        <form id="resetForm" novalidate>
+          <div class="password-input"><input id="newPassword" type="password" placeholder="Nueva contraseña"><button type="button" data-toggle-password="#newPassword">◉</button></div>
+          <div class="password-input"><input id="confirmNewPassword" type="password" placeholder="Confirmar nueva contraseña"><button type="button" data-toggle-password="#confirmNewPassword">◉</button></div>
+          <div class="password-rules compact-rules"><span data-rule="length">• 8 caracteres</span><span data-rule="upper">• mayúscula</span><span data-rule="number">• número</span><span data-rule="symbol">• símbolo</span></div>
+          <button class="btn btn-gold reset-submit" type="submit" disabled>ACTUALIZAR CONTRASEÑA</button>
+          <p class="reset-message" aria-live="polite"></p>
+        </form>
+        <a class="modal-link" href="index.html?login=1">Volver al inicio de sesión</a>
+      </div>
+    </section>
+  </main>
+  <script src="assets/js/reset-password.js"></script>
+</body>
+</html>

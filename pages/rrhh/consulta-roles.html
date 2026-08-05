@@ -1,0 +1,387 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Consulta de roles</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="RECURSOS_HUMANOS"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Recursos Humanos</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="usuarios.html" class=""><i>♙</i><span>Usuarios internos</span></a><a href="capacitaciones.html" class=""><i>▤</i><span>Capacitaciones</span></a><a href="consulta-roles.html" class="active"><i>◌</i><span>Consulta por área y rol</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">RECURSOS HUMANOS</span>
+            <h1>Consulta de roles</h1>
+            <p>Visualización de roles, permisos y accesos asignados al personal interno según su gerencia.</p>
+        </div>
+
+        <button class="btn-primary" id="btnNuevoRol">
+            Nuevo rol
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Total roles</span>
+            <h3 id="rolTotal">0</h3>
+            <p>Roles registrados para el sistema interno.</p>
+        </div>
+
+        <div class="card">
+            <span>Roles activos</span>
+            <h3 id="rolActivos">0</h3>
+            <p>Roles disponibles para asignación.</p>
+        </div>
+
+        <div class="card">
+            <span>Gerencias</span>
+            <h3 id="rolGerencias">0</h3>
+            <p>Áreas que tienen roles configurados.</p>
+        </div>
+
+        <div class="card danger">
+            <span>En revisión</span>
+            <h3 id="rolRevision">0</h3>
+            <p>Roles pendientes de validación.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarRol" placeholder="Buscar rol, gerencia, permiso o descripción...">
+
+        <select id="filtroGerenciaRol">
+            <option value="Todos">Todas las gerencias</option>
+            <option value="Servicio al Cliente">Servicio al Cliente</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Operaciones">Operaciones</option>
+            <option value="Recursos Humanos">Recursos Humanos</option>
+            <option value="Tecnología de la Información">Tecnología de la Información</option>
+            <option value="Desarrollo de Negocios">Desarrollo de Negocios</option>
+            <option value="Administración General">Administración General</option>
+        </select>
+
+        <select id="filtroEstadoRol">
+            <option value="Todos">Todos los estados</option>
+            <option value="Activo">Activo</option>
+            <option value="En revisión">En revisión</option>
+            <option value="Inactivo">Inactivo</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Rol</th>
+                    <th>Gerencia</th>
+                    <th>Descripción</th>
+                    <th>Permisos principales</th>
+                    <th>Usuarios asignados</th>
+                    <th>Nivel acceso</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaRoles">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+<script>
+const rolesRrhh = [
+    {
+        id: 1,
+        nombre: "Administrador General",
+        gerencia: "Administración General",
+        descripcion: "Acceso general para supervisar módulos, usuarios, reportes y configuraciones.",
+        permisos: "Dashboard, usuarios, auditoría, configuración, reportes",
+        usuarios: 1,
+        nivel: "Alto",
+        estado: "Activo"
+    },
+    {
+        id: 2,
+        nombre: "Servicio al Cliente",
+        gerencia: "Servicio al Cliente",
+        descripcion: "Permite gestionar clientes, perfil 360°, interacciones, incidencias, preferencias y reservas.",
+        permisos: "Clientes, incidencias, interacciones, reservas",
+        usuarios: 1,
+        nivel: "Medio",
+        estado: "Activo"
+    },
+    {
+        id: 3,
+        nombre: "Marketing",
+        gerencia: "Marketing",
+        descripcion: "Permite administrar segmentos, promociones, campañas, categorías y canales digitales.",
+        permisos: "Segmentos, promociones, campañas, abandono, canales",
+        usuarios: 1,
+        nivel: "Medio",
+        estado: "Activo"
+    },
+    {
+        id: 4,
+        nombre: "Operaciones",
+        gerencia: "Operaciones",
+        descripcion: "Permite controlar visitas, reservas operativas, check-in VIP, perfiles operativos y cortesías.",
+        permisos: "Visitas, reservas, check-in VIP, cortesías",
+        usuarios: 2,
+        nivel: "Medio",
+        estado: "Activo"
+    },
+    {
+        id: 5,
+        nombre: "Recursos Humanos",
+        gerencia: "Recursos Humanos",
+        descripcion: "Permite consultar trabajadores, capacitaciones y roles asignados.",
+        permisos: "Usuarios internos, capacitaciones, consulta de roles",
+        usuarios: 1,
+        nivel: "Medio",
+        estado: "Activo"
+    },
+    {
+        id: 6,
+        nombre: "Tecnología de la Información",
+        gerencia: "Tecnología de la Información",
+        descripcion: "Permite administrar usuarios, roles, seguridad, monitoreo, auditoría y soporte técnico.",
+        permisos: "Usuarios, roles, seguridad, monitoreo, auditoría",
+        usuarios: 1,
+        nivel: "Alto",
+        estado: "Activo"
+    },
+    {
+        id: 7,
+        nombre: "Desarrollo de Negocios",
+        gerencia: "Desarrollo de Negocios",
+        descripcion: "Permite visualizar indicadores, reportes estratégicos, fidelización y dashboard ejecutivo.",
+        permisos: "Indicadores, reportes, dashboard, fidelización",
+        usuarios: 1,
+        nivel: "Medio",
+        estado: "Activo"
+    },
+    {
+        id: 8,
+        nombre: "Rol temporal",
+        gerencia: "Operaciones",
+        descripcion: "Rol creado para pruebas o revisión de permisos operativos.",
+        permisos: "Acceso limitado a consultas",
+        usuarios: 0,
+        nivel: "Bajo",
+        estado: "En revisión"
+    }
+];
+
+const tablaRoles = document.getElementById("tablaRoles");
+const buscarRol = document.getElementById("buscarRol");
+const filtroGerenciaRol = document.getElementById("filtroGerenciaRol");
+const filtroEstadoRol = document.getElementById("filtroEstadoRol");
+const btnNuevoRol = document.getElementById("btnNuevoRol");
+
+function claseGerenciaRol(gerencia) {
+    if (gerencia === "Administración General") return "vip";
+    if (gerencia === "Servicio al Cliente") return "blue";
+    if (gerencia === "Marketing") return "vip";
+    if (gerencia === "Operaciones") return "success";
+    if (gerencia === "Recursos Humanos") return "warning";
+    if (gerencia === "Tecnología de la Información") return "danger";
+    if (gerencia === "Desarrollo de Negocios") return "blue";
+    return "blue";
+}
+
+function claseEstadoRol(estado) {
+    if (estado === "Activo") return "success";
+    if (estado === "En revisión") return "warning";
+    if (estado === "Inactivo") return "danger";
+    return "blue";
+}
+
+function claseNivelRol(nivel) {
+    if (nivel === "Alto") return "danger";
+    if (nivel === "Medio") return "warning";
+    if (nivel === "Bajo") return "blue";
+    return "blue";
+}
+
+function cargarResumenRoles() {
+    document.getElementById("rolTotal").textContent = rolesRrhh.length;
+
+    document.getElementById("rolActivos").textContent =
+        rolesRrhh.filter(r => r.estado === "Activo").length;
+
+    const gerenciasUnicas = new Set(rolesRrhh.map(r => r.gerencia));
+    document.getElementById("rolGerencias").textContent = gerenciasUnicas.size;
+
+    document.getElementById("rolRevision").textContent =
+        rolesRrhh.filter(r => r.estado === "En revisión").length;
+}
+
+function cargarTablaRoles(lista = rolesRrhh) {
+    tablaRoles.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaRoles.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron roles con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(rol => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${rol.nombre}</strong>
+                    <span>ID rol: ${rol.id}</span>
+                </div>
+            </td>
+
+            <td>
+                <span class="badge ${claseGerenciaRol(rol.gerencia)}">
+                    ${rol.gerencia}
+                </span>
+            </td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${rol.descripcion}
+                </span>
+            </td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${rol.permisos}
+                </span>
+            </td>
+
+            <td>${rol.usuarios}</td>
+
+            <td>
+                <span class="badge ${claseNivelRol(rol.nivel)}">
+                    ${rol.nivel}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${claseEstadoRol(rol.estado)}">
+                    ${rol.estado}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verRol(${rol.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="activarRol(${rol.id})">Activar</button>
+                <button class="btn-action btn-delete" onclick="desactivarRol(${rol.id})">Inactivar</button>
+            </td>
+        `;
+
+        tablaRoles.appendChild(fila);
+    });
+}
+
+function filtrarRoles() {
+    const texto = buscarRol.value.toLowerCase();
+    const gerencia = filtroGerenciaRol.value;
+    const estado = filtroEstadoRol.value;
+
+    const resultado = rolesRrhh.filter(rol => {
+        const coincideTexto =
+            rol.nombre.toLowerCase().includes(texto) ||
+            rol.gerencia.toLowerCase().includes(texto) ||
+            rol.descripcion.toLowerCase().includes(texto) ||
+            rol.permisos.toLowerCase().includes(texto);
+
+        const coincideGerencia =
+            gerencia === "Todos" || rol.gerencia === gerencia;
+
+        const coincideEstado =
+            estado === "Todos" || rol.estado === estado;
+
+        return coincideTexto && coincideGerencia && coincideEstado;
+    });
+
+    cargarTablaRoles(resultado);
+}
+
+function verRol(id) {
+    const rol = rolesRrhh.find(r => r.id === id);
+
+    if (!rol) return;
+
+    alert(
+        `Rol: ${rol.nombre}\n` +
+        `Gerencia: ${rol.gerencia}\n` +
+        `Nivel de acceso: ${rol.nivel}\n` +
+        `Usuarios asignados: ${rol.usuarios}\n` +
+        `Estado: ${rol.estado}\n\n` +
+        `Permisos: ${rol.permisos}\n\n` +
+        `Descripción: ${rol.descripcion}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function activarRol(id) {
+    const rol = rolesRrhh.find(r => r.id === id);
+
+    if (!rol) return;
+
+    rol.estado = "Activo";
+
+    cargarResumenRoles();
+    cargarTablaRoles();
+
+    alert(`Rol "${rol.nombre}" activado correctamente. Acción mockeada.`);
+}
+
+function desactivarRol(id) {
+    const rol = rolesRrhh.find(r => r.id === id);
+
+    if (!rol) return;
+
+    const confirmar = confirm(`¿Deseas inactivar el rol "${rol.nombre}"?`);
+
+    if (confirmar) {
+        rol.estado = "Inactivo";
+
+        cargarResumenRoles();
+        cargarTablaRoles();
+
+        alert("Rol inactivado correctamente. Acción mockeada.");
+    }
+}
+
+btnNuevoRol.addEventListener("click", () => {
+    const nuevo = {
+        id: rolesRrhh.length + 1,
+        nombre: "Nuevo rol interno",
+        gerencia: "Recursos Humanos",
+        descripcion: "Rol mockeado para pruebas de asignación de permisos.",
+        permisos: "Permisos pendientes de configuración",
+        usuarios: 0,
+        nivel: "Bajo",
+        estado: "En revisión"
+    };
+
+    rolesRrhh.push(nuevo);
+
+    cargarResumenRoles();
+    cargarTablaRoles();
+
+    alert("Nuevo rol registrado correctamente. Acción mockeada.");
+});
+
+buscarRol.addEventListener("input", filtrarRoles);
+filtroGerenciaRol.addEventListener("change", filtrarRoles);
+filtroEstadoRol.addEventListener("change", filtrarRoles);
+
+cargarResumenRoles();
+cargarTablaRoles();
+</script>
+
+<script src="../../js/app.js"></script></body></html>

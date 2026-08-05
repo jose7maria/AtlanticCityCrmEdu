@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Prototipo académico del portal cliente Atlantic City V2">
+  <title>Atlantic City | Portal Cliente V2</title>
+  <link rel="stylesheet" href="CLIENTE/css/styles.css">
+</head>
+<body class="home-page">
+  
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="icon-button menu-trigger" type="button" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+      <a class="brand" href="index.html" aria-label="Atlantic City inicio">
+        <strong>ATLANTIC CITY</strong>
+        <small>CASINO ◈ SPORTS</small>
+      </a>
+    </div>
+
+  <div class="topbar-actions logged-out-actions">
+  <button class="btn btn-gold open-login" type="button">INICIAR SESIÓN</button>
+  <a class="btn btn-outline" href="registro.html">REGÍSTRATE</a>
+  <a class="btn btn-intranet" href="index-cmr.html">INTRANET</a>
+</div>
+    <div class="topbar-actions logged-in-actions" hidden>
+      <button class="btn btn-gold open-deposit" type="button"><span class="coin-icon">S/</span> DEPOSITAR</button>
+      <button class="header-icon notification-trigger" type="button" aria-label="Notificaciones">🔔<span class="notification-dot"></span></button>
+      <button class="header-icon account-trigger" type="button" aria-label="Abrir cuenta">👤</button>
+    </div>
+  </header>
+
+  <aside class="side-menu" aria-hidden="true">
+    <div class="side-menu-head">
+      <span class="brand compact"><strong>ATLANTIC CITY</strong><small>CASINO ◈ SPORTS</small></span>
+      <button class="icon-button close-menu" type="button" aria-label="Cerrar menú">×</button>
+    </div>
+    <nav>
+      <a class="side-link active" href="#promociones"><span>🎁</span> PROMOCIONES</a>
+      <a class="side-link" href="#maquinas"><span>🎰</span> MÁQUINAS</a>
+      <a class="side-link" href="#maquinas" data-filter="live"><span>⚽</span> MESAS EN VIVO <b>⌄</b></a>
+      <a class="side-link" href="#maquinas" data-filter="table"><span>🎲</span> MESAS</a>
+      <a class="side-link" href="#maquinas" data-filter="poker"><span>🃏</span> PÓKER</a>
+      <hr>
+      <a class="side-link sport" href="#maquinas" data-filter="sports"><span>⚽</span> SPORTS</a>
+    </nav>
+  </aside>
+  <div class="menu-backdrop"></div>
+
+  <main>
+    <section class="hero" aria-label="Promoción Millón City 2">
+      <img src="cliente/img/hero-million-city.png" alt="Promoción Millón City 2">
+      <div class="hero-copy">
+        <h1>¡De junio a octubre,<br>la ciudad premia<br>cada semana!</h1>
+        <a href="#promociones" class="btn btn-gold hero-btn">VER MÁS</a>
+      </div>
+    </section>
+
+    <section class="content-shell" id="promociones">
+      <div class="promo-carousel" aria-label="Promociones destacadas">
+        <button class="carousel-arrow carousel-prev" type="button" aria-label="Promoción anterior">‹</button>
+        <div class="promo-track">
+          <article class="promo-card"><img src="cliente/img/promo-combo.png" alt="Combo de bienvenida"></article>
+          <article class="promo-card"><img src="cliente/img//promo-hattrick.png" alt="Hat Trick de bienvenida"></article>
+          <article class="promo-card"><img src="cliente/img/promo-crazy-chips.png" alt="Crazy Chips"></article>
+          <article class="promo-card"><img src="cliente/img/promo-combo.png" alt="Promoción de puntos"></article>
+        </div>
+        <button class="carousel-arrow carousel-next" type="button" aria-label="Siguiente promoción">›</button>
+      </div>
+
+      <div class="category-search">
+        <div class="category-tabs" role="tablist" aria-label="Categorías de juegos">
+          <button class="category active" type="button" data-category="all"><span>🚀</span> Todos</button>
+          <button class="category" type="button" data-category="poker"><span>🎴</span> Póker</button>
+          <button class="category" type="button" data-category="live"><span>⚽</span> En vivo</button>
+          <button class="category" type="button" data-category="sports"><span>🐎</span> Carreras</button>
+        </div>
+        <label class="search-box">
+          <input id="gameSearch" type="search" placeholder="Buscar juegos" aria-label="Buscar juegos">
+          <span>⌕</span>
+        </label>
+      </div>
+
+      <section class="games-section" id="maquinas">
+        <div class="section-heading">
+          <div class="title-group">
+            <h2><span>🎰</span> Máquinas</h2>
+            <button class="round-arrow games-prev" type="button" aria-label="Anterior">‹</button>
+            <button class="round-arrow outlined games-next" type="button" aria-label="Siguiente">›</button>
+          </div>
+          <button class="btn btn-outline see-more" type="button">VER MÁS</button>
+        </div>
+        <p class="empty-games" hidden>No se encontraron juegos con ese criterio.</p>
+        <div class="games-grid">
+          <article class="game-card" data-category="all poker" data-name="Royal 2"><img src="cliente/img/games/game-1.png" alt="Royal 2"><div><b>Royal 2</b><small>Máquinas</small></div></article>
+          <article class="game-card" data-category="all table" data-name="Fortune Kids"><img src="cliente/img/games/game-2.png" alt="Fortune Kids"><div><b>Fortune Kids</b><small>Mesas</small></div></article>
+          <article class="game-card" data-category="all sports" data-name="Perú Atlanticland"><img src="cliente/img/games/game-3.png" alt="Perú Atlanticland"><div><b>Perú Atlanticland</b><small>Exclusivo</small></div></article>
+          <article class="game-card" data-category="all live" data-name="Cuby Cash"><img src="cliente/img/games/game-4.png" alt="Cuby Cash"><div><b>Cuby Cash</b><small>En vivo</small></div></article>
+          <article class="game-card" data-category="all sports" data-name="Blazing Double"><img src="cliente/img/games/game-5.png" alt="Blazing Double"><div><b>Blazing Double</b><small>Carreras</small></div></article>
+          <article class="game-card" data-category="all poker" data-name="Crown 18"><img src="cliente/img/games/game-6.png" alt="Crown 18"><div><b>Crown 18</b><small>Póker</small></div></article>
+          <article class="game-card" data-category="all live" data-name="Fire Links"><img src="cliente/img/games/game-7.png" alt="Fire Links"><div><b>Fire Links</b><small>En vivo</small></div></article>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="payments-footer">
+    <h2>Medios de pago</h2>
+    <div class="payment-logos" aria-label="Medios de pago simulados">
+      <span>VISA</span><span>◯◯<small>mastercard</small></span><span>yape</span><span>plin</span><span>kashio</span><span>MONNET</span><span>tupay</span><span>ligoPay</span><span>▣ Interbank</span><span>PagoEfectivo</span><span>safety›pay</span>
+    </div>
+    <p>Demostración visual. No se procesa dinero ni se conecta con medios de pago reales.</p>
+  </footer>
+
+  <!-- LOGIN -->
+  <div class="login-overlay overlay-layer" aria-hidden="true">
+    <section class="login-modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+      <div class="login-art" aria-hidden="true"><img src="cliente/img/login-visual.png" alt=""></div>
+      <div class="login-panel">
+        <button class="login-close" type="button" aria-label="Cerrar">×</button>
+        <div class="login-content">
+          <div class="modal-brand"><strong>ATLANTIC CITY</strong><small>CASINO ◈ SPORTS</small></div>
+          <h2 id="loginTitle">Te damos la bienvenida</h2>
+          <form id="loginForm" novalidate>
+            <label class="field"><span class="sr-only">Usuario o correo electrónico</span><input id="loginUser" type="text" placeholder="Usuario o correo electrónico" autocomplete="username"></label>
+            <label class="field password-field"><span class="sr-only">Contraseña</span><input id="loginPassword" type="password" placeholder="Contraseña" autocomplete="current-password"><button class="toggle-password" type="button" aria-label="Mostrar contraseña">◉</button></label>
+            <label class="remember"><input id="rememberSession" type="checkbox"><span>Recordar sesión</span></label>
+            <button class="login-submit" type="submit" disabled>INICIAR SESIÓN</button>
+            <p class="form-message" aria-live="polite"></p>
+          </form>
+          <a class="modal-link" href="recuperar.html">¿Olvidaste tu contraseña?</a>
+          <p class="signup-copy">¿Aún no tienes una cuenta? <a href="registro.html">Regístrate</a></p>
+          <p class="demo-credentials">Demo: <b>demo</b> / <b>Demo123*</b></p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- INTERFAZ DE CLIENTE -->
+  <div class="client-backdrop" aria-hidden="true"></div>
+  <aside class="client-drawer" aria-hidden="true" aria-label="Interfaz del cliente">
+    <button class="drawer-close" type="button" aria-label="Cerrar">×</button>
+    <div class="drawer-greeting">¡Hola!<strong id="drawerName">Dslogan</strong></div>
+    <section class="balance-card">
+      <div class="balance-title"><b>Saldos</b><button id="refreshBalance" type="button" aria-label="Actualizar saldo">↻</button></div>
+      <div class="balance-row"><span>🪙 Efectivo:</span><strong id="cashBalance">S/0.00</strong></div>
+      <div class="balance-row"><span>🤲 Retirable:</span><strong id="withdrawableBalance">S/0.00</strong></div>
+      <div class="balance-row bonus"><span>🎁 Bono Casino:</span><strong id="bonusBalance">S/0.00</strong></div>
+    </section>
+    <div class="drawer-actions">
+      <button class="btn btn-outline withdraw-trigger" type="button">RETIRAR</button>
+      <button class="btn btn-gold open-deposit" type="button"><span class="coin-icon">S/</span> DEPOSITAR</button>
+    </div>
+    <button class="identity-warning verify-trigger" type="button">⚠ <span>Para poder retirar tus ganancias, debes <u>verificar tu identidad</u>.</span></button>
+    <hr>
+    <div class="client-menu-grid">
+      <button type="button" data-client-view="balances"><span>🪙</span>SALDOS Y<br>RETIROS</button>
+      <button type="button" data-client-view="bonuses"><span>🎁</span>MIS<br>BONOS</button>
+      <button type="button" data-client-view="profile"><span>👤</span>PERFIL</button>
+      <button type="button" data-client-view="history"><span>📑</span>HISTORIAL</button>
+      <button type="button" data-client-view="help"><span>❓</span>CENTRO<br>DE AYUDA</button>
+    </div>
+    <button class="logout-button" type="button">CERRAR SESIÓN</button>
+  </aside>
+
+  <!-- DEPÓSITO SIMULADO -->
+  <div class="deposit-overlay overlay-layer" aria-hidden="true">
+    <section class="deposit-modal" role="dialog" aria-modal="true" aria-labelledby="depositTitle">
+      <header><h2 id="depositTitle">Depósito</h2><button class="deposit-close" type="button" aria-label="Cerrar">×</button></header>
+      <div class="deposit-body">
+        <div class="academic-note">solo es visual</div>
+        <div class="payment-methods">
+          <button class="payment-method recommended" type="button" data-method="Transferencia Interbancaria" data-min="10" data-max="30000"><span class="method-icons">BCP ◼ 🟢 🔴 +34</span><span><b>Transferencia Interbancaria</b><small>S/10 a S/30,000</small></span><i>›</i></button>
+          <button class="payment-method" type="button" data-method="Pago con QR" data-min="10" data-max="500"><span class="method-icons">plin yape +16</span><span><b>Pago con QR</b><small>S/10 a S/500</small></span><i>›</i></button>
+          <button class="payment-method" type="button" data-method="Kashio" data-min="20" data-max="50000"><span class="method-icons">BCP 🟢 🔴 +7</span><span><b class="kashio">kashio</b><small>S/20 a S/50,000</small></span><i>›</i></button>
+          <button class="payment-method" type="button" data-method="Monnet" data-min="130" data-max="50000"><span class="method-icons">BCP 🟢 🔴 +12</span><span><b class="monnet">MONNET</b><small>S/130 a S/50,000</small></span><i>›</i></button>
+          <button class="payment-method" type="button" data-method="Débito / Crédito" data-min="30" data-max="50000"><span class="method-icons">VISA ●</span><span><b>Débito / Crédito</b><small>S/30 a S/50,000</small></span><i>›</i></button>
+          <button class="payment-method" type="button" data-method="Interbank" data-min="80" data-max="30000"><span class="method-icons interbank">▣ Interbank</span><span><b>Interbank</b><small>S/80 a S/30,000</small></span><i>›</i></button>
+          <button class="payment-method" type="button" data-method="Tupay" data-min="140" data-max="50000"><span class="method-icons">BCP 🟢 🔴 +18</span><span><b class="tupay">tupay</b><small>S/140 a S/50,000</small></span><i>›</i></button>
+          <button class="payment-method" type="button" data-method="SafetyPay" data-min="100" data-max="50000"><span class="method-icons">BCP 🟢 🔴 +10</span><span><b class="safetypay">safety›pay</b><small>S/100 a S/50,000</small></span><i>›</i></button>
+        </div>
+        <form class="deposit-step" hidden>
+          <button class="deposit-back" type="button">← Volver</button>
+          <h3 id="selectedMethod">Método seleccionado</h3>
+          <p id="methodRange"></p>
+          <label>Monto a simular (S/)<input id="depositAmount" type="number" step="0.01" inputmode="decimal"></label>
+          <button class="btn btn-gold confirm-deposit" type="submit">CONFIRMAR DEPÓSITO DEMO</button>
+          <p class="deposit-message" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- MODAL GENERAL DE CLIENTE -->
+  <div class="client-modal-overlay overlay-layer" aria-hidden="true">
+    <section class="client-modal" role="dialog" aria-modal="true" aria-labelledby="clientModalTitle">
+      <header><h2 id="clientModalTitle">Mi cuenta</h2><button class="client-modal-close" type="button" aria-label="Cerrar">×</button></header>
+      <div class="client-modal-body" id="clientModalBody"></div>
+    </section>
+  </div>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+
+  <script src="cliente/js/app.js"></script>
+</body>
+</html>

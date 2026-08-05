@@ -1,0 +1,366 @@
+<!doctype html><html lang="es">
+    <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Interacciones</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="SERVICIO_CLIENTE"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Servicio al Cliente</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="clientes.html" class=""><i>♙</i><span>Clientes</span></a><a href="perfil-360.html" class=""><i>◎</i><span>Perfil 360°</span></a><a href="interacciones.html" class="active"><i>✉</i><span>Interacciones</span></a><a href="incidencias.html" class=""><i>!</i><span>Incidencias</span></a><a href="reservas.html" class=""><i>◈</i><span>Reservas y eventos</span></a><a href="preferencias.html" class=""><i>♡</i><span>Preferencias</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><main class="main-content">
+
+    <section class="page-section">
+
+        <div class="section-header">
+            <div>
+                <span class="eyebrow">SERVICIO AL CLIENTE</span>
+                <h1>Interacciones con clientes</h1>
+                <p>Registro y seguimiento de consultas, comunicaciones, solicitudes y atenciones realizadas a los clientes.</p>
+            </div>
+
+            <button class="btn-primary" id="btnNuevaInteraccion">
+                Nueva interacción
+            </button>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <span>Total interacciones</span>
+                <h3 id="intTotal">0</h3>
+                <p>Comunicaciones registradas con clientes.</p>
+            </div>
+
+            <div class="card">
+                <span>Atendidas</span>
+                <h3 id="intAtendidas">0</h3>
+                <p>Interacciones cerradas correctamente.</p>
+            </div>
+
+            <div class="card">
+                <span>En seguimiento</span>
+                <h3 id="intSeguimiento">0</h3>
+                <p>Casos que requieren continuidad.</p>
+            </div>
+
+            <div class="card danger">
+                <span>Pendientes</span>
+                <h3 id="intPendientes">0</h3>
+                <p>Interacciones aún no finalizadas.</p>
+            </div>
+        </div>
+
+        <div class="filters-box">
+            <input type="text" id="buscarInteraccion" placeholder="Buscar cliente, canal, motivo o responsable...">
+
+            <select id="filtroCanalInteraccion">
+                <option value="Todos">Todos los canales</option>
+                <option value="Presencial">Presencial</option>
+                <option value="Teléfono">Teléfono</option>
+                <option value="WhatsApp">WhatsApp</option>
+                <option value="Email">Email</option>
+            </select>
+
+            <select id="filtroEstadoInteraccion">
+                <option value="Todos">Todos los estados</option>
+                <option value="Atendido">Atendido</option>
+                <option value="En seguimiento">En seguimiento</option>
+                <option value="Pendiente">Pendiente</option>
+            </select>
+        </div>
+
+        <div class="table-panel">
+            <table class="crm-table">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>DNI</th>
+                        <th>Fecha</th>
+                        <th>Canal</th>
+                        <th>Motivo</th>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+                        <th>Responsable</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaInteracciones">
+                    <!-- Se llena con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+    
+    </div>
+        
+        
+        
+        
+        <div class="toast" id="toast"></div>
+        
+        <script>
+const interaccionesServicio = [
+    {
+        id: 1,
+        cliente: "Carlos Ramírez",
+        dni: "45678912",
+        correo: "carlos.ramirez@gmail.com",
+        fecha: "04/08/2026",
+        canal: "WhatsApp",
+        motivo: "Consulta de promoción VIP",
+        descripcion: "Cliente solicita información sobre bono de cumpleaños y beneficios premium.",
+        estado: "Atendido",
+        responsable: "María Torres"
+    },
+    {
+        id: 2,
+        cliente: "Ana Torres",
+        dni: "74258963",
+        correo: "ana.torres@gmail.com",
+        fecha: "03/08/2026",
+        canal: "Email",
+        motivo: "Confirmación de promoción",
+        descripcion: "Se envió información sobre promoción de tragamonedas.",
+        estado: "Atendido",
+        responsable: "Servicio al Cliente"
+    },
+    {
+        id: 3,
+        cliente: "Luis Gómez",
+        dni: "65897412",
+        correo: "luis.gomez@gmail.com",
+        fecha: "19/07/2026",
+        canal: "Presencial",
+        motivo: "Orientación de beneficios",
+        descripcion: "Cliente nuevo solicita explicación sobre categorías, puntos y promociones disponibles.",
+        estado: "En seguimiento",
+        responsable: "María Torres"
+    },
+    {
+        id: 4,
+        cliente: "Jorge Salazar",
+        dni: "78965412",
+        correo: "jorge.salazar@gmail.com",
+        fecha: "05/06/2026",
+        canal: "Teléfono",
+        motivo: "Reclamo por promoción",
+        descripcion: "Cliente indica que una promoción no fue aplicada durante su visita.",
+        estado: "Pendiente",
+        responsable: "Servicio al Cliente"
+    },
+    {
+        id: 5,
+        cliente: "María Fernández",
+        dni: "48596712",
+        correo: "maria.fernandez@gmail.com",
+        fecha: "01/08/2026",
+        canal: "WhatsApp",
+        motivo: "Confirmación de evento",
+        descripcion: "Cliente confirma asistencia a evento Poker Premium.",
+        estado: "Atendido",
+        responsable: "María Torres"
+    }
+];
+
+const tablaInteracciones = document.getElementById("tablaInteracciones");
+const buscarInteraccion = document.getElementById("buscarInteraccion");
+const filtroCanalInteraccion = document.getElementById("filtroCanalInteraccion");
+const filtroEstadoInteraccion = document.getElementById("filtroEstadoInteraccion");
+const btnNuevaInteraccion = document.getElementById("btnNuevaInteraccion");
+
+function claseCanalInteraccion(canal) {
+    if (canal === "WhatsApp") return "success";
+    if (canal === "Email") return "blue";
+    if (canal === "Teléfono") return "warning";
+    if (canal === "Presencial") return "vip";
+    return "blue";
+}
+
+function claseEstadoInteraccion(estado) {
+    if (estado === "Atendido") return "success";
+    if (estado === "En seguimiento") return "warning";
+    if (estado === "Pendiente") return "danger";
+    return "blue";
+}
+
+function cargarResumenInteracciones() {
+    document.getElementById("intTotal").textContent = interaccionesServicio.length;
+
+    document.getElementById("intAtendidas").textContent =
+        interaccionesServicio.filter(i => i.estado === "Atendido").length;
+
+    document.getElementById("intSeguimiento").textContent =
+        interaccionesServicio.filter(i => i.estado === "En seguimiento").length;
+
+    document.getElementById("intPendientes").textContent =
+        interaccionesServicio.filter(i => i.estado === "Pendiente").length;
+}
+
+function cargarTablaInteracciones(lista = interaccionesServicio) {
+    tablaInteracciones.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaInteracciones.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron interacciones con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(item => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${item.cliente}</strong>
+                    <span>${item.correo}</span>
+                </div>
+            </td>
+
+            <td>${item.dni}</td>
+
+            <td>${item.fecha}</td>
+
+            <td>
+                <span class="badge ${claseCanalInteraccion(item.canal)}">
+                    ${item.canal}
+                </span>
+            </td>
+
+            <td>${item.motivo}</td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${item.descripcion}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${claseEstadoInteraccion(item.estado)}">
+                    ${item.estado}
+                </span>
+            </td>
+
+            <td>${item.responsable}</td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verInteraccion(${item.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="seguimientoInteraccion(${item.id})">Seguimiento</button>
+                <button class="btn-action btn-delete" onclick="cerrarInteraccion(${item.id})">Cerrar</button>
+            </td>
+        `;
+
+        tablaInteracciones.appendChild(fila);
+    });
+}
+
+function filtrarInteracciones() {
+    const texto = buscarInteraccion.value.toLowerCase();
+    const canal = filtroCanalInteraccion.value;
+    const estado = filtroEstadoInteraccion.value;
+
+    const resultado = interaccionesServicio.filter(item => {
+        const coincideTexto =
+            item.cliente.toLowerCase().includes(texto) ||
+            item.dni.includes(texto) ||
+            item.canal.toLowerCase().includes(texto) ||
+            item.motivo.toLowerCase().includes(texto) ||
+            item.responsable.toLowerCase().includes(texto);
+
+        const coincideCanal =
+            canal === "Todos" || item.canal === canal;
+
+        const coincideEstado =
+            estado === "Todos" || item.estado === estado;
+
+        return coincideTexto && coincideCanal && coincideEstado;
+    });
+
+    cargarTablaInteracciones(resultado);
+}
+
+function verInteraccion(id) {
+    const item = interaccionesServicio.find(i => i.id === id);
+
+    if (!item) return;
+
+    alert(
+        `Cliente: ${item.cliente}\n` +
+        `DNI: ${item.dni}\n` +
+        `Fecha: ${item.fecha}\n` +
+        `Canal: ${item.canal}\n` +
+        `Motivo: ${item.motivo}\n` +
+        `Estado: ${item.estado}\n\n` +
+        `${item.descripcion}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function seguimientoInteraccion(id) {
+    const item = interaccionesServicio.find(i => i.id === id);
+
+    if (!item) return;
+
+    item.estado = "En seguimiento";
+
+    cargarResumenInteracciones();
+    cargarTablaInteracciones();
+
+    alert(`Interacción de "${item.cliente}" enviada a seguimiento. Acción mockeada.`);
+}
+
+function cerrarInteraccion(id) {
+    const item = interaccionesServicio.find(i => i.id === id);
+
+    if (!item) return;
+
+    const confirmar = confirm(`¿Deseas cerrar la interacción de "${item.cliente}"?`);
+
+    if (confirmar) {
+        item.estado = "Atendido";
+
+        cargarResumenInteracciones();
+        cargarTablaInteracciones();
+
+        alert("Interacción cerrada correctamente. Acción mockeada.");
+    }
+}
+
+btnNuevaInteraccion.addEventListener("click", () => {
+    const nueva = {
+        id: interaccionesServicio.length + 1,
+        cliente: "Nuevo Cliente",
+        dni: "00000000",
+        correo: "nuevo.cliente@gmail.com",
+        fecha: "05/08/2026",
+        canal: "Presencial",
+        motivo: "Consulta general",
+        descripcion: "Registro mockeado de una nueva interacción con cliente.",
+        estado: "Pendiente",
+        responsable: "Servicio al Cliente"
+    };
+
+    interaccionesServicio.push(nueva);
+
+    cargarResumenInteracciones();
+    cargarTablaInteracciones();
+
+    alert("Nueva interacción registrada correctamente. Acción mockeada.");
+});
+
+buscarInteraccion.addEventListener("input", filtrarInteracciones);
+filtroCanalInteraccion.addEventListener("change", filtrarInteracciones);
+filtroEstadoInteraccion.addEventListener("change", filtrarInteracciones);
+
+cargarResumenInteracciones();
+cargarTablaInteracciones();
+</script>
+        
+        <script src="../../js/app.js"></script>
+    </body></html>

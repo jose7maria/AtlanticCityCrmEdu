@@ -1,0 +1,355 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Reportes estratégicos</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="DESARROLLO_NEGOCIOS"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Desarrollo de Negocios</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="reportes.html" class="active"><i>▥</i><span>Reportes</span></a><a href="indicadores.html" class=""><i>↗</i><span>Indicadores</span></a><a href="fidelizacion.html" class=""><i>◎</i><span>Fidelización</span></a><a href="ejecutivo.html" class=""><i>▤</i><span>Dashboard ejecutivo</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">DESARROLLO DE NEGOCIOS</span>
+            <h1>Reportes estratégicos</h1>
+            <p>Visualización de reportes para la toma de decisiones: clientes activos, campañas, visitas, fidelización e incidencias.</p>
+        </div>
+
+        <button class="btn-primary" id="btnGenerarReporte">
+            Generar reporte
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Reportes generados</span>
+            <h3 id="repTotal">0</h3>
+            <p>Reportes disponibles para análisis gerencial.</p>
+        </div>
+
+        <div class="card">
+            <span>Clientes activos</span>
+            <h3 id="repClientes">0</h3>
+            <p>Clientes considerados en los reportes.</p>
+        </div>
+
+        <div class="card">
+            <span>Campañas exitosas</span>
+            <h3 id="repCampanias">0</h3>
+            <p>Campañas con resultado favorable.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Alertas estratégicas</span>
+            <h3 id="repAlertas">0</h3>
+            <p>Indicadores que requieren revisión.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarReporte" placeholder="Buscar reporte, área, indicador o responsable...">
+
+        <select id="filtroTipoReporte">
+            <option value="Todos">Todos los tipos</option>
+            <option value="Clientes">Clientes</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Operaciones">Operaciones</option>
+            <option value="Fidelización">Fidelización</option>
+        </select>
+
+        <select id="filtroEstadoReporte">
+            <option value="Todos">Todos los estados</option>
+            <option value="Disponible">Disponible</option>
+            <option value="En análisis">En análisis</option>
+            <option value="Alerta">Alerta</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Reporte</th>
+                    <th>Tipo</th>
+                    <th>Área origen</th>
+                    <th>Indicador principal</th>
+                    <th>Resultado</th>
+                    <th>Estado</th>
+                    <th>Responsable</th>
+                    <th>Observación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaReportesNegocios">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+<script>
+const reportesNegocios = [
+    {
+        id: 1,
+        nombre: "Clientes más activos",
+        tipo: "Clientes",
+        area: "Servicio al Cliente",
+        indicador: "Frecuencia de visitas",
+        resultado: "85%",
+        estado: "Disponible",
+        responsable: "Fernando Ruiz",
+        observacion: "Permite identificar clientes con mayor actividad para acciones de fidelización."
+    },
+    {
+        id: 2,
+        nombre: "Promociones más exitosas",
+        tipo: "Marketing",
+        area: "Marketing",
+        indicador: "Efectividad de campaña",
+        resultado: "78%",
+        estado: "Disponible",
+        responsable: "Diego Salazar",
+        observacion: "Muestra campañas con mejor respuesta por segmento."
+    },
+    {
+        id: 3,
+        nombre: "Visitas operativas por área",
+        tipo: "Operaciones",
+        area: "Operaciones",
+        indicador: "Uso de áreas",
+        resultado: "69%",
+        estado: "En análisis",
+        responsable: "Lucía Ramírez",
+        observacion: "Evalúa zonas con mayor uso operativo durante el periodo."
+    },
+    {
+        id: 4,
+        nombre: "Clientes en riesgo de abandono",
+        tipo: "Fidelización",
+        area: "Marketing",
+        indicador: "Riesgo de abandono",
+        resultado: "32%",
+        estado: "Alerta",
+        responsable: "Fernando Ruiz",
+        observacion: "Clientes con baja frecuencia requieren campañas de recuperación."
+    },
+    {
+        id: 5,
+        nombre: "Incidencias por atención",
+        tipo: "Clientes",
+        area: "Servicio al Cliente",
+        indicador: "Casos pendientes",
+        resultado: "41%",
+        estado: "En análisis",
+        responsable: "María Torres",
+        observacion: "Reporte usado para mejorar tiempos de atención y solución de reclamos."
+    }
+];
+
+const tablaReportesNegocios = document.getElementById("tablaReportesNegocios");
+const buscarReporte = document.getElementById("buscarReporte");
+const filtroTipoReporte = document.getElementById("filtroTipoReporte");
+const filtroEstadoReporte = document.getElementById("filtroEstadoReporte");
+const btnGenerarReporte = document.getElementById("btnGenerarReporte");
+
+function claseTipoReporte(tipo) {
+    if (tipo === "Clientes") return "blue";
+    if (tipo === "Marketing") return "vip";
+    if (tipo === "Operaciones") return "success";
+    if (tipo === "Fidelización") return "warning";
+    return "blue";
+}
+
+function claseEstadoReporte(estado) {
+    if (estado === "Disponible") return "success";
+    if (estado === "En análisis") return "warning";
+    if (estado === "Alerta") return "danger";
+    return "blue";
+}
+
+function numeroResultado(valor) {
+    return parseInt(valor.replace("%", ""));
+}
+
+function cargarResumenReportes() {
+    document.getElementById("repTotal").textContent = reportesNegocios.length;
+
+    document.getElementById("repClientes").textContent =
+        reportesNegocios.filter(r => r.tipo === "Clientes").length;
+
+    document.getElementById("repCampanias").textContent =
+        reportesNegocios.filter(r => r.tipo === "Marketing" && numeroResultado(r.resultado) >= 70).length;
+
+    document.getElementById("repAlertas").textContent =
+        reportesNegocios.filter(r => r.estado === "Alerta").length;
+}
+
+function cargarTablaReportes(lista = reportesNegocios) {
+    tablaReportesNegocios.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaReportesNegocios.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron reportes con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(reporte => {
+        const fila = document.createElement("tr");
+        const porcentaje = numeroResultado(reporte.resultado);
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${reporte.nombre}</strong>
+                    <span>ID reporte: ${reporte.id}</span>
+                </div>
+            </td>
+
+            <td>
+                <span class="badge ${claseTipoReporte(reporte.tipo)}">
+                    ${reporte.tipo}
+                </span>
+            </td>
+
+            <td>${reporte.area}</td>
+
+            <td>${reporte.indicador}</td>
+
+            <td>
+                <strong>${reporte.resultado}</strong>
+                <div class="effect-bar">
+                    <div class="effect-fill" style="width:${porcentaje}%;"></div>
+                </div>
+            </td>
+
+            <td>
+                <span class="badge ${claseEstadoReporte(reporte.estado)}">
+                    ${reporte.estado}
+                </span>
+            </td>
+
+            <td>${reporte.responsable}</td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${reporte.observacion}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verReporte(${reporte.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="analizarReporte(${reporte.id})">Analizar</button>
+                <button class="btn-action btn-delete" onclick="marcarAlertaReporte(${reporte.id})">Alerta</button>
+            </td>
+        `;
+
+        tablaReportesNegocios.appendChild(fila);
+    });
+}
+
+function filtrarReportes() {
+    const texto = buscarReporte.value.toLowerCase();
+    const tipo = filtroTipoReporte.value;
+    const estado = filtroEstadoReporte.value;
+
+    const resultado = reportesNegocios.filter(reporte => {
+        const coincideTexto =
+            reporte.nombre.toLowerCase().includes(texto) ||
+            reporte.tipo.toLowerCase().includes(texto) ||
+            reporte.area.toLowerCase().includes(texto) ||
+            reporte.indicador.toLowerCase().includes(texto) ||
+            reporte.responsable.toLowerCase().includes(texto) ||
+            reporte.observacion.toLowerCase().includes(texto);
+
+        const coincideTipo =
+            tipo === "Todos" || reporte.tipo === tipo;
+
+        const coincideEstado =
+            estado === "Todos" || reporte.estado === estado;
+
+        return coincideTexto && coincideTipo && coincideEstado;
+    });
+
+    cargarTablaReportes(resultado);
+}
+
+function verReporte(id) {
+    const reporte = reportesNegocios.find(r => r.id === id);
+
+    if (!reporte) return;
+
+    alert(
+        `Reporte: ${reporte.nombre}\n` +
+        `Tipo: ${reporte.tipo}\n` +
+        `Área origen: ${reporte.area}\n` +
+        `Indicador: ${reporte.indicador}\n` +
+        `Resultado: ${reporte.resultado}\n` +
+        `Estado: ${reporte.estado}\n` +
+        `Responsable: ${reporte.responsable}\n\n` +
+        `Observación: ${reporte.observacion}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function analizarReporte(id) {
+    const reporte = reportesNegocios.find(r => r.id === id);
+
+    if (!reporte) return;
+
+    reporte.estado = "En análisis";
+    reporte.observacion = "Reporte enviado a análisis estratégico por Desarrollo de Negocios.";
+
+    cargarResumenReportes();
+    cargarTablaReportes();
+
+    alert(`Reporte "${reporte.nombre}" enviado a análisis. Acción mockeada.`);
+}
+
+function marcarAlertaReporte(id) {
+    const reporte = reportesNegocios.find(r => r.id === id);
+
+    if (!reporte) return;
+
+    reporte.estado = "Alerta";
+    reporte.observacion = "Reporte marcado como alerta estratégica para revisión gerencial.";
+
+    cargarResumenReportes();
+    cargarTablaReportes();
+
+    alert(`Reporte "${reporte.nombre}" marcado como alerta. Acción mockeada.`);
+}
+
+btnGenerarReporte.addEventListener("click", () => {
+    const nuevo = {
+        id: reportesNegocios.length + 1,
+        nombre: "Nuevo reporte estratégico",
+        tipo: "Clientes",
+        area: "Desarrollo de Negocios",
+        indicador: "Indicador por definir",
+        resultado: "0%",
+        estado: "En análisis",
+        responsable: "Fernando Ruiz",
+        observacion: "Reporte mockeado generado para análisis gerencial."
+    };
+
+    reportesNegocios.push(nuevo);
+
+    cargarResumenReportes();
+    cargarTablaReportes();
+
+    alert("Nuevo reporte generado correctamente. Acción mockeada.");
+});
+
+buscarReporte.addEventListener("input", filtrarReportes);
+filtroTipoReporte.addEventListener("change", filtrarReportes);
+filtroEstadoReporte.addEventListener("change", filtrarReportes);
+
+cargarResumenReportes();
+cargarTablaReportes();
+</script>
+<script src="../../js/app.js"></script></body></html>

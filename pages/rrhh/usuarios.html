@@ -1,0 +1,380 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Usuarios internos</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="RECURSOS_HUMANOS"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Recursos Humanos</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html"><i>⌂</i><span>Resumen</span></a><a href="usuarios.html" class="active"><i>♙</i><span>Usuarios internos</span></a><a href="capacitaciones.html"><i>▤</i><span>Capacitaciones</span></a><a href="consulta-roles.html"><i>◌</i><span>Consulta por área y rol</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">RECURSOS HUMANOS</span>
+            <h1>Usuarios internos</h1>
+            <p>Gestión de trabajadores registrados en el sistema, áreas asignadas, cargos, estado laboral y acceso interno.</p>
+        </div>
+
+        <button class="btn-primary" id="btnNuevoUsuarioRrhh">
+            Nuevo usuario
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Total trabajadores</span>
+            <h3 id="rrhhTotal">0</h3>
+            <p>Usuarios internos registrados en el CRM.</p>
+        </div>
+
+        <div class="card">
+            <span>Activos</span>
+            <h3 id="rrhhActivos">0</h3>
+            <p>Trabajadores con acceso habilitado.</p>
+        </div>
+
+        <div class="card">
+            <span>Áreas registradas</span>
+            <h3 id="rrhhAreas">0</h3>
+            <p>Gerencias o áreas con usuarios asignados.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Inactivos</span>
+            <h3 id="rrhhInactivos">0</h3>
+            <p>Usuarios bloqueados o sin acceso actual.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarUsuarioRrhh" placeholder="Buscar trabajador, usuario, área o cargo...">
+
+        <select id="filtroAreaRrhh">
+            <option value="Todos">Todas las áreas</option>
+            <option value="Servicio al Cliente">Servicio al Cliente</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Operaciones">Operaciones</option>
+            <option value="Recursos Humanos">Recursos Humanos</option>
+            <option value="Tecnología de la Información">Tecnología de la Información</option>
+            <option value="Desarrollo de Negocios">Desarrollo de Negocios</option>
+        </select>
+
+        <select id="filtroEstadoRrhh">
+            <option value="Todos">Todos los estados</option>
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
+            <option value="En revisión">En revisión</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Trabajador</th>
+                    <th>Usuario</th>
+                    <th>Área</th>
+                    <th>Cargo</th>
+                    <th>Correo</th>
+                    <th>Fecha ingreso</th>
+                    <th>Estado</th>
+                    <th>Acceso</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaUsuariosRrhh">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+<script>
+const usuariosRrhh = [
+    {
+        id: 1,
+        trabajador: "María Torres",
+        usuario: "maria.torres",
+        area: "Servicio al Cliente",
+        cargo: "Asesora de atención",
+        correo: "maria.torres@atlanticcity.com",
+        fechaIngreso: "10/01/2026",
+        estado: "Activo",
+        acceso: "Habilitado"
+    },
+    {
+        id: 2,
+        trabajador: "Diego Salazar",
+        usuario: "diego.salazar",
+        area: "Marketing",
+        cargo: "Analista de marketing",
+        correo: "diego.salazar@atlanticcity.com",
+        fechaIngreso: "15/01/2026",
+        estado: "Activo",
+        acceso: "Habilitado"
+    },
+    {
+        id: 3,
+        trabajador: "Lucía Ramírez",
+        usuario: "lucia.ramirez",
+        area: "Operaciones",
+        cargo: "Coordinadora operativa",
+        correo: "lucia.ramirez@atlanticcity.com",
+        fechaIngreso: "20/01/2026",
+        estado: "Activo",
+        acceso: "Habilitado"
+    },
+    {
+        id: 4,
+        trabajador: "Carlos Mendoza",
+        usuario: "carlos.mendoza",
+        area: "Recursos Humanos",
+        cargo: "Analista RR.HH.",
+        correo: "carlos.mendoza@atlanticcity.com",
+        fechaIngreso: "01/02/2026",
+        estado: "Activo",
+        acceso: "Habilitado"
+    },
+    {
+        id: 5,
+        trabajador: "Andrea Paredes",
+        usuario: "andrea.paredes",
+        area: "Tecnología de la Información",
+        cargo: "Soporte TI",
+        correo: "andrea.paredes@atlanticcity.com",
+        fechaIngreso: "05/02/2026",
+        estado: "Activo",
+        acceso: "Habilitado"
+    },
+    {
+        id: 6,
+        trabajador: "Fernando Ruiz",
+        usuario: "fernando.ruiz",
+        area: "Desarrollo de Negocios",
+        cargo: "Analista de indicadores",
+        correo: "fernando.ruiz@atlanticcity.com",
+        fechaIngreso: "12/02/2026",
+        estado: "Activo",
+        acceso: "Habilitado"
+    },
+    {
+        id: 7,
+        trabajador: "Pedro Salas",
+        usuario: "pedro.salas",
+        area: "Operaciones",
+        cargo: "Auxiliar operativo",
+        correo: "pedro.salas@atlanticcity.com",
+        fechaIngreso: "18/02/2026",
+        estado: "Inactivo",
+        acceso: "Bloqueado"
+    }
+];
+
+const tablaUsuariosRrhh = document.getElementById("tablaUsuariosRrhh");
+const buscarUsuarioRrhh = document.getElementById("buscarUsuarioRrhh");
+const filtroAreaRrhh = document.getElementById("filtroAreaRrhh");
+const filtroEstadoRrhh = document.getElementById("filtroEstadoRrhh");
+const btnNuevoUsuarioRrhh = document.getElementById("btnNuevoUsuarioRrhh");
+
+function claseAreaRrhh(area) {
+    if (area === "Servicio al Cliente") return "blue";
+    if (area === "Marketing") return "vip";
+    if (area === "Operaciones") return "success";
+    if (area === "Recursos Humanos") return "warning";
+    if (area === "Tecnología de la Información") return "danger";
+    if (area === "Desarrollo de Negocios") return "blue";
+    return "blue";
+}
+
+function claseEstadoRrhh(estado) {
+    if (estado === "Activo") return "success";
+    if (estado === "Inactivo") return "danger";
+    if (estado === "En revisión") return "warning";
+    return "blue";
+}
+
+function claseAccesoRrhh(acceso) {
+    if (acceso === "Habilitado") return "success";
+    if (acceso === "Bloqueado") return "danger";
+    return "warning";
+}
+
+function cargarResumenRrhh() {
+    document.getElementById("rrhhTotal").textContent = usuariosRrhh.length;
+
+    document.getElementById("rrhhActivos").textContent =
+        usuariosRrhh.filter(u => u.estado === "Activo").length;
+
+    const areasUnicas = new Set(usuariosRrhh.map(u => u.area));
+    document.getElementById("rrhhAreas").textContent = areasUnicas.size;
+
+    document.getElementById("rrhhInactivos").textContent =
+        usuariosRrhh.filter(u => u.estado === "Inactivo").length;
+}
+
+function cargarTablaUsuariosRrhh(lista = usuariosRrhh) {
+    tablaUsuariosRrhh.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaUsuariosRrhh.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron usuarios internos con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(usuario => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${usuario.trabajador}</strong>
+                    <span>ID trabajador: ${usuario.id}</span>
+                </div>
+            </td>
+
+            <td>${usuario.usuario}</td>
+
+            <td>
+                <span class="badge ${claseAreaRrhh(usuario.area)}">
+                    ${usuario.area}
+                </span>
+            </td>
+
+            <td>${usuario.cargo}</td>
+
+            <td>${usuario.correo}</td>
+
+            <td>${usuario.fechaIngreso}</td>
+
+            <td>
+                <span class="badge ${claseEstadoRrhh(usuario.estado)}">
+                    ${usuario.estado}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${claseAccesoRrhh(usuario.acceso)}">
+                    ${usuario.acceso}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verUsuarioRrhh(${usuario.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="activarUsuarioRrhh(${usuario.id})">Activar</button>
+                <button class="btn-action btn-delete" onclick="bloquearUsuarioRrhh(${usuario.id})">Bloquear</button>
+            </td>
+        `;
+
+        tablaUsuariosRrhh.appendChild(fila);
+    });
+}
+
+function filtrarUsuariosRrhh() {
+    const texto = buscarUsuarioRrhh.value.toLowerCase();
+    const area = filtroAreaRrhh.value;
+    const estado = filtroEstadoRrhh.value;
+
+    const resultado = usuariosRrhh.filter(usuario => {
+        const coincideTexto =
+            usuario.trabajador.toLowerCase().includes(texto) ||
+            usuario.usuario.toLowerCase().includes(texto) ||
+            usuario.area.toLowerCase().includes(texto) ||
+            usuario.cargo.toLowerCase().includes(texto) ||
+            usuario.correo.toLowerCase().includes(texto);
+
+        const coincideArea =
+            area === "Todos" || usuario.area === area;
+
+        const coincideEstado =
+            estado === "Todos" || usuario.estado === estado;
+
+        return coincideTexto && coincideArea && coincideEstado;
+    });
+
+    cargarTablaUsuariosRrhh(resultado);
+}
+
+function verUsuarioRrhh(id) {
+    const usuario = usuariosRrhh.find(u => u.id === id);
+
+    if (!usuario) return;
+
+    alert(
+        `Trabajador: ${usuario.trabajador}\n` +
+        `Usuario: ${usuario.usuario}\n` +
+        `Área: ${usuario.area}\n` +
+        `Cargo: ${usuario.cargo}\n` +
+        `Correo: ${usuario.correo}\n` +
+        `Estado: ${usuario.estado}\n` +
+        `Acceso: ${usuario.acceso}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function activarUsuarioRrhh(id) {
+    const usuario = usuariosRrhh.find(u => u.id === id);
+
+    if (!usuario) return;
+
+    usuario.estado = "Activo";
+    usuario.acceso = "Habilitado";
+
+    cargarResumenRrhh();
+    cargarTablaUsuariosRrhh();
+
+    alert(`Usuario "${usuario.usuario}" activado correctamente. Acción mockeada.`);
+}
+
+function bloquearUsuarioRrhh(id) {
+    const usuario = usuariosRrhh.find(u => u.id === id);
+
+    if (!usuario) return;
+
+    const confirmar = confirm(`¿Deseas bloquear el acceso de "${usuario.trabajador}"?`);
+
+    if (confirmar) {
+        usuario.estado = "Inactivo";
+        usuario.acceso = "Bloqueado";
+
+        cargarResumenRrhh();
+        cargarTablaUsuariosRrhh();
+
+        alert("Usuario bloqueado correctamente. Acción mockeada.");
+    }
+}
+
+btnNuevoUsuarioRrhh.addEventListener("click", () => {
+    const nuevo = {
+        id: usuariosRrhh.length + 1,
+        trabajador: "Nuevo Trabajador",
+        usuario: "nuevo.trabajador",
+        area: "Recursos Humanos",
+        cargo: "Cargo por definir",
+        correo: "nuevo.trabajador@atlanticcity.com",
+        fechaIngreso: "05/08/2026",
+        estado: "En revisión",
+        acceso: "Pendiente"
+    };
+
+    usuariosRrhh.push(nuevo);
+
+    cargarResumenRrhh();
+    cargarTablaUsuariosRrhh();
+
+    alert("Nuevo usuario interno registrado correctamente. Acción mockeada.");
+});
+
+buscarUsuarioRrhh.addEventListener("input", filtrarUsuariosRrhh);
+filtroAreaRrhh.addEventListener("change", filtrarUsuariosRrhh);
+filtroEstadoRrhh.addEventListener("change", filtrarUsuariosRrhh);
+
+cargarResumenRrhh();
+cargarTablaUsuariosRrhh();
+</script>
+
+<script src="../../js/app.js"></script><script src="../../js/rrhh-usuarios.js"></script></body></html>

@@ -1,0 +1,372 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Fidelización</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="DESARROLLO_NEGOCIOS"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Desarrollo de Negocios</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="reportes.html" class=""><i>▥</i><span>Reportes</span></a><a href="indicadores.html" class=""><i>↗</i><span>Indicadores</span></a><a href="fidelizacion.html" class="active"><i>◎</i><span>Fidelización</span></a><a href="ejecutivo.html" class=""><i>▤</i><span>Dashboard ejecutivo</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">DESARROLLO DE NEGOCIOS</span>
+            <h1>Fidelización de clientes</h1>
+            <p>Seguimiento de estrategias para retener clientes, mejorar frecuencia de visitas y reducir riesgo de abandono.</p>
+        </div>
+
+        <button class="btn-primary" id="btnNuevaEstrategia">
+            Nueva estrategia
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Clientes fidelizados</span>
+            <h3 id="fidClientes">0</h3>
+            <p>Clientes con acciones activas de fidelización.</p>
+        </div>
+
+        <div class="card">
+            <span>Estrategias activas</span>
+            <h3 id="fidEstrategias">0</h3>
+            <p>Planes aplicados a segmentos de clientes.</p>
+        </div>
+
+        <div class="card">
+            <span>Retención estimada</span>
+            <h3 id="fidRetencion">0%</h3>
+            <p>Promedio de retención proyectada.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Riesgo alto</span>
+            <h3 id="fidRiesgo">0</h3>
+            <p>Clientes que requieren acción inmediata.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarFidelizacion" placeholder="Buscar cliente, segmento, estrategia o responsable...">
+
+        <select id="filtroSegmentoFidelizacion">
+            <option value="Todos">Todos los segmentos</option>
+            <option value="VIP">VIP</option>
+            <option value="Frecuente">Frecuente</option>
+            <option value="Nuevo">Nuevo</option>
+            <option value="Inactivo">Inactivo</option>
+        </select>
+
+        <select id="filtroRiesgoFidelizacion">
+            <option value="Todos">Todos los riesgos</option>
+            <option value="Bajo">Bajo</option>
+            <option value="Medio">Medio</option>
+            <option value="Alto">Alto</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>DNI</th>
+                    <th>Segmento</th>
+                    <th>Estrategia</th>
+                    <th>Retención</th>
+                    <th>Riesgo</th>
+                    <th>Responsable</th>
+                    <th>Acción recomendada</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaFidelizacion">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+<script>
+const fidelizacionNegocios = [
+    {
+        id: 1,
+        cliente: "Carlos Ramírez",
+        dni: "45678912",
+        correo: "carlos.ramirez@gmail.com",
+        segmento: "VIP",
+        estrategia: "Beneficios exclusivos",
+        retencion: "92%",
+        riesgo: "Bajo",
+        responsable: "Fernando Ruiz",
+        accion: "Mantener trato preferencial y bonos premium."
+    },
+    {
+        id: 2,
+        cliente: "Ana Torres",
+        dni: "74258963",
+        correo: "ana.torres@gmail.com",
+        segmento: "Frecuente",
+        estrategia: "Promociones por frecuencia",
+        retencion: "80%",
+        riesgo: "Bajo",
+        responsable: "Diego Salazar",
+        accion: "Enviar promociones personalizadas de tragamonedas."
+    },
+    {
+        id: 3,
+        cliente: "Luis Gómez",
+        dni: "65897412",
+        correo: "luis.gomez@gmail.com",
+        segmento: "Nuevo",
+        estrategia: "Campaña de bienvenida",
+        retencion: "58%",
+        riesgo: "Medio",
+        responsable: "Servicio al Cliente",
+        accion: "Acompañar al cliente y explicar beneficios."
+    },
+    {
+        id: 4,
+        cliente: "Jorge Salazar",
+        dni: "78965412",
+        correo: "jorge.salazar@gmail.com",
+        segmento: "Inactivo",
+        estrategia: "Campaña de recuperación",
+        retencion: "35%",
+        riesgo: "Alto",
+        responsable: "Fernando Ruiz",
+        accion: "Enviar bono de retorno y seguimiento directo."
+    },
+    {
+        id: 5,
+        cliente: "María Fernández",
+        dni: "48596712",
+        correo: "maria.fernandez@gmail.com",
+        segmento: "VIP",
+        estrategia: "Eventos premium",
+        retencion: "95%",
+        riesgo: "Bajo",
+        responsable: "Desarrollo de Negocios",
+        accion: "Invitar a eventos exclusivos de Poker Premium."
+    }
+];
+
+const tablaFidelizacion = document.getElementById("tablaFidelizacion");
+const buscarFidelizacion = document.getElementById("buscarFidelizacion");
+const filtroSegmentoFidelizacion = document.getElementById("filtroSegmentoFidelizacion");
+const filtroRiesgoFidelizacion = document.getElementById("filtroRiesgoFidelizacion");
+const btnNuevaEstrategia = document.getElementById("btnNuevaEstrategia");
+
+function claseSegmentoFidelizacion(segmento) {
+    if (segmento === "VIP") return "vip";
+    if (segmento === "Frecuente") return "success";
+    if (segmento === "Nuevo") return "blue";
+    if (segmento === "Inactivo") return "danger";
+    return "blue";
+}
+
+function claseRiesgoFidelizacion(riesgo) {
+    if (riesgo === "Bajo") return "success";
+    if (riesgo === "Medio") return "warning";
+    if (riesgo === "Alto") return "danger";
+    return "blue";
+}
+
+function numeroRetencion(valor) {
+    return parseInt(valor.replace("%", ""));
+}
+
+function cargarResumenFidelizacion() {
+    document.getElementById("fidClientes").textContent = fidelizacionNegocios.length;
+
+    document.getElementById("fidEstrategias").textContent =
+        new Set(fidelizacionNegocios.map(f => f.estrategia)).size;
+
+    const totalRetencion = fidelizacionNegocios.reduce((total, item) => {
+        return total + numeroRetencion(item.retencion);
+    }, 0);
+
+    const promedio = Math.round(totalRetencion / fidelizacionNegocios.length);
+
+    document.getElementById("fidRetencion").textContent = promedio + "%";
+
+    document.getElementById("fidRiesgo").textContent =
+        fidelizacionNegocios.filter(f => f.riesgo === "Alto").length;
+}
+
+function cargarTablaFidelizacion(lista = fidelizacionNegocios) {
+    tablaFidelizacion.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaFidelizacion.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron registros de fidelización con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(item => {
+        const fila = document.createElement("tr");
+        const porcentaje = numeroRetencion(item.retencion);
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${item.cliente}</strong>
+                    <span>${item.correo}</span>
+                </div>
+            </td>
+
+            <td>${item.dni}</td>
+
+            <td>
+                <span class="badge ${claseSegmentoFidelizacion(item.segmento)}">
+                    ${item.segmento}
+                </span>
+            </td>
+
+            <td>${item.estrategia}</td>
+
+            <td>
+                <strong>${item.retencion}</strong>
+                <div class="effect-bar">
+                    <div class="effect-fill" style="width:${porcentaje}%;"></div>
+                </div>
+            </td>
+
+            <td>
+                <span class="badge ${claseRiesgoFidelizacion(item.riesgo)}">
+                    ${item.riesgo}
+                </span>
+            </td>
+
+            <td>${item.responsable}</td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${item.accion}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verFidelizacion(${item.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="mejorarFidelizacion(${item.id})">Mejorar</button>
+                <button class="btn-action btn-delete" onclick="marcarRiesgoFidelizacion(${item.id})">Riesgo</button>
+            </td>
+        `;
+
+        tablaFidelizacion.appendChild(fila);
+    });
+}
+
+function filtrarFidelizacion() {
+    const texto = buscarFidelizacion.value.toLowerCase();
+    const segmento = filtroSegmentoFidelizacion.value;
+    const riesgo = filtroRiesgoFidelizacion.value;
+
+    const resultado = fidelizacionNegocios.filter(item => {
+        const coincideTexto =
+            item.cliente.toLowerCase().includes(texto) ||
+            item.dni.includes(texto) ||
+            item.segmento.toLowerCase().includes(texto) ||
+            item.estrategia.toLowerCase().includes(texto) ||
+            item.responsable.toLowerCase().includes(texto) ||
+            item.accion.toLowerCase().includes(texto);
+
+        const coincideSegmento =
+            segmento === "Todos" || item.segmento === segmento;
+
+        const coincideRiesgo =
+            riesgo === "Todos" || item.riesgo === riesgo;
+
+        return coincideTexto && coincideSegmento && coincideRiesgo;
+    });
+
+    cargarTablaFidelizacion(resultado);
+}
+
+function verFidelizacion(id) {
+    const item = fidelizacionNegocios.find(f => f.id === id);
+
+    if (!item) return;
+
+    alert(
+        `Cliente: ${item.cliente}\n` +
+        `DNI: ${item.dni}\n` +
+        `Segmento: ${item.segmento}\n` +
+        `Estrategia: ${item.estrategia}\n` +
+        `Retención: ${item.retencion}\n` +
+        `Riesgo: ${item.riesgo}\n` +
+        `Responsable: ${item.responsable}\n\n` +
+        `Acción recomendada: ${item.accion}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function mejorarFidelizacion(id) {
+    const item = fidelizacionNegocios.find(f => f.id === id);
+
+    if (!item) return;
+
+    item.retencion = "85%";
+    item.riesgo = "Bajo";
+    item.accion = "Estrategia reforzada con promoción personalizada.";
+
+    cargarResumenFidelizacion();
+    cargarTablaFidelizacion();
+
+    alert(`Estrategia de fidelización para "${item.cliente}" mejorada correctamente. Acción mockeada.`);
+}
+
+function marcarRiesgoFidelizacion(id) {
+    const item = fidelizacionNegocios.find(f => f.id === id);
+
+    if (!item) return;
+
+    const confirmar = confirm(`¿Deseas marcar a "${item.cliente}" como riesgo alto?`);
+
+    if (confirmar) {
+        item.riesgo = "Alto";
+        item.retencion = "35%";
+        item.accion = "Aplicar campaña de recuperación urgente.";
+
+        cargarResumenFidelizacion();
+        cargarTablaFidelizacion();
+
+        alert("Cliente marcado como riesgo alto. Acción mockeada.");
+    }
+}
+
+btnNuevaEstrategia.addEventListener("click", () => {
+    const nueva = {
+        id: fidelizacionNegocios.length + 1,
+        cliente: "Nuevo Cliente",
+        dni: "00000000",
+        correo: "nuevo.cliente@gmail.com",
+        segmento: "Nuevo",
+        estrategia: "Nueva estrategia comercial",
+        retencion: "50%",
+        riesgo: "Medio",
+        responsable: "Desarrollo de Negocios",
+        accion: "Definir acción de fidelización según perfil del cliente."
+    };
+
+    fidelizacionNegocios.push(nueva);
+
+    cargarResumenFidelizacion();
+    cargarTablaFidelizacion();
+
+    alert("Nueva estrategia de fidelización registrada correctamente. Acción mockeada.");
+});
+
+buscarFidelizacion.addEventListener("input", filtrarFidelizacion);
+filtroSegmentoFidelizacion.addEventListener("change", filtrarFidelizacion);
+filtroRiesgoFidelizacion.addEventListener("change", filtrarFidelizacion);
+
+cargarResumenFidelizacion();
+cargarTablaFidelizacion();
+</script>
+<script src="../../js/app.js"></script></body></html>

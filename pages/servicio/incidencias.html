@@ -1,0 +1,374 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Incidencias</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head>
+<body data-role="SERVICIO_CLIENTE"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Servicio al Cliente</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="clientes.html" class=""><i>♙</i><span>Clientes</span></a><a href="perfil-360.html" class=""><i>◎</i><span>Perfil 360°</span></a><a href="interacciones.html" class=""><i>✉</i><span>Interacciones</span></a><a href="incidencias.html" class="active"><i>!</i><span>Incidencias</span></a><a href="reservas.html" class=""><i>◈</i><span>Reservas y eventos</span></a><a href="preferencias.html" class=""><i>♡</i><span>Preferencias</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside>
+
+
+<main class="main-content">
+
+    <section class="page-section">
+
+        <div class="section-header">
+            <div>
+                <span class="eyebrow">SERVICIO AL CLIENTE</span>
+                <h1>Gestión de incidencias</h1>
+                <p>Registro, seguimiento y solución de reclamos, problemas o solicitudes presentadas por los clientes.</p>
+            </div>
+
+            <button class="btn-primary" id="btnNuevaIncidencia">
+                Nueva incidencia
+            </button>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card danger">
+                <span>Pendientes</span>
+                <h3 id="incPendientes">0</h3>
+                <p>Incidencias que aún no fueron atendidas.</p>
+            </div>
+
+            <div class="card">
+                <span>En proceso</span>
+                <h3 id="incProceso">0</h3>
+                <p>Casos que están siendo revisados.</p>
+            </div>
+
+            <div class="card">
+                <span>Resueltas</span>
+                <h3 id="incResueltas">0</h3>
+                <p>Incidencias cerradas correctamente.</p>
+            </div>
+
+            <div class="card">
+                <span>Total registradas</span>
+                <h3 id="incTotal">0</h3>
+                <p>Historial general de incidencias.</p>
+            </div>
+        </div>
+
+        <div class="filters-box">
+            <input type="text" id="buscarIncidencia" placeholder="Buscar cliente, DNI, tipo o responsable...">
+
+            <select id="filtroTipoIncidencia">
+                <option value="Todos">Todos los tipos</option>
+                <option value="Reclamo">Reclamo</option>
+                <option value="Solicitud">Solicitud</option>
+                <option value="Problema técnico">Problema técnico</option>
+                <option value="Promoción no aplicada">Promoción no aplicada</option>
+            </select>
+
+            <select id="filtroEstadoIncidencia">
+                <option value="Todos">Todos los estados</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="En proceso">En proceso</option>
+                <option value="Resuelta">Resuelta</option>
+            </select>
+        </div>
+
+        <div class="table-panel">
+            <table class="crm-table">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>DNI</th>
+                        <th>Tipo</th>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+                        <th>Responsable</th>
+                        <th>Solución</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaIncidencias">
+                    <!-- Se llena con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+
+
+
+
+</div><div class="toast" id="toast"></div>
+    
+    <script>
+const incidenciasServicio = [
+    {
+        id: 1,
+        cliente: "Jorge Salazar",
+        dni: "78965412",
+        correo: "jorge.salazar@gmail.com",
+        tipo: "Promoción no aplicada",
+        fecha: "05/06/2026",
+        descripcion: "Cliente indica que una promoción ofrecida por SMS no fue aplicada en caja.",
+        estado: "Pendiente",
+        responsable: "María Torres",
+        solucion: "Pendiente de validación con Marketing."
+    },
+    {
+        id: 2,
+        cliente: "Luis Gómez",
+        dni: "65897412",
+        correo: "luis.gomez@gmail.com",
+        tipo: "Solicitud",
+        fecha: "19/07/2026",
+        descripcion: "Cliente solicita información sobre acumulación de beneficios y categorías.",
+        estado: "En proceso",
+        responsable: "Servicio al Cliente",
+        solucion: "Se brindará orientación y seguimiento personalizado."
+    },
+    {
+        id: 3,
+        cliente: "Carlos Ramírez",
+        dni: "45678912",
+        correo: "carlos.ramirez@gmail.com",
+        tipo: "Reclamo",
+        fecha: "22/07/2026",
+        descripcion: "Cliente VIP reporta demora en atención preferencial.",
+        estado: "Resuelta",
+        responsable: "María Torres",
+        solucion: "Se ofreció disculpa formal y beneficio VIP adicional."
+    },
+    {
+        id: 4,
+        cliente: "Ana Torres",
+        dni: "74258963",
+        correo: "ana.torres@gmail.com",
+        tipo: "Problema técnico",
+        fecha: "28/07/2026",
+        descripcion: "Cliente indica que no pudo visualizar una promoción enviada por correo.",
+        estado: "En proceso",
+        responsable: "Soporte TI",
+        solucion: "Se revisa configuración del canal digital."
+    },
+    {
+        id: 5,
+        cliente: "María Fernández",
+        dni: "48596712",
+        correo: "maria.fernandez@gmail.com",
+        tipo: "Solicitud",
+        fecha: "01/08/2026",
+        descripcion: "Cliente solicita reserva para evento Poker Premium.",
+        estado: "Resuelta",
+        responsable: "Servicio al Cliente",
+        solucion: "Reserva confirmada y registrada correctamente."
+    }
+];
+
+const tablaIncidencias = document.getElementById("tablaIncidencias");
+const buscarIncidencia = document.getElementById("buscarIncidencia");
+const filtroTipoIncidencia = document.getElementById("filtroTipoIncidencia");
+const filtroEstadoIncidencia = document.getElementById("filtroEstadoIncidencia");
+const btnNuevaIncidencia = document.getElementById("btnNuevaIncidencia");
+
+function claseTipoIncidencia(tipo) {
+    if (tipo === "Reclamo") return "danger";
+    if (tipo === "Solicitud") return "blue";
+    if (tipo === "Problema técnico") return "warning";
+    if (tipo === "Promoción no aplicada") return "vip";
+    return "blue";
+}
+
+function claseEstadoIncidencia(estado) {
+    if (estado === "Pendiente") return "danger";
+    if (estado === "En proceso") return "warning";
+    if (estado === "Resuelta") return "success";
+    return "blue";
+}
+
+function cargarResumenIncidencias() {
+    document.getElementById("incPendientes").textContent =
+        incidenciasServicio.filter(i => i.estado === "Pendiente").length;
+
+    document.getElementById("incProceso").textContent =
+        incidenciasServicio.filter(i => i.estado === "En proceso").length;
+
+    document.getElementById("incResueltas").textContent =
+        incidenciasServicio.filter(i => i.estado === "Resuelta").length;
+
+    document.getElementById("incTotal").textContent = incidenciasServicio.length;
+}
+
+function cargarTablaIncidencias(lista = incidenciasServicio) {
+    tablaIncidencias.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaIncidencias.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron incidencias con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(item => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${item.cliente}</strong>
+                    <span>${item.correo}</span>
+                </div>
+            </td>
+
+            <td>${item.dni}</td>
+
+            <td>
+                <span class="badge ${claseTipoIncidencia(item.tipo)}">
+                    ${item.tipo}
+                </span>
+            </td>
+
+            <td>${item.fecha}</td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${item.descripcion}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${claseEstadoIncidencia(item.estado)}">
+                    ${item.estado}
+                </span>
+            </td>
+
+            <td>${item.responsable}</td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${item.solucion}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verIncidencia(${item.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="procesarIncidencia(${item.id})">Procesar</button>
+                <button class="btn-action btn-delete" onclick="resolverIncidencia(${item.id})">Resolver</button>
+            </td>
+        `;
+
+        tablaIncidencias.appendChild(fila);
+    });
+}
+
+function filtrarIncidencias() {
+    const texto = buscarIncidencia.value.toLowerCase();
+    const tipo = filtroTipoIncidencia.value;
+    const estado = filtroEstadoIncidencia.value;
+
+    const resultado = incidenciasServicio.filter(item => {
+        const coincideTexto =
+            item.cliente.toLowerCase().includes(texto) ||
+            item.dni.includes(texto) ||
+            item.tipo.toLowerCase().includes(texto) ||
+            item.responsable.toLowerCase().includes(texto) ||
+            item.descripcion.toLowerCase().includes(texto);
+
+        const coincideTipo =
+            tipo === "Todos" || item.tipo === tipo;
+
+        const coincideEstado =
+            estado === "Todos" || item.estado === estado;
+
+        return coincideTexto && coincideTipo && coincideEstado;
+    });
+
+    cargarTablaIncidencias(resultado);
+}
+
+function verIncidencia(id) {
+    const item = incidenciasServicio.find(i => i.id === id);
+
+    if (!item) return;
+
+    alert(
+        `Cliente: ${item.cliente}\n` +
+        `DNI: ${item.dni}\n` +
+        `Tipo: ${item.tipo}\n` +
+        `Fecha: ${item.fecha}\n` +
+        `Estado: ${item.estado}\n` +
+        `Responsable: ${item.responsable}\n\n` +
+        `Descripción: ${item.descripcion}\n\n` +
+        `Solución: ${item.solucion}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function procesarIncidencia(id) {
+    const item = incidenciasServicio.find(i => i.id === id);
+
+    if (!item) return;
+
+    item.estado = "En proceso";
+    item.solucion = "Incidencia derivada para revisión y seguimiento.";
+
+    cargarResumenIncidencias();
+    cargarTablaIncidencias();
+
+    alert(`Incidencia de "${item.cliente}" enviada a proceso. Acción mockeada.`);
+}
+
+function resolverIncidencia(id) {
+    const item = incidenciasServicio.find(i => i.id === id);
+
+    if (!item) return;
+
+    const confirmar = confirm(`¿Deseas marcar como resuelta la incidencia de "${item.cliente}"?`);
+
+    if (confirmar) {
+        item.estado = "Resuelta";
+        item.solucion = "Incidencia atendida y cerrada correctamente.";
+
+        cargarResumenIncidencias();
+        cargarTablaIncidencias();
+
+        alert("Incidencia resuelta correctamente. Acción mockeada.");
+    }
+}
+
+btnNuevaIncidencia.addEventListener("click", () => {
+    const nueva = {
+        id: incidenciasServicio.length + 1,
+        cliente: "Nuevo Cliente",
+        dni: "00000000",
+        correo: "nuevo.cliente@gmail.com",
+        tipo: "Solicitud",
+        fecha: "05/08/2026",
+        descripcion: "Registro mockeado de una nueva incidencia o solicitud del cliente.",
+        estado: "Pendiente",
+        responsable: "Servicio al Cliente",
+        solucion: "Pendiente de atención."
+    };
+
+    incidenciasServicio.push(nueva);
+
+    cargarResumenIncidencias();
+    cargarTablaIncidencias();
+
+    alert("Nueva incidencia registrada correctamente. Acción mockeada.");
+});
+
+buscarIncidencia.addEventListener("input", filtrarIncidencias);
+filtroTipoIncidencia.addEventListener("change", filtrarIncidencias);
+filtroEstadoIncidencia.addEventListener("change", filtrarIncidencias);
+
+cargarResumenIncidencias();
+cargarTablaIncidencias();
+</script>
+    <script src="../../js/app.js"></script>
+</body>
+</html>

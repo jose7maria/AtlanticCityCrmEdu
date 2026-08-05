@@ -1,0 +1,360 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Reservas de clientes</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="SERVICIO_CLIENTE"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Servicio al Cliente</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="clientes.html" class=""><i>♙</i><span>Clientes</span></a><a href="perfil-360.html" class=""><i>◎</i><span>Perfil 360°</span></a><a href="interacciones.html" class=""><i>✉</i><span>Interacciones</span></a><a href="incidencias.html" class=""><i>!</i><span>Incidencias</span></a><a href="reservas.html" class="active"><i>◈</i><span>Reservas y eventos</span></a><a href="preferencias.html" class=""><i>♡</i><span>Preferencias</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside>
+
+
+<main class="main-content">
+
+    <section class="page-section">
+
+        <div class="section-header">
+            <div>
+                <span class="eyebrow">SERVICIO AL CLIENTE</span>
+                <h1>Reservas de clientes</h1>
+                <p>Registro y seguimiento de reservas solicitadas por clientes para eventos, salas VIP y atenciones especiales.</p>
+            </div>
+
+            <button class="btn-primary" id="btnNuevaReserva">
+                Nueva reserva
+            </button>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <span>Total reservas</span>
+                <h3 id="resTotal">0</h3>
+                <p>Reservas registradas por atención al cliente.</p>
+            </div>
+
+            <div class="card">
+                <span>Confirmadas</span>
+                <h3 id="resConfirmadas">0</h3>
+                <p>Reservas aprobadas y listas para atención.</p>
+            </div>
+
+            <div class="card">
+                <span>Pendientes</span>
+                <h3 id="resPendientes">0</h3>
+                <p>Reservas que requieren validación.</p>
+            </div>
+
+            <div class="card danger">
+                <span>Canceladas</span>
+                <h3 id="resCanceladas">0</h3>
+                <p>Reservas anuladas o rechazadas.</p>
+            </div>
+        </div>
+
+        <div class="filters-box">
+            <input type="text" id="buscarReserva" placeholder="Buscar cliente, DNI, tipo o responsable...">
+
+            <select id="filtroTipoReserva">
+                <option value="Todos">Todos los tipos</option>
+                <option value="Sala VIP">Sala VIP</option>
+                <option value="Evento especial">Evento especial</option>
+                <option value="Atención preferencial">Atención preferencial</option>
+                <option value="Mesa de juego">Mesa de juego</option>
+            </select>
+
+            <select id="filtroEstadoReserva">
+                <option value="Todos">Todos los estados</option>
+                <option value="Confirmada">Confirmada</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Cancelada">Cancelada</option>
+            </select>
+        </div>
+
+        <div class="table-panel">
+            <table class="crm-table">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>DNI</th>
+                        <th>Tipo de reserva</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Área</th>
+                        <th>Estado</th>
+                        <th>Responsable</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaReservas">
+                    <!-- Se llena con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+
+
+</div><div class="toast" id="toast"></div>
+
+<script>
+const reservasServicio = [
+    {
+        id: 1,
+        cliente: "Carlos Ramírez",
+        dni: "45678912",
+        correo: "carlos.ramirez@gmail.com",
+        tipo: "Sala VIP",
+        fecha: "08/08/2026",
+        hora: "21:00",
+        area: "Zona VIP",
+        estado: "Confirmada",
+        responsable: "María Torres"
+    },
+    {
+        id: 2,
+        cliente: "María Fernández",
+        dni: "48596712",
+        correo: "maria.fernandez@gmail.com",
+        tipo: "Evento especial",
+        fecha: "10/08/2026",
+        hora: "20:30",
+        area: "Poker Premium",
+        estado: "Confirmada",
+        responsable: "Servicio al Cliente"
+    },
+    {
+        id: 3,
+        cliente: "Luis Gómez",
+        dni: "65897412",
+        correo: "luis.gomez@gmail.com",
+        tipo: "Atención preferencial",
+        fecha: "12/08/2026",
+        hora: "19:00",
+        area: "Recepción",
+        estado: "Pendiente",
+        responsable: "María Torres"
+    },
+    {
+        id: 4,
+        cliente: "Ana Torres",
+        dni: "74258963",
+        correo: "ana.torres@gmail.com",
+        tipo: "Mesa de juego",
+        fecha: "09/08/2026",
+        hora: "22:00",
+        area: "Tragamonedas",
+        estado: "Pendiente",
+        responsable: "Servicio al Cliente"
+    },
+    {
+        id: 5,
+        cliente: "Jorge Salazar",
+        dni: "78965412",
+        correo: "jorge.salazar@gmail.com",
+        tipo: "Evento especial",
+        fecha: "06/08/2026",
+        hora: "18:00",
+        area: "Apuestas deportivas",
+        estado: "Cancelada",
+        responsable: "María Torres"
+    }
+];
+
+const tablaReservas = document.getElementById("tablaReservas");
+const buscarReserva = document.getElementById("buscarReserva");
+const filtroTipoReserva = document.getElementById("filtroTipoReserva");
+const filtroEstadoReserva = document.getElementById("filtroEstadoReserva");
+const btnNuevaReserva = document.getElementById("btnNuevaReserva");
+
+function claseTipoReserva(tipo) {
+    if (tipo === "Sala VIP") return "vip";
+    if (tipo === "Evento especial") return "blue";
+    if (tipo === "Atención preferencial") return "success";
+    if (tipo === "Mesa de juego") return "warning";
+    return "blue";
+}
+
+function claseEstadoReserva(estado) {
+    if (estado === "Confirmada") return "success";
+    if (estado === "Pendiente") return "warning";
+    if (estado === "Cancelada") return "danger";
+    return "blue";
+}
+
+function cargarResumenReservas() {
+    document.getElementById("resTotal").textContent = reservasServicio.length;
+
+    document.getElementById("resConfirmadas").textContent =
+        reservasServicio.filter(r => r.estado === "Confirmada").length;
+
+    document.getElementById("resPendientes").textContent =
+        reservasServicio.filter(r => r.estado === "Pendiente").length;
+
+    document.getElementById("resCanceladas").textContent =
+        reservasServicio.filter(r => r.estado === "Cancelada").length;
+}
+
+function cargarTablaReservas(lista = reservasServicio) {
+    tablaReservas.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaReservas.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron reservas con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(reserva => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${reserva.cliente}</strong>
+                    <span>${reserva.correo}</span>
+                </div>
+            </td>
+
+            <td>${reserva.dni}</td>
+
+            <td>
+                <span class="badge ${claseTipoReserva(reserva.tipo)}">
+                    ${reserva.tipo}
+                </span>
+            </td>
+
+            <td>${reserva.fecha}</td>
+
+            <td>${reserva.hora}</td>
+
+            <td>${reserva.area}</td>
+
+            <td>
+                <span class="badge ${claseEstadoReserva(reserva.estado)}">
+                    ${reserva.estado}
+                </span>
+            </td>
+
+            <td>${reserva.responsable}</td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verReserva(${reserva.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="confirmarReserva(${reserva.id})">Confirmar</button>
+                <button class="btn-action btn-delete" onclick="cancelarReserva(${reserva.id})">Cancelar</button>
+            </td>
+        `;
+
+        tablaReservas.appendChild(fila);
+    });
+}
+
+function filtrarReservas() {
+    const texto = buscarReserva.value.toLowerCase();
+    const tipo = filtroTipoReserva.value;
+    const estado = filtroEstadoReserva.value;
+
+    const resultado = reservasServicio.filter(reserva => {
+        const coincideTexto =
+            reserva.cliente.toLowerCase().includes(texto) ||
+            reserva.dni.includes(texto) ||
+            reserva.tipo.toLowerCase().includes(texto) ||
+            reserva.area.toLowerCase().includes(texto) ||
+            reserva.responsable.toLowerCase().includes(texto);
+
+        const coincideTipo =
+            tipo === "Todos" || reserva.tipo === tipo;
+
+        const coincideEstado =
+            estado === "Todos" || reserva.estado === estado;
+
+        return coincideTexto && coincideTipo && coincideEstado;
+    });
+
+    cargarTablaReservas(resultado);
+}
+
+function verReserva(id) {
+    const reserva = reservasServicio.find(r => r.id === id);
+
+    if (!reserva) return;
+
+    alert(
+        `Cliente: ${reserva.cliente}\n` +
+        `DNI: ${reserva.dni}\n` +
+        `Tipo: ${reserva.tipo}\n` +
+        `Fecha: ${reserva.fecha}\n` +
+        `Hora: ${reserva.hora}\n` +
+        `Área: ${reserva.area}\n` +
+        `Estado: ${reserva.estado}\n` +
+        `Responsable: ${reserva.responsable}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function confirmarReserva(id) {
+    const reserva = reservasServicio.find(r => r.id === id);
+
+    if (!reserva) return;
+
+    reserva.estado = "Confirmada";
+
+    cargarResumenReservas();
+    cargarTablaReservas();
+
+    alert(`Reserva de "${reserva.cliente}" confirmada correctamente. Acción mockeada.`);
+}
+
+function cancelarReserva(id) {
+    const reserva = reservasServicio.find(r => r.id === id);
+
+    if (!reserva) return;
+
+    const confirmar = confirm(`¿Deseas cancelar la reserva de "${reserva.cliente}"?`);
+
+    if (confirmar) {
+        reserva.estado = "Cancelada";
+
+        cargarResumenReservas();
+        cargarTablaReservas();
+
+        alert("Reserva cancelada correctamente. Acción mockeada.");
+    }
+}
+
+btnNuevaReserva.addEventListener("click", () => {
+    const nueva = {
+        id: reservasServicio.length + 1,
+        cliente: "Nuevo Cliente",
+        dni: "00000000",
+        correo: "nuevo.cliente@gmail.com",
+        tipo: "Atención preferencial",
+        fecha: "15/08/2026",
+        hora: "20:00",
+        area: "Recepción",
+        estado: "Pendiente",
+        responsable: "Servicio al Cliente"
+    };
+
+    reservasServicio.push(nueva);
+
+    cargarResumenReservas();
+    cargarTablaReservas();
+
+    alert("Nueva reserva registrada correctamente. Acción mockeada.");
+});
+
+buscarReserva.addEventListener("input", filtrarReservas);
+filtroTipoReserva.addEventListener("change", filtrarReservas);
+filtroEstadoReserva.addEventListener("change", filtrarReservas);
+
+cargarResumenReservas();
+cargarTablaReservas();
+</script>
+
+<script src="../../js/app.js"></script></body></html>

@@ -1,0 +1,349 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Auditoría general</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="ADMINISTRADOR"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Administración General</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen general</span></a><a href="usuarios.html" class=""><i>♙</i><span>Usuarios y accesos</span></a><a href="auditoria.html" class="active"><i>▣</i><span>Auditoría</span></a><a href="configuracion.html" class=""><i>⚙</i><span>Configuración</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">ADMINISTRACIÓN GENERAL</span>
+            <h1>Auditoría general</h1>
+            <p>Supervisión administrativa de accesos, cambios, eliminaciones, configuraciones y acciones críticas del sistema.</p>
+        </div>
+
+        <button class="btn-primary" id="btnActualizarAuditoriaAdmin">
+            Actualizar auditoría
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Eventos registrados</span>
+            <h3 id="adminAudTotal">0</h3>
+            <p>Acciones trazadas dentro del sistema.</p>
+        </div>
+
+        <div class="card">
+            <span>Eventos revisados</span>
+            <h3 id="adminAudRevisados">0</h3>
+            <p>Acciones validadas por administración.</p>
+        </div>
+
+        <div class="card">
+            <span>Usuarios involucrados</span>
+            <h3 id="adminAudUsuarios">0</h3>
+            <p>Usuarios internos con acciones registradas.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Eventos críticos</span>
+            <h3 id="adminAudCriticos">0</h3>
+            <p>Acciones que requieren control inmediato.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarAuditoriaAdmin" placeholder="Buscar evento, usuario, módulo o responsable...">
+
+        <select id="filtroTipoAuditoriaAdmin">
+            <option value="Todos">Todos los tipos</option>
+            <option value="Acceso">Acceso</option>
+            <option value="Creación">Creación</option>
+            <option value="Edición">Edición</option>
+            <option value="Eliminación">Eliminación</option>
+            <option value="Configuración">Configuración</option>
+        </select>
+
+        <select id="filtroEstadoAuditoriaAdmin">
+            <option value="Todos">Todos los estados</option>
+            <option value="Registrado">Registrado</option>
+            <option value="Revisado">Revisado</option>
+            <option value="En revisión">En revisión</option>
+            <option value="Crítico">Crítico</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Evento</th>
+                    <th>Usuario</th>
+                    <th>Módulo</th>
+                    <th>Tipo</th>
+                    <th>Fecha y hora</th>
+                    <th>Estado</th>
+                    <th>Responsable</th>
+                    <th>Detalle</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaAuditoriaAdmin">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+<script>
+const auditoriaAdmin = [
+    {
+        id: 1,
+        evento: "Inicio de sesión administrativo",
+        usuario: "admin.general",
+        modulo: "Administración General",
+        tipo: "Acceso",
+        fechaHora: "05/08/2026 16:20",
+        estado: "Registrado",
+        responsable: "Sistema",
+        detalle: "Ingreso correcto del administrador general al panel principal."
+    },
+    {
+        id: 2,
+        evento: "Creación de usuario interno",
+        usuario: "admin.general",
+        modulo: "Usuarios",
+        tipo: "Creación",
+        fechaHora: "05/08/2026 16:25",
+        estado: "Revisado",
+        responsable: "Administrador General",
+        detalle: "Registro mockeado de nuevo usuario interno para pruebas."
+    },
+    {
+        id: 3,
+        evento: "Edición de estado de usuario",
+        usuario: "admin.general",
+        modulo: "Usuarios",
+        tipo: "Edición",
+        fechaHora: "05/08/2026 16:30",
+        estado: "Revisado",
+        responsable: "Administrador General",
+        detalle: "Actualización mockeada del estado de acceso de un usuario."
+    },
+    {
+        id: 4,
+        evento: "Inactivación de usuario",
+        usuario: "admin.general",
+        modulo: "Usuarios",
+        tipo: "Eliminación",
+        fechaHora: "05/08/2026 16:35",
+        estado: "Crítico",
+        responsable: "Administrador General",
+        detalle: "Usuario marcado como inactivo. Acción registrada para trazabilidad."
+    },
+    {
+        id: 5,
+        evento: "Cambio de configuración general",
+        usuario: "admin.general",
+        modulo: "Configuración",
+        tipo: "Configuración",
+        fechaHora: "05/08/2026 16:40",
+        estado: "En revisión",
+        responsable: "Administrador General",
+        detalle: "Cambio mockeado en parámetros generales del sistema."
+    },
+    {
+        id: 6,
+        evento: "Consulta de auditoría TI",
+        usuario: "andrea.paredes",
+        modulo: "Auditoría TI",
+        tipo: "Acceso",
+        fechaHora: "05/08/2026 16:45",
+        estado: "Registrado",
+        responsable: "TI",
+        detalle: "Consulta de eventos técnicos desde el área de Tecnología de la Información."
+    }
+];
+
+const tablaAuditoriaAdmin = document.getElementById("tablaAuditoriaAdmin");
+const buscarAuditoriaAdmin = document.getElementById("buscarAuditoriaAdmin");
+const filtroTipoAuditoriaAdmin = document.getElementById("filtroTipoAuditoriaAdmin");
+const filtroEstadoAuditoriaAdmin = document.getElementById("filtroEstadoAuditoriaAdmin");
+const btnActualizarAuditoriaAdmin = document.getElementById("btnActualizarAuditoriaAdmin");
+
+function claseTipoAuditoriaAdmin(tipo) {
+    if (tipo === "Acceso") return "success";
+    if (tipo === "Creación") return "blue";
+    if (tipo === "Edición") return "warning";
+    if (tipo === "Eliminación") return "danger";
+    if (tipo === "Configuración") return "vip";
+    return "blue";
+}
+
+function claseEstadoAuditoriaAdmin(estado) {
+    if (estado === "Registrado") return "success";
+    if (estado === "Revisado") return "blue";
+    if (estado === "En revisión") return "warning";
+    if (estado === "Crítico") return "danger";
+    return "blue";
+}
+
+function cargarResumenAuditoriaAdmin() {
+    document.getElementById("adminAudTotal").textContent = auditoriaAdmin.length;
+
+    document.getElementById("adminAudRevisados").textContent =
+        auditoriaAdmin.filter(a => a.estado === "Revisado").length;
+
+    const usuariosUnicos = new Set(auditoriaAdmin.map(a => a.usuario));
+    document.getElementById("adminAudUsuarios").textContent = usuariosUnicos.size;
+
+    document.getElementById("adminAudCriticos").textContent =
+        auditoriaAdmin.filter(a => a.estado === "Crítico").length;
+}
+
+function cargarTablaAuditoriaAdmin(lista = auditoriaAdmin) {
+    tablaAuditoriaAdmin.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaAuditoriaAdmin.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron eventos de auditoría con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(item => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${item.evento}</strong>
+                    <span>ID auditoría: ${item.id}</span>
+                </div>
+            </td>
+
+            <td>${item.usuario}</td>
+
+            <td>${item.modulo}</td>
+
+            <td>
+                <span class="badge ${claseTipoAuditoriaAdmin(item.tipo)}">
+                    ${item.tipo}
+                </span>
+            </td>
+
+            <td>${item.fechaHora}</td>
+
+            <td>
+                <span class="badge ${claseEstadoAuditoriaAdmin(item.estado)}">
+                    ${item.estado}
+                </span>
+            </td>
+
+            <td>${item.responsable}</td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${item.detalle}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verAuditoriaAdmin(${item.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="revisarAuditoriaAdmin(${item.id})">Revisar</button>
+                <button class="btn-action btn-delete" onclick="criticoAuditoriaAdmin(${item.id})">Crítico</button>
+            </td>
+        `;
+
+        tablaAuditoriaAdmin.appendChild(fila);
+    });
+}
+
+function filtrarAuditoriaAdmin() {
+    const texto = buscarAuditoriaAdmin.value.toLowerCase();
+    const tipo = filtroTipoAuditoriaAdmin.value;
+    const estado = filtroEstadoAuditoriaAdmin.value;
+
+    const resultado = auditoriaAdmin.filter(item => {
+        const coincideTexto =
+            item.evento.toLowerCase().includes(texto) ||
+            item.usuario.toLowerCase().includes(texto) ||
+            item.modulo.toLowerCase().includes(texto) ||
+            item.responsable.toLowerCase().includes(texto) ||
+            item.detalle.toLowerCase().includes(texto);
+
+        const coincideTipo =
+            tipo === "Todos" || item.tipo === tipo;
+
+        const coincideEstado =
+            estado === "Todos" || item.estado === estado;
+
+        return coincideTexto && coincideTipo && coincideEstado;
+    });
+
+    cargarTablaAuditoriaAdmin(resultado);
+}
+
+function verAuditoriaAdmin(id) {
+    const item = auditoriaAdmin.find(a => a.id === id);
+
+    if (!item) return;
+
+    alert(
+        `Evento: ${item.evento}\n` +
+        `Usuario: ${item.usuario}\n` +
+        `Módulo: ${item.modulo}\n` +
+        `Tipo: ${item.tipo}\n` +
+        `Fecha y hora: ${item.fechaHora}\n` +
+        `Estado: ${item.estado}\n` +
+        `Responsable: ${item.responsable}\n\n` +
+        `Detalle: ${item.detalle}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function revisarAuditoriaAdmin(id) {
+    const item = auditoriaAdmin.find(a => a.id === id);
+
+    if (!item) return;
+
+    item.estado = "Revisado";
+    item.detalle = "Evento revisado desde Administración General.";
+
+    cargarResumenAuditoriaAdmin();
+    cargarTablaAuditoriaAdmin();
+
+    alert(`Evento "${item.evento}" revisado correctamente. Acción mockeada.`);
+}
+
+function criticoAuditoriaAdmin(id) {
+    const item = auditoriaAdmin.find(a => a.id === id);
+
+    if (!item) return;
+
+    const confirmar = confirm(`¿Deseas marcar como crítico el evento "${item.evento}"?`);
+
+    if (confirmar) {
+        item.estado = "Crítico";
+        item.detalle = "Evento marcado como crítico para revisión administrativa.";
+
+        cargarResumenAuditoriaAdmin();
+        cargarTablaAuditoriaAdmin();
+
+        alert("Evento marcado como crítico. Acción mockeada.");
+    }
+}
+
+btnActualizarAuditoriaAdmin.addEventListener("click", () => {
+    cargarResumenAuditoriaAdmin();
+    cargarTablaAuditoriaAdmin();
+
+    alert("Auditoría general actualizada correctamente. Acción mockeada.");
+});
+
+buscarAuditoriaAdmin.addEventListener("input", filtrarAuditoriaAdmin);
+filtroTipoAuditoriaAdmin.addEventListener("change", filtrarAuditoriaAdmin);
+filtroEstadoAuditoriaAdmin.addEventListener("change", filtrarAuditoriaAdmin);
+
+cargarResumenAuditoriaAdmin();
+cargarTablaAuditoriaAdmin();
+</script>
+<script src="../../js/app.js"></script></body></html>

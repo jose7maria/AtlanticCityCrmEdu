@@ -1,0 +1,339 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Telefonía TI</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="TECNOLOGIA_INFORMACION"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Tecnología de la Información</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="usuarios-roles.html" class=""><i>♙</i><span>Usuarios y roles</span></a><a href="monitoreo.html" class=""><i>◇</i><span>Monitoreo</span></a><a href="telefonia.html" class="active"><i>☎</i><span>Central telefónica</span></a><a href="sistemas-sala.html" class=""><i>↔</i><span>Sistemas de sala</span></a><a href="auditoria.html" class=""><i>▣</i><span>Auditoría</span></a><a href="seguridad.html" class=""><i>⚿</i><span>Seguridad</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">TECNOLOGÍA DE LA INFORMACIÓN</span>
+            <h1>Telefonía e integración futura</h1>
+            <p>Seguimiento técnico de llamadas, canales telefónicos y futura integración con central telefónica.</p>
+        </div>
+
+        <button class="btn-primary" id="btnActualizarTelefonia">
+            Actualizar estado
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Llamadas registradas</span>
+            <h3 id="telLlamadas">0</h3>
+            <p>Registros mockeados para seguimiento telefónico.</p>
+        </div>
+
+        <div class="card">
+            <span>Canales disponibles</span>
+            <h3 id="telCanales">0</h3>
+            <p>Medios telefónicos o de contacto identificados.</p>
+        </div>
+
+        <div class="card">
+            <span>Derivadas a CRM</span>
+            <h3 id="telDerivadas">0</h3>
+            <p>Llamadas asociadas a atención o incidencias.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Pendientes TI</span>
+            <h3 id="telPendientes">0</h3>
+            <p>Elementos pendientes para futura integración.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarTelefonia" placeholder="Buscar cliente, canal, motivo o responsable...">
+
+        <select id="filtroCanalTelefonia">
+            <option value="Todos">Todos los canales</option>
+            <option value="Central telefónica">Central telefónica</option>
+            <option value="WhatsApp">WhatsApp</option>
+            <option value="Llamada directa">Llamada directa</option>
+            <option value="Mesa de ayuda">Mesa de ayuda</option>
+        </select>
+
+        <select id="filtroEstadoTelefonia">
+            <option value="Todos">Todos los estados</option>
+            <option value="Registrado">Registrado</option>
+            <option value="Derivado a CRM">Derivado a CRM</option>
+            <option value="Pendiente TI">Pendiente TI</option>
+            <option value="Futuro">Futuro</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Registro</th>
+                    <th>Cliente / Usuario</th>
+                    <th>Canal</th>
+                    <th>Motivo</th>
+                    <th>Área vinculada</th>
+                    <th>Estado</th>
+                    <th>Responsable</th>
+                    <th>Observación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaTelefonia">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+<script>
+const telefoniaTi = [
+    {
+        id: 1,
+        registro: "Llamada de consulta",
+        cliente: "Carlos Ramírez",
+        canal: "Llamada directa",
+        motivo: "Consulta sobre beneficio VIP",
+        area: "Servicio al Cliente",
+        estado: "Derivado a CRM",
+        responsable: "María Torres",
+        observacion: "La llamada fue registrada como interacción del cliente."
+    },
+    {
+        id: 2,
+        registro: "Comunicación por WhatsApp",
+        cliente: "Ana Torres",
+        canal: "WhatsApp",
+        motivo: "Consulta de promoción",
+        area: "Marketing",
+        estado: "Registrado",
+        responsable: "Diego Salazar",
+        observacion: "Comunicación asociada a campaña promocional."
+    },
+    {
+        id: 3,
+        registro: "Reclamo telefónico",
+        cliente: "Jorge Salazar",
+        canal: "Central telefónica",
+        motivo: "Promoción no aplicada",
+        area: "Servicio al Cliente",
+        estado: "Derivado a CRM",
+        responsable: "María Torres",
+        observacion: "Se generó incidencia para seguimiento."
+    },
+    {
+        id: 4,
+        registro: "Revisión de integración",
+        cliente: "Sistema interno",
+        canal: "Central telefónica",
+        motivo: "Evaluar conexión con CRM",
+        area: "Tecnología de la Información",
+        estado: "Pendiente TI",
+        responsable: "Andrea Paredes",
+        observacion: "Integración considerada como mejora futura, no implementada en esta etapa."
+    },
+    {
+        id: 5,
+        registro: "Mesa de ayuda",
+        cliente: "Usuario interno",
+        canal: "Mesa de ayuda",
+        motivo: "Consulta sobre registro de llamadas",
+        area: "Tecnología de la Información",
+        estado: "Futuro",
+        responsable: "TI",
+        observacion: "Funcionalidad proyectada para una siguiente versión."
+    }
+];
+
+const tablaTelefonia = document.getElementById("tablaTelefonia");
+const buscarTelefonia = document.getElementById("buscarTelefonia");
+const filtroCanalTelefonia = document.getElementById("filtroCanalTelefonia");
+const filtroEstadoTelefonia = document.getElementById("filtroEstadoTelefonia");
+const btnActualizarTelefonia = document.getElementById("btnActualizarTelefonia");
+
+function claseCanalTelefonia(canal) {
+    if (canal === "Central telefónica") return "warning";
+    if (canal === "WhatsApp") return "success";
+    if (canal === "Llamada directa") return "blue";
+    if (canal === "Mesa de ayuda") return "vip";
+    return "blue";
+}
+
+function claseEstadoTelefonia(estado) {
+    if (estado === "Registrado") return "success";
+    if (estado === "Derivado a CRM") return "blue";
+    if (estado === "Pendiente TI") return "danger";
+    if (estado === "Futuro") return "warning";
+    return "blue";
+}
+
+function cargarResumenTelefonia() {
+    document.getElementById("telLlamadas").textContent = telefoniaTi.length;
+
+    const canalesUnicos = new Set(telefoniaTi.map(t => t.canal));
+    document.getElementById("telCanales").textContent = canalesUnicos.size;
+
+    document.getElementById("telDerivadas").textContent =
+        telefoniaTi.filter(t => t.estado === "Derivado a CRM").length;
+
+    document.getElementById("telPendientes").textContent =
+        telefoniaTi.filter(t => t.estado === "Pendiente TI" || t.estado === "Futuro").length;
+}
+
+function cargarTablaTelefonia(lista = telefoniaTi) {
+    tablaTelefonia.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaTelefonia.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron registros de telefonía con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(item => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${item.registro}</strong>
+                    <span>ID registro: ${item.id}</span>
+                </div>
+            </td>
+
+            <td>${item.cliente}</td>
+
+            <td>
+                <span class="badge ${claseCanalTelefonia(item.canal)}">
+                    ${item.canal}
+                </span>
+            </td>
+
+            <td>${item.motivo}</td>
+
+            <td>${item.area}</td>
+
+            <td>
+                <span class="badge ${claseEstadoTelefonia(item.estado)}">
+                    ${item.estado}
+                </span>
+            </td>
+
+            <td>${item.responsable}</td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${item.observacion}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verTelefonia(${item.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="derivarTelefonia(${item.id})">Derivar</button>
+                <button class="btn-action btn-delete" onclick="marcarFuturoTelefonia(${item.id})">Futuro</button>
+            </td>
+        `;
+
+        tablaTelefonia.appendChild(fila);
+    });
+}
+
+function filtrarTelefonia() {
+    const texto = buscarTelefonia.value.toLowerCase();
+    const canal = filtroCanalTelefonia.value;
+    const estado = filtroEstadoTelefonia.value;
+
+    const resultado = telefoniaTi.filter(item => {
+        const coincideTexto =
+            item.registro.toLowerCase().includes(texto) ||
+            item.cliente.toLowerCase().includes(texto) ||
+            item.canal.toLowerCase().includes(texto) ||
+            item.motivo.toLowerCase().includes(texto) ||
+            item.area.toLowerCase().includes(texto) ||
+            item.responsable.toLowerCase().includes(texto) ||
+            item.observacion.toLowerCase().includes(texto);
+
+        const coincideCanal =
+            canal === "Todos" || item.canal === canal;
+
+        const coincideEstado =
+            estado === "Todos" || item.estado === estado;
+
+        return coincideTexto && coincideCanal && coincideEstado;
+    });
+
+    cargarTablaTelefonia(resultado);
+}
+
+function verTelefonia(id) {
+    const item = telefoniaTi.find(t => t.id === id);
+
+    if (!item) return;
+
+    alert(
+        `Registro: ${item.registro}\n` +
+        `Cliente / Usuario: ${item.cliente}\n` +
+        `Canal: ${item.canal}\n` +
+        `Motivo: ${item.motivo}\n` +
+        `Área vinculada: ${item.area}\n` +
+        `Estado: ${item.estado}\n` +
+        `Responsable: ${item.responsable}\n\n` +
+        `Observación: ${item.observacion}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function derivarTelefonia(id) {
+    const item = telefoniaTi.find(t => t.id === id);
+
+    if (!item) return;
+
+    item.estado = "Derivado a CRM";
+    item.observacion = "Registro derivado al CRM para seguimiento.";
+
+    cargarResumenTelefonia();
+    cargarTablaTelefonia();
+
+    alert(`Registro "${item.registro}" derivado al CRM. Acción mockeada.`);
+}
+
+function marcarFuturoTelefonia(id) {
+    const item = telefoniaTi.find(t => t.id === id);
+
+    if (!item) return;
+
+    const confirmar = confirm(`¿Deseas marcar "${item.registro}" como integración futura?`);
+
+    if (confirmar) {
+        item.estado = "Futuro";
+        item.observacion = "Marcado como funcionalidad futura, no implementada en esta versión.";
+
+        cargarResumenTelefonia();
+        cargarTablaTelefonia();
+
+        alert("Registro marcado como integración futura. Acción mockeada.");
+    }
+}
+
+btnActualizarTelefonia.addEventListener("click", () => {
+    cargarResumenTelefonia();
+    cargarTablaTelefonia();
+
+    alert("Estado de telefonía actualizado correctamente. Acción mockeada.");
+});
+
+buscarTelefonia.addEventListener("input", filtrarTelefonia);
+filtroCanalTelefonia.addEventListener("change", filtrarTelefonia);
+filtroEstadoTelefonia.addEventListener("change", filtrarTelefonia);
+
+cargarResumenTelefonia();
+cargarTablaTelefonia();
+</script>
+
+<script src="../../js/app.js"></script></body></html>

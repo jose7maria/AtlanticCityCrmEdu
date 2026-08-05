@@ -1,0 +1,345 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Indicadores estratégicos</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="DESARROLLO_NEGOCIOS"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Desarrollo de Negocios</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="reportes.html" class=""><i>▥</i><span>Reportes</span></a><a href="indicadores.html" class="active"><i>↗</i><span>Indicadores</span></a><a href="fidelizacion.html" class=""><i>◎</i><span>Fidelización</span></a><a href="ejecutivo.html" class=""><i>▤</i><span>Dashboard ejecutivo</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">DESARROLLO DE NEGOCIOS</span>
+            <h1>Indicadores estratégicos</h1>
+            <p>Seguimiento de indicadores clave relacionados con clientes, promociones, visitas, fidelización y atención.</p>
+        </div>
+
+        <button class="btn-primary" id="btnActualizarIndicadores">
+            Actualizar indicadores
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Clientes activos</span>
+            <h3 id="indClientesActivos">0</h3>
+            <p>Clientes con actividad reciente.</p>
+        </div>
+
+        <div class="card">
+            <span>Efectividad promedio</span>
+            <h3 id="indEfectividad">0%</h3>
+            <p>Promedio de respuesta en campañas.</p>
+        </div>
+
+        <div class="card">
+            <span>Visitas registradas</span>
+            <h3 id="indVisitas">0</h3>
+            <p>Visitas consideradas para análisis.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Riesgos detectados</span>
+            <h3 id="indRiesgos">0</h3>
+            <p>Indicadores con alerta estratégica.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarIndicador" placeholder="Buscar indicador, área, responsable o estado...">
+
+        <select id="filtroAreaIndicador">
+            <option value="Todos">Todas las áreas</option>
+            <option value="Servicio al Cliente">Servicio al Cliente</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Operaciones">Operaciones</option>
+            <option value="Desarrollo de Negocios">Desarrollo de Negocios</option>
+        </select>
+
+        <select id="filtroEstadoIndicador">
+            <option value="Todos">Todos los estados</option>
+            <option value="Óptimo">Óptimo</option>
+            <option value="En observación">En observación</option>
+            <option value="Riesgo">Riesgo</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Indicador</th>
+                    <th>Área</th>
+                    <th>Valor actual</th>
+                    <th>Meta</th>
+                    <th>Cumplimiento</th>
+                    <th>Estado</th>
+                    <th>Responsable</th>
+                    <th>Observación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaIndicadores">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+<script>
+const indicadoresNegocios = [
+    {
+        id: 1,
+        nombre: "Clientes activos mensuales",
+        area: "Servicio al Cliente",
+        valor: "420",
+        meta: "500",
+        cumplimiento: "84%",
+        estado: "En observación",
+        responsable: "Fernando Ruiz",
+        observacion: "Se requiere reforzar campañas para incrementar actividad."
+    },
+    {
+        id: 2,
+        nombre: "Efectividad de promociones",
+        area: "Marketing",
+        valor: "78%",
+        meta: "75%",
+        cumplimiento: "104%",
+        estado: "Óptimo",
+        responsable: "Diego Salazar",
+        observacion: "Las campañas personalizadas superan la meta esperada."
+    },
+    {
+        id: 3,
+        nombre: "Visitas operativas registradas",
+        area: "Operaciones",
+        valor: "315",
+        meta: "350",
+        cumplimiento: "90%",
+        estado: "Óptimo",
+        responsable: "Lucía Ramírez",
+        observacion: "Buen nivel de registro operativo durante el periodo."
+    },
+    {
+        id: 4,
+        nombre: "Clientes en riesgo de abandono",
+        area: "Marketing",
+        valor: "32%",
+        meta: "15%",
+        cumplimiento: "47%",
+        estado: "Riesgo",
+        responsable: "Fernando Ruiz",
+        observacion: "Se recomienda campaña de recuperación inmediata."
+    },
+    {
+        id: 5,
+        nombre: "Incidencias pendientes",
+        area: "Servicio al Cliente",
+        valor: "18",
+        meta: "5",
+        cumplimiento: "28%",
+        estado: "Riesgo",
+        responsable: "María Torres",
+        observacion: "Hay casos pendientes que afectan la calidad de atención."
+    }
+];
+
+const tablaIndicadores = document.getElementById("tablaIndicadores");
+const buscarIndicador = document.getElementById("buscarIndicador");
+const filtroAreaIndicador = document.getElementById("filtroAreaIndicador");
+const filtroEstadoIndicador = document.getElementById("filtroEstadoIndicador");
+const btnActualizarIndicadores = document.getElementById("btnActualizarIndicadores");
+
+function claseAreaIndicador(area) {
+    if (area === "Servicio al Cliente") return "blue";
+    if (area === "Marketing") return "vip";
+    if (area === "Operaciones") return "success";
+    if (area === "Desarrollo de Negocios") return "warning";
+    return "blue";
+}
+
+function claseEstadoIndicador(estado) {
+    if (estado === "Óptimo") return "success";
+    if (estado === "En observación") return "warning";
+    if (estado === "Riesgo") return "danger";
+    return "blue";
+}
+
+function numeroCumplimiento(valor) {
+    return parseInt(valor.replace("%", ""));
+}
+
+function cargarResumenIndicadores() {
+    document.getElementById("indClientesActivos").textContent = "420";
+
+    const totalEfectividad = indicadoresNegocios
+        .filter(i => i.area === "Marketing")
+        .reduce((total, item) => total + numeroCumplimiento(item.cumplimiento), 0);
+
+    const totalMarketing = indicadoresNegocios.filter(i => i.area === "Marketing").length;
+    const promedio = Math.round(totalEfectividad / totalMarketing);
+
+    document.getElementById("indEfectividad").textContent = promedio + "%";
+
+    document.getElementById("indVisitas").textContent = "315";
+
+    document.getElementById("indRiesgos").textContent =
+        indicadoresNegocios.filter(i => i.estado === "Riesgo").length;
+}
+
+function cargarTablaIndicadores(lista = indicadoresNegocios) {
+    tablaIndicadores.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaIndicadores.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron indicadores con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(indicador => {
+        const fila = document.createElement("tr");
+        const porcentaje = numeroCumplimiento(indicador.cumplimiento);
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${indicador.nombre}</strong>
+                    <span>ID indicador: ${indicador.id}</span>
+                </div>
+            </td>
+
+            <td>
+                <span class="badge ${claseAreaIndicador(indicador.area)}">
+                    ${indicador.area}
+                </span>
+            </td>
+
+            <td>${indicador.valor}</td>
+
+            <td>${indicador.meta}</td>
+
+            <td>
+                <strong>${indicador.cumplimiento}</strong>
+                <div class="effect-bar">
+                    <div class="effect-fill" style="width:${porcentaje > 100 ? 100 : porcentaje}%;"></div>
+                </div>
+            </td>
+
+            <td>
+                <span class="badge ${claseEstadoIndicador(indicador.estado)}">
+                    ${indicador.estado}
+                </span>
+            </td>
+
+            <td>${indicador.responsable}</td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${indicador.observacion}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verIndicador(${indicador.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="observarIndicador(${indicador.id})">Observar</button>
+                <button class="btn-action btn-delete" onclick="marcarRiesgoIndicador(${indicador.id})">Riesgo</button>
+            </td>
+        `;
+
+        tablaIndicadores.appendChild(fila);
+    });
+}
+
+function filtrarIndicadores() {
+    const texto = buscarIndicador.value.toLowerCase();
+    const area = filtroAreaIndicador.value;
+    const estado = filtroEstadoIndicador.value;
+
+    const resultado = indicadoresNegocios.filter(indicador => {
+        const coincideTexto =
+            indicador.nombre.toLowerCase().includes(texto) ||
+            indicador.area.toLowerCase().includes(texto) ||
+            indicador.estado.toLowerCase().includes(texto) ||
+            indicador.responsable.toLowerCase().includes(texto) ||
+            indicador.observacion.toLowerCase().includes(texto);
+
+        const coincideArea =
+            area === "Todos" || indicador.area === area;
+
+        const coincideEstado =
+            estado === "Todos" || indicador.estado === estado;
+
+        return coincideTexto && coincideArea && coincideEstado;
+    });
+
+    cargarTablaIndicadores(resultado);
+}
+
+function verIndicador(id) {
+    const indicador = indicadoresNegocios.find(i => i.id === id);
+
+    if (!indicador) return;
+
+    alert(
+        `Indicador: ${indicador.nombre}\n` +
+        `Área: ${indicador.area}\n` +
+        `Valor actual: ${indicador.valor}\n` +
+        `Meta: ${indicador.meta}\n` +
+        `Cumplimiento: ${indicador.cumplimiento}\n` +
+        `Estado: ${indicador.estado}\n` +
+        `Responsable: ${indicador.responsable}\n\n` +
+        `Observación: ${indicador.observacion}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function observarIndicador(id) {
+    const indicador = indicadoresNegocios.find(i => i.id === id);
+
+    if (!indicador) return;
+
+    indicador.estado = "En observación";
+    indicador.observacion = "Indicador enviado a observación para seguimiento estratégico.";
+
+    cargarResumenIndicadores();
+    cargarTablaIndicadores();
+
+    alert(`Indicador "${indicador.nombre}" enviado a observación. Acción mockeada.`);
+}
+
+function marcarRiesgoIndicador(id) {
+    const indicador = indicadoresNegocios.find(i => i.id === id);
+
+    if (!indicador) return;
+
+    indicador.estado = "Riesgo";
+    indicador.observacion = "Indicador marcado como riesgo para revisión gerencial.";
+
+    cargarResumenIndicadores();
+    cargarTablaIndicadores();
+
+    alert(`Indicador "${indicador.nombre}" marcado como riesgo. Acción mockeada.`);
+}
+
+btnActualizarIndicadores.addEventListener("click", () => {
+    cargarResumenIndicadores();
+    cargarTablaIndicadores();
+
+    alert("Indicadores actualizados correctamente. Acción mockeada.");
+});
+
+buscarIndicador.addEventListener("input", filtrarIndicadores);
+filtroAreaIndicador.addEventListener("change", filtrarIndicadores);
+filtroEstadoIndicador.addEventListener("change", filtrarIndicadores);
+
+cargarResumenIndicadores();
+cargarTablaIndicadores();
+</script>
+<script src="../../js/app.js"></script></body></html>

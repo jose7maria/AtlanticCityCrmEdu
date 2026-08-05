@@ -1,0 +1,361 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Cortesías</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="OPERACIONES"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Operaciones</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="perfil-cliente.html" class=""><i>◎</i><span>Perfil del cliente</span></a><a href="visitas.html" class=""><i>↳</i><span>Visitas</span></a><a href="checkin-vip.html" class=""><i>♛</i><span>Check-in VIP</span></a><a href="reservas.html" class=""><i>◈</i><span>Reservas</span></a><a href="cortesias.html" class="active"><i>◉</i><span>Cortesías</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">OPERACIONES</span>
+            <h1>Cortesías operativas</h1>
+            <p>Registro y control de beneficios otorgados a clientes: bonos, atenciones preferenciales, invitaciones y servicios especiales.</p>
+        </div>
+
+        <button class="btn-primary" id="btnNuevaCortesia">
+            Nueva cortesía
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Total cortesías</span>
+            <h3 id="corTotal">0</h3>
+            <p>Cortesías registradas por el área de operaciones.</p>
+        </div>
+
+        <div class="card">
+            <span>Aprobadas</span>
+            <h3 id="corAprobadas">0</h3>
+            <p>Beneficios autorizados para los clientes.</p>
+        </div>
+
+        <div class="card">
+            <span>Pendientes</span>
+            <h3 id="corPendientes">0</h3>
+            <p>Cortesías en espera de validación.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Rechazadas</span>
+            <h3 id="corRechazadas">0</h3>
+            <p>Solicitudes no autorizadas o anuladas.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarCortesia" placeholder="Buscar cliente, DNI, tipo o responsable...">
+
+        <select id="filtroTipoCortesia">
+            <option value="Todos">Todos los tipos</option>
+            <option value="Bono promocional">Bono promocional</option>
+            <option value="Atención VIP">Atención VIP</option>
+            <option value="Invitación evento">Invitación evento</option>
+            <option value="Servicio especial">Servicio especial</option>
+        </select>
+
+        <select id="filtroEstadoCortesia">
+            <option value="Todos">Todos los estados</option>
+            <option value="Aprobada">Aprobada</option>
+            <option value="Pendiente">Pendiente</option>
+            <option value="Rechazada">Rechazada</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>DNI</th>
+                    <th>Tipo</th>
+                    <th>Detalle</th>
+                    <th>Valor estimado</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Responsable</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaCortesias">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+
+<script>
+const cortesiasOperaciones = [
+    {
+        id: 1,
+        cliente: "Carlos Ramírez",
+        dni: "45678912",
+        correo: "carlos.ramirez@gmail.com",
+        tipo: "Atención VIP",
+        detalle: "Atención preferencial en Sala VIP con beneficio premium.",
+        valor: "S/ 250",
+        fecha: "05/08/2026",
+        estado: "Aprobada",
+        responsable: "Lucía Ramírez",
+        observacion: "Cliente VIP de alto valor."
+    },
+    {
+        id: 2,
+        cliente: "María Fernández",
+        dni: "48596712",
+        correo: "maria.fernandez@gmail.com",
+        tipo: "Invitación evento",
+        detalle: "Invitación especial para evento Poker Premium.",
+        valor: "S/ 180",
+        fecha: "05/08/2026",
+        estado: "Aprobada",
+        responsable: "Operaciones",
+        observacion: "Cliente premium con reserva activa."
+    },
+    {
+        id: 3,
+        cliente: "Ana Torres",
+        dni: "74258963",
+        correo: "ana.torres@gmail.com",
+        tipo: "Bono promocional",
+        detalle: "Bono para tragamonedas por frecuencia de visitas.",
+        valor: "S/ 80",
+        fecha: "04/08/2026",
+        estado: "Pendiente",
+        responsable: "Lucía Ramírez",
+        observacion: "Pendiente de validación por Marketing."
+    },
+    {
+        id: 4,
+        cliente: "Luis Gómez",
+        dni: "65897412",
+        correo: "luis.gomez@gmail.com",
+        tipo: "Servicio especial",
+        detalle: "Orientación personalizada para cliente nuevo.",
+        valor: "S/ 50",
+        fecha: "03/08/2026",
+        estado: "Pendiente",
+        responsable: "Operaciones",
+        observacion: "Cliente nuevo en seguimiento."
+    },
+    {
+        id: 5,
+        cliente: "Jorge Salazar",
+        dni: "78965412",
+        correo: "jorge.salazar@gmail.com",
+        tipo: "Bono promocional",
+        detalle: "Bono de recuperación para cliente inactivo.",
+        valor: "S/ 100",
+        fecha: "02/08/2026",
+        estado: "Rechazada",
+        responsable: "Lucía Ramírez",
+        observacion: "No cumple criterio operativo actual."
+    }
+];
+
+const tablaCortesias = document.getElementById("tablaCortesias");
+const buscarCortesia = document.getElementById("buscarCortesia");
+const filtroTipoCortesia = document.getElementById("filtroTipoCortesia");
+const filtroEstadoCortesia = document.getElementById("filtroEstadoCortesia");
+const btnNuevaCortesia = document.getElementById("btnNuevaCortesia");
+
+function claseTipoCortesia(tipo) {
+    if (tipo === "Atención VIP") return "vip";
+    if (tipo === "Bono promocional") return "success";
+    if (tipo === "Invitación evento") return "blue";
+    if (tipo === "Servicio especial") return "warning";
+    return "blue";
+}
+
+function claseEstadoCortesia(estado) {
+    if (estado === "Aprobada") return "success";
+    if (estado === "Pendiente") return "warning";
+    if (estado === "Rechazada") return "danger";
+    return "blue";
+}
+
+function cargarResumenCortesias() {
+    document.getElementById("corTotal").textContent = cortesiasOperaciones.length;
+
+    document.getElementById("corAprobadas").textContent =
+        cortesiasOperaciones.filter(c => c.estado === "Aprobada").length;
+
+    document.getElementById("corPendientes").textContent =
+        cortesiasOperaciones.filter(c => c.estado === "Pendiente").length;
+
+    document.getElementById("corRechazadas").textContent =
+        cortesiasOperaciones.filter(c => c.estado === "Rechazada").length;
+}
+
+function cargarTablaCortesias(lista = cortesiasOperaciones) {
+    tablaCortesias.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaCortesias.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron cortesías con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(cortesia => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${cortesia.cliente}</strong>
+                    <span>${cortesia.correo}</span>
+                </div>
+            </td>
+
+            <td>${cortesia.dni}</td>
+
+            <td>
+                <span class="badge ${claseTipoCortesia(cortesia.tipo)}">
+                    ${cortesia.tipo}
+                </span>
+            </td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${cortesia.detalle}
+                </span>
+            </td>
+
+            <td>${cortesia.valor}</td>
+
+            <td>${cortesia.fecha}</td>
+
+            <td>
+                <span class="badge ${claseEstadoCortesia(cortesia.estado)}">
+                    ${cortesia.estado}
+                </span>
+            </td>
+
+            <td>${cortesia.responsable}</td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verCortesia(${cortesia.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="aprobarCortesia(${cortesia.id})">Aprobar</button>
+                <button class="btn-action btn-delete" onclick="rechazarCortesia(${cortesia.id})">Rechazar</button>
+            </td>
+        `;
+
+        tablaCortesias.appendChild(fila);
+    });
+}
+
+function filtrarCortesias() {
+    const texto = buscarCortesia.value.toLowerCase();
+    const tipo = filtroTipoCortesia.value;
+    const estado = filtroEstadoCortesia.value;
+
+    const resultado = cortesiasOperaciones.filter(cortesia => {
+        const coincideTexto =
+            cortesia.cliente.toLowerCase().includes(texto) ||
+            cortesia.dni.includes(texto) ||
+            cortesia.tipo.toLowerCase().includes(texto) ||
+            cortesia.responsable.toLowerCase().includes(texto) ||
+            cortesia.detalle.toLowerCase().includes(texto);
+
+        const coincideTipo =
+            tipo === "Todos" || cortesia.tipo === tipo;
+
+        const coincideEstado =
+            estado === "Todos" || cortesia.estado === estado;
+
+        return coincideTexto && coincideTipo && coincideEstado;
+    });
+
+    cargarTablaCortesias(resultado);
+}
+
+function verCortesia(id) {
+    const cortesia = cortesiasOperaciones.find(c => c.id === id);
+
+    if (!cortesia) return;
+
+    alert(
+        `Cliente: ${cortesia.cliente}\n` +
+        `DNI: ${cortesia.dni}\n` +
+        `Tipo: ${cortesia.tipo}\n` +
+        `Valor estimado: ${cortesia.valor}\n` +
+        `Estado: ${cortesia.estado}\n` +
+        `Responsable: ${cortesia.responsable}\n\n` +
+        `Detalle: ${cortesia.detalle}\n\n` +
+        `Observación: ${cortesia.observacion}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function aprobarCortesia(id) {
+    const cortesia = cortesiasOperaciones.find(c => c.id === id);
+
+    if (!cortesia) return;
+
+    cortesia.estado = "Aprobada";
+    cortesia.observacion = "Cortesía aprobada por Operaciones.";
+
+    cargarResumenCortesias();
+    cargarTablaCortesias();
+
+    alert(`Cortesía para "${cortesia.cliente}" aprobada correctamente. Acción mockeada.`);
+}
+
+function rechazarCortesia(id) {
+    const cortesia = cortesiasOperaciones.find(c => c.id === id);
+
+    if (!cortesia) return;
+
+    const confirmar = confirm(`¿Deseas rechazar la cortesía para "${cortesia.cliente}"?`);
+
+    if (confirmar) {
+        cortesia.estado = "Rechazada";
+        cortesia.observacion = "Cortesía rechazada por validación operativa.";
+
+        cargarResumenCortesias();
+        cargarTablaCortesias();
+
+        alert("Cortesía rechazada correctamente. Acción mockeada.");
+    }
+}
+
+btnNuevaCortesia.addEventListener("click", () => {
+    const nueva = {
+        id: cortesiasOperaciones.length + 1,
+        cliente: "Nuevo Cliente",
+        dni: "00000000",
+        correo: "nuevo.cliente@gmail.com",
+        tipo: "Servicio especial",
+        detalle: "Cortesía mockeada para atención operativa.",
+        valor: "S/ 50",
+        fecha: "05/08/2026",
+        estado: "Pendiente",
+        responsable: "Operaciones",
+        observacion: "Pendiente de aprobación."
+    };
+
+    cortesiasOperaciones.push(nueva);
+
+    cargarResumenCortesias();
+    cargarTablaCortesias();
+
+    alert("Nueva cortesía registrada correctamente. Acción mockeada.");
+});
+
+buscarCortesia.addEventListener("input", filtrarCortesias);
+filtroTipoCortesia.addEventListener("change", filtrarCortesias);
+filtroEstadoCortesia.addEventListener("change", filtrarCortesias);
+
+cargarResumenCortesias();
+cargarTablaCortesias();
+</script>
+<script src="../../js/app.js"></script></body></html>

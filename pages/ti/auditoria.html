@@ -1,0 +1,354 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Auditoría TI</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="TECNOLOGIA_INFORMACION"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Tecnología de la Información</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="usuarios-roles.html" class=""><i>♙</i><span>Usuarios y roles</span></a><a href="monitoreo.html" class=""><i>◇</i><span>Monitoreo</span></a><a href="telefonia.html" class=""><i>☎</i><span>Central telefónica</span></a><a href="sistemas-sala.html" class=""><i>↔</i><span>Sistemas de sala</span></a><a href="auditoria.html" class="active"><i>▣</i><span>Auditoría</span></a><a href="seguridad.html" class=""><i>⚿</i><span>Seguridad</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">TECNOLOGÍA DE LA INFORMACIÓN</span>
+            <h1>Auditoría del sistema</h1>
+            <p>Registro de accesos, cambios, acciones críticas, sesiones internas y trazabilidad de usuarios.</p>
+        </div>
+
+        <button class="btn-primary" id="btnActualizarAuditoria">
+            Actualizar auditoría
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Eventos registrados</span>
+            <h3 id="audTotal">0</h3>
+            <p>Acciones registradas en la auditoría del sistema.</p>
+        </div>
+
+        <div class="card">
+            <span>Sesiones activas</span>
+            <h3 id="audSesiones">0</h3>
+            <p>Ingresos internos detectados por el sistema.</p>
+        </div>
+
+        <div class="card">
+            <span>Cambios revisados</span>
+            <h3 id="audRevisados">0</h3>
+            <p>Eventos validados por el área de TI.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Eventos críticos</span>
+            <h3 id="audCriticos">0</h3>
+            <p>Acciones que requieren revisión inmediata.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarAuditoria" placeholder="Buscar usuario, módulo, acción o responsable...">
+
+        <select id="filtroTipoAuditoria">
+            <option value="Todos">Todos los tipos</option>
+            <option value="Inicio de sesión">Inicio de sesión</option>
+            <option value="Cambio de datos">Cambio de datos</option>
+            <option value="Eliminación">Eliminación</option>
+            <option value="Exportación">Exportación</option>
+            <option value="Configuración">Configuración</option>
+        </select>
+
+        <select id="filtroEstadoAuditoria">
+            <option value="Todos">Todos los estados</option>
+            <option value="Registrado">Registrado</option>
+            <option value="Revisado">Revisado</option>
+            <option value="En revisión">En revisión</option>
+            <option value="Crítico">Crítico</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Evento</th>
+                    <th>Usuario</th>
+                    <th>Módulo</th>
+                    <th>Tipo</th>
+                    <th>Fecha y hora</th>
+                    <th>IP / Equipo</th>
+                    <th>Estado</th>
+                    <th>Responsable</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaAuditoria">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+
+<script>
+const auditoriaTi = [
+    {
+        id: 1,
+        evento: "Inicio de sesión correcto",
+        usuario: "diego.salazar",
+        modulo: "Marketing",
+        tipo: "Inicio de sesión",
+        fechaHora: "05/08/2026 13:55",
+        ipEquipo: "192.168.1.24",
+        estado: "Registrado",
+        responsable: "Sistema",
+        detalle: "El usuario ingresó correctamente al panel de Marketing."
+    },
+    {
+        id: 2,
+        evento: "Consulta de perfil 360°",
+        usuario: "maria.torres",
+        modulo: "Servicio al Cliente",
+        tipo: "Cambio de datos",
+        fechaHora: "05/08/2026 14:10",
+        ipEquipo: "192.168.1.18",
+        estado: "Revisado",
+        responsable: "TI",
+        detalle: "Se registró consulta de información del cliente desde perfil 360°."
+    },
+    {
+        id: 3,
+        evento: "Bloqueo de usuario interno",
+        usuario: "andrea.paredes",
+        modulo: "Usuarios y roles",
+        tipo: "Configuración",
+        fechaHora: "05/08/2026 15:20",
+        ipEquipo: "192.168.1.30",
+        estado: "Revisado",
+        responsable: "Andrea Paredes",
+        detalle: "Se bloqueó el acceso del usuario pedro.salas por estado inactivo."
+    },
+    {
+        id: 4,
+        evento: "Intento de acceso con usuario inactivo",
+        usuario: "pedro.salas",
+        modulo: "Login interno",
+        tipo: "Inicio de sesión",
+        fechaHora: "05/08/2026 15:30",
+        ipEquipo: "192.168.1.41",
+        estado: "Crítico",
+        responsable: "TI",
+        detalle: "Intento de ingreso rechazado por usuario inactivo."
+    },
+    {
+        id: 5,
+        evento: "Exportación de reporte estratégico",
+        usuario: "fernando.ruiz",
+        modulo: "Desarrollo de Negocios",
+        tipo: "Exportación",
+        fechaHora: "05/08/2026 16:00",
+        ipEquipo: "192.168.1.35",
+        estado: "En revisión",
+        responsable: "TI",
+        detalle: "Exportación mockeada de reporte ejecutivo para análisis estratégico."
+    },
+    {
+        id: 6,
+        evento: "Eliminación de registro de prueba",
+        usuario: "admin.general",
+        modulo: "Administración",
+        tipo: "Eliminación",
+        fechaHora: "05/08/2026 16:15",
+        ipEquipo: "192.168.1.10",
+        estado: "Crítico",
+        responsable: "Administrador General",
+        detalle: "Eliminación mockeada de registro de prueba con trazabilidad."
+    }
+];
+
+const tablaAuditoria = document.getElementById("tablaAuditoria");
+const buscarAuditoria = document.getElementById("buscarAuditoria");
+const filtroTipoAuditoria = document.getElementById("filtroTipoAuditoria");
+const filtroEstadoAuditoria = document.getElementById("filtroEstadoAuditoria");
+const btnActualizarAuditoria = document.getElementById("btnActualizarAuditoria");
+
+function claseTipoAuditoria(tipo) {
+    if (tipo === "Inicio de sesión") return "success";
+    if (tipo === "Cambio de datos") return "blue";
+    if (tipo === "Eliminación") return "danger";
+    if (tipo === "Exportación") return "warning";
+    if (tipo === "Configuración") return "vip";
+    return "blue";
+}
+
+function claseEstadoAuditoria(estado) {
+    if (estado === "Registrado") return "success";
+    if (estado === "Revisado") return "blue";
+    if (estado === "En revisión") return "warning";
+    if (estado === "Crítico") return "danger";
+    return "blue";
+}
+
+function cargarResumenAuditoria() {
+    document.getElementById("audTotal").textContent = auditoriaTi.length;
+
+    document.getElementById("audSesiones").textContent =
+        auditoriaTi.filter(a => a.tipo === "Inicio de sesión").length;
+
+    document.getElementById("audRevisados").textContent =
+        auditoriaTi.filter(a => a.estado === "Revisado").length;
+
+    document.getElementById("audCriticos").textContent =
+        auditoriaTi.filter(a => a.estado === "Crítico").length;
+}
+
+function cargarTablaAuditoria(lista = auditoriaTi) {
+    tablaAuditoria.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaAuditoria.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron eventos de auditoría con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(item => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${item.evento}</strong>
+                    <span>ID auditoría: ${item.id}</span>
+                </div>
+            </td>
+
+            <td>${item.usuario}</td>
+
+            <td>${item.modulo}</td>
+
+            <td>
+                <span class="badge ${claseTipoAuditoria(item.tipo)}">
+                    ${item.tipo}
+                </span>
+            </td>
+
+            <td>${item.fechaHora}</td>
+
+            <td>${item.ipEquipo}</td>
+
+            <td>
+                <span class="badge ${claseEstadoAuditoria(item.estado)}">
+                    ${item.estado}
+                </span>
+            </td>
+
+            <td>${item.responsable}</td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verAuditoria(${item.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="revisarAuditoria(${item.id})">Revisar</button>
+                <button class="btn-action btn-delete" onclick="marcarCritico(${item.id})">Crítico</button>
+            </td>
+        `;
+
+        tablaAuditoria.appendChild(fila);
+    });
+}
+
+function filtrarAuditoria() {
+    const texto = buscarAuditoria.value.toLowerCase();
+    const tipo = filtroTipoAuditoria.value;
+    const estado = filtroEstadoAuditoria.value;
+
+    const resultado = auditoriaTi.filter(item => {
+        const coincideTexto =
+            item.evento.toLowerCase().includes(texto) ||
+            item.usuario.toLowerCase().includes(texto) ||
+            item.modulo.toLowerCase().includes(texto) ||
+            item.responsable.toLowerCase().includes(texto) ||
+            item.detalle.toLowerCase().includes(texto);
+
+        const coincideTipo =
+            tipo === "Todos" || item.tipo === tipo;
+
+        const coincideEstado =
+            estado === "Todos" || item.estado === estado;
+
+        return coincideTexto && coincideTipo && coincideEstado;
+    });
+
+    cargarTablaAuditoria(resultado);
+}
+
+function verAuditoria(id) {
+    const item = auditoriaTi.find(a => a.id === id);
+
+    if (!item) return;
+
+    alert(
+        `Evento: ${item.evento}\n` +
+        `Usuario: ${item.usuario}\n` +
+        `Módulo: ${item.modulo}\n` +
+        `Tipo: ${item.tipo}\n` +
+        `Fecha y hora: ${item.fechaHora}\n` +
+        `IP / Equipo: ${item.ipEquipo}\n` +
+        `Estado: ${item.estado}\n` +
+        `Responsable: ${item.responsable}\n\n` +
+        `Detalle: ${item.detalle}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function revisarAuditoria(id) {
+    const item = auditoriaTi.find(a => a.id === id);
+
+    if (!item) return;
+
+    item.estado = "Revisado";
+    item.responsable = "Andrea Paredes";
+    item.detalle = "Evento revisado por el área de TI.";
+
+    cargarResumenAuditoria();
+    cargarTablaAuditoria();
+
+    alert(`Evento "${item.evento}" revisado correctamente. Acción mockeada.`);
+}
+
+function marcarCritico(id) {
+    const item = auditoriaTi.find(a => a.id === id);
+
+    if (!item) return;
+
+    const confirmar = confirm(`¿Deseas marcar como crítico el evento "${item.evento}"?`);
+
+    if (confirmar) {
+        item.estado = "Crítico";
+        item.detalle = "Evento marcado como crítico para seguimiento de TI.";
+
+        cargarResumenAuditoria();
+        cargarTablaAuditoria();
+
+        alert("Evento marcado como crítico. Acción mockeada.");
+    }
+}
+
+btnActualizarAuditoria.addEventListener("click", () => {
+    cargarResumenAuditoria();
+    cargarTablaAuditoria();
+
+    alert("Auditoría actualizada correctamente. Acción mockeada.");
+});
+
+buscarAuditoria.addEventListener("input", filtrarAuditoria);
+filtroTipoAuditoria.addEventListener("change", filtrarAuditoria);
+filtroEstadoAuditoria.addEventListener("change", filtrarAuditoria);
+
+cargarResumenAuditoria();
+cargarTablaAuditoria();
+</script>
+<script src="../../js/app.js"></script></body></html>

@@ -1,0 +1,352 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Monitoreo TI</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="TECNOLOGIA_INFORMACION"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Tecnología de la Información</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="usuarios-roles.html" class=""><i>♙</i><span>Usuarios y roles</span></a><a href="monitoreo.html" class="active"><i>◇</i><span>Monitoreo</span></a><a href="telefonia.html" class=""><i>☎</i><span>Central telefónica</span></a><a href="sistemas-sala.html" class=""><i>↔</i><span>Sistemas de sala</span></a><a href="auditoria.html" class=""><i>▣</i><span>Auditoría</span></a><a href="seguridad.html" class=""><i>⚿</i><span>Seguridad</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">TECNOLOGÍA DE LA INFORMACIÓN</span>
+            <h1>Monitoreo del sistema</h1>
+            <p>Supervisión del estado de módulos, servicios internos, rendimiento, disponibilidad y alertas técnicas.</p>
+        </div>
+
+        <button class="btn-primary" id="btnActualizarMonitoreo">
+            Actualizar monitoreo
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Módulos operativos</span>
+            <h3 id="monOperativos">0</h3>
+            <p>Módulos funcionando correctamente.</p>
+        </div>
+
+        <div class="card">
+            <span>Servicios activos</span>
+            <h3 id="monServicios">0</h3>
+            <p>Servicios internos disponibles.</p>
+        </div>
+
+        <div class="card">
+            <span>Rendimiento promedio</span>
+            <h3 id="monRendimiento">0%</h3>
+            <p>Indicador general del sistema.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Alertas técnicas</span>
+            <h3 id="monAlertas">0</h3>
+            <p>Eventos que requieren revisión de TI.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarMonitoreo" placeholder="Buscar módulo, servicio, estado o responsable...">
+
+        <select id="filtroTipoMonitoreo">
+            <option value="Todos">Todos los tipos</option>
+            <option value="Módulo">Módulo</option>
+            <option value="Servicio">Servicio</option>
+            <option value="Base de datos">Base de datos</option>
+            <option value="Seguridad">Seguridad</option>
+        </select>
+
+        <select id="filtroEstadoMonitoreo">
+            <option value="Todos">Todos los estados</option>
+            <option value="Operativo">Operativo</option>
+            <option value="En revisión">En revisión</option>
+            <option value="Alerta">Alerta</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Componente</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th>Disponibilidad</th>
+                    <th>Rendimiento</th>
+                    <th>Última revisión</th>
+                    <th>Responsable</th>
+                    <th>Observación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaMonitoreo">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+<script>
+const monitoreoTi = [
+    {
+        id: 1,
+        componente: "Módulo de clientes",
+        tipo: "Módulo",
+        estado: "Operativo",
+        disponibilidad: "99%",
+        rendimiento: "92%",
+        ultimaRevision: "05/08/2026 15:30",
+        responsable: "Andrea Paredes",
+        observacion: "Consulta y registro de clientes funcionando correctamente."
+    },
+    {
+        id: 2,
+        componente: "Módulo de promociones",
+        tipo: "Módulo",
+        estado: "Operativo",
+        disponibilidad: "98%",
+        rendimiento: "88%",
+        ultimaRevision: "05/08/2026 15:35",
+        responsable: "TI",
+        observacion: "Campañas y promociones cargan sin incidencias."
+    },
+    {
+        id: 3,
+        componente: "Base central CRM",
+        tipo: "Base de datos",
+        estado: "Operativo",
+        disponibilidad: "99%",
+        rendimiento: "90%",
+        ultimaRevision: "05/08/2026 15:40",
+        responsable: "Andrea Paredes",
+        observacion: "Base de datos central disponible para futura integración."
+    },
+    {
+        id: 4,
+        componente: "Servicio de auditoría",
+        tipo: "Servicio",
+        estado: "En revisión",
+        disponibilidad: "85%",
+        rendimiento: "72%",
+        ultimaRevision: "05/08/2026 15:45",
+        responsable: "TI",
+        observacion: "Se revisa registro de accesos y eventos del sistema."
+    },
+    {
+        id: 5,
+        componente: "Control de seguridad",
+        tipo: "Seguridad",
+        estado: "Alerta",
+        disponibilidad: "80%",
+        rendimiento: "65%",
+        ultimaRevision: "05/08/2026 15:50",
+        responsable: "Andrea Paredes",
+        observacion: "Se detectaron intentos de acceso con usuario inactivo."
+    }
+];
+
+const tablaMonitoreo = document.getElementById("tablaMonitoreo");
+const buscarMonitoreo = document.getElementById("buscarMonitoreo");
+const filtroTipoMonitoreo = document.getElementById("filtroTipoMonitoreo");
+const filtroEstadoMonitoreo = document.getElementById("filtroEstadoMonitoreo");
+const btnActualizarMonitoreo = document.getElementById("btnActualizarMonitoreo");
+
+function claseTipoMonitoreo(tipo) {
+    if (tipo === "Módulo") return "blue";
+    if (tipo === "Servicio") return "warning";
+    if (tipo === "Base de datos") return "success";
+    if (tipo === "Seguridad") return "danger";
+    return "blue";
+}
+
+function claseEstadoMonitoreo(estado) {
+    if (estado === "Operativo") return "success";
+    if (estado === "En revisión") return "warning";
+    if (estado === "Alerta") return "danger";
+    return "blue";
+}
+
+function numeroPorcentajeMonitoreo(valor) {
+    return parseInt(valor.replace("%", ""));
+}
+
+function cargarResumenMonitoreo() {
+    document.getElementById("monOperativos").textContent =
+        monitoreoTi.filter(m => m.estado === "Operativo").length;
+
+    document.getElementById("monServicios").textContent =
+        monitoreoTi.filter(m => m.tipo === "Servicio" || m.tipo === "Módulo").length;
+
+    const totalRendimiento = monitoreoTi.reduce((total, item) => {
+        return total + numeroPorcentajeMonitoreo(item.rendimiento);
+    }, 0);
+
+    const promedio = Math.round(totalRendimiento / monitoreoTi.length);
+
+    document.getElementById("monRendimiento").textContent = promedio + "%";
+
+    document.getElementById("monAlertas").textContent =
+        monitoreoTi.filter(m => m.estado === "Alerta" || m.estado === "En revisión").length;
+}
+
+function cargarTablaMonitoreo(lista = monitoreoTi) {
+    tablaMonitoreo.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaMonitoreo.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron componentes con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(item => {
+        const fila = document.createElement("tr");
+        const rendimiento = numeroPorcentajeMonitoreo(item.rendimiento);
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${item.componente}</strong>
+                    <span>ID monitoreo: ${item.id}</span>
+                </div>
+            </td>
+
+            <td>
+                <span class="badge ${claseTipoMonitoreo(item.tipo)}">
+                    ${item.tipo}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${claseEstadoMonitoreo(item.estado)}">
+                    ${item.estado}
+                </span>
+            </td>
+
+            <td>${item.disponibilidad}</td>
+
+            <td>
+                <strong>${item.rendimiento}</strong>
+                <div class="effect-bar">
+                    <div class="effect-fill" style="width:${rendimiento}%;"></div>
+                </div>
+            </td>
+
+            <td>${item.ultimaRevision}</td>
+
+            <td>${item.responsable}</td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${item.observacion}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verMonitoreo(${item.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="marcarOperativo(${item.id})">Operativo</button>
+                <button class="btn-action btn-delete" onclick="marcarAlertaMonitoreo(${item.id})">Alerta</button>
+            </td>
+        `;
+
+        tablaMonitoreo.appendChild(fila);
+    });
+}
+
+function filtrarMonitoreo() {
+    const texto = buscarMonitoreo.value.toLowerCase();
+    const tipo = filtroTipoMonitoreo.value;
+    const estado = filtroEstadoMonitoreo.value;
+
+    const resultado = monitoreoTi.filter(item => {
+        const coincideTexto =
+            item.componente.toLowerCase().includes(texto) ||
+            item.tipo.toLowerCase().includes(texto) ||
+            item.estado.toLowerCase().includes(texto) ||
+            item.responsable.toLowerCase().includes(texto) ||
+            item.observacion.toLowerCase().includes(texto);
+
+        const coincideTipo =
+            tipo === "Todos" || item.tipo === tipo;
+
+        const coincideEstado =
+            estado === "Todos" || item.estado === estado;
+
+        return coincideTexto && coincideTipo && coincideEstado;
+    });
+
+    cargarTablaMonitoreo(resultado);
+}
+
+function verMonitoreo(id) {
+    const item = monitoreoTi.find(m => m.id === id);
+
+    if (!item) return;
+
+    alert(
+        `Componente: ${item.componente}\n` +
+        `Tipo: ${item.tipo}\n` +
+        `Estado: ${item.estado}\n` +
+        `Disponibilidad: ${item.disponibilidad}\n` +
+        `Rendimiento: ${item.rendimiento}\n` +
+        `Última revisión: ${item.ultimaRevision}\n` +
+        `Responsable: ${item.responsable}\n\n` +
+        `Observación: ${item.observacion}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function marcarOperativo(id) {
+    const item = monitoreoTi.find(m => m.id === id);
+
+    if (!item) return;
+
+    item.estado = "Operativo";
+    item.disponibilidad = "99%";
+    item.rendimiento = "92%";
+    item.ultimaRevision = "05/08/2026 16:20";
+    item.observacion = "Componente revisado y marcado como operativo.";
+
+    cargarResumenMonitoreo();
+    cargarTablaMonitoreo();
+
+    alert(`"${item.componente}" marcado como operativo. Acción mockeada.`);
+}
+
+function marcarAlertaMonitoreo(id) {
+    const item = monitoreoTi.find(m => m.id === id);
+
+    if (!item) return;
+
+    item.estado = "Alerta";
+    item.rendimiento = "60%";
+    item.ultimaRevision = "05/08/2026 16:20";
+    item.observacion = "Componente marcado con alerta técnica para revisión.";
+
+    cargarResumenMonitoreo();
+    cargarTablaMonitoreo();
+
+    alert(`Alerta técnica generada para "${item.componente}". Acción mockeada.`);
+}
+
+btnActualizarMonitoreo.addEventListener("click", () => {
+    cargarResumenMonitoreo();
+    cargarTablaMonitoreo();
+
+    alert("Monitoreo actualizado correctamente. Acción mockeada.");
+});
+
+buscarMonitoreo.addEventListener("input", filtrarMonitoreo);
+filtroTipoMonitoreo.addEventListener("change", filtrarMonitoreo);
+filtroEstadoMonitoreo.addEventListener("change", filtrarMonitoreo);
+
+cargarResumenMonitoreo();
+cargarTablaMonitoreo();
+</script>
+
+<script src="../../js/app.js"></script></body></html>

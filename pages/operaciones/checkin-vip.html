@@ -1,0 +1,346 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Check-in VIP</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="OPERACIONES"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Operaciones</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="perfil-cliente.html" class=""><i>◎</i><span>Perfil del cliente</span></a><a href="visitas.html" class=""><i>↳</i><span>Visitas</span></a><a href="checkin-vip.html" class="active"><i>♛</i><span>Check-in VIP</span></a><a href="reservas.html" class=""><i>◈</i><span>Reservas</span></a><a href="cortesias.html" class=""><i>◉</i><span>Cortesías</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside>
+
+
+<section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">OPERACIONES</span>
+            <h1>Check-in VIP</h1>
+            <p>Control de ingreso, atención preferencial y alertas operativas para clientes VIP.</p>
+        </div>
+
+        <button class="btn-primary" id="btnNuevoCheckin">
+            Nuevo check-in
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Check-in VIP hoy</span>
+            <h3 id="vipHoy">0</h3>
+            <p>Clientes VIP registrados durante el día.</p>
+        </div>
+
+        <div class="card">
+            <span>En atención</span>
+            <h3 id="vipAtencion">0</h3>
+            <p>Clientes VIP siendo atendidos actualmente.</p>
+        </div>
+
+        <div class="card">
+            <span>Atendidos</span>
+            <h3 id="vipAtendidos">0</h3>
+            <p>Check-in VIP finalizados correctamente.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Alertas activas</span>
+            <h3 id="vipAlertas">0</h3>
+            <p>Casos VIP que requieren revisión inmediata.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarCheckin" placeholder="Buscar cliente, DNI, nivel VIP o responsable...">
+
+        <select id="filtroNivelVip">
+            <option value="Todos">Todos los niveles</option>
+            <option value="VIP Gold">VIP Gold</option>
+            <option value="VIP Platinum">VIP Platinum</option>
+            <option value="VIP Black">VIP Black</option>
+        </select>
+
+        <select id="filtroEstadoCheckin">
+            <option value="Todos">Todos los estados</option>
+            <option value="En atención">En atención</option>
+            <option value="Atendido">Atendido</option>
+            <option value="Alerta">Alerta</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>DNI</th>
+                    <th>Nivel VIP</th>
+                    <th>Hora ingreso</th>
+                    <th>Área asignada</th>
+                    <th>Beneficio aplicado</th>
+                    <th>Estado</th>
+                    <th>Responsable</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaCheckinVip">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+
+</div><div class="toast" id="toast"></div>
+
+<script>
+const checkinVipOperaciones = [
+    {
+        id: 1,
+        cliente: "Carlos Ramírez",
+        dni: "45678912",
+        correo: "carlos.ramirez@gmail.com",
+        nivel: "VIP Platinum",
+        horaIngreso: "18:30",
+        area: "Sala VIP",
+        beneficio: "Atención preferencial + bono premium",
+        estado: "En atención",
+        responsable: "Lucía Ramírez",
+        observacion: "Cliente VIP de alto valor en sala."
+    },
+    {
+        id: 2,
+        cliente: "María Fernández",
+        dni: "48596712",
+        correo: "maria.fernandez@gmail.com",
+        nivel: "VIP Black",
+        horaIngreso: "19:00",
+        area: "Poker Premium",
+        beneficio: "Mesa preferencial + cortesía especial",
+        estado: "En atención",
+        responsable: "Operaciones",
+        observacion: "Cliente premium para evento Poker."
+    },
+    {
+        id: 3,
+        cliente: "Roberto Díaz",
+        dni: "71245896",
+        correo: "roberto.diaz@gmail.com",
+        nivel: "VIP Gold",
+        horaIngreso: "17:40",
+        area: "Ruleta",
+        beneficio: "Bono de bienvenida VIP",
+        estado: "Atendido",
+        responsable: "Lucía Ramírez",
+        observacion: "Atención finalizada correctamente."
+    },
+    {
+        id: 4,
+        cliente: "Patricia León",
+        dni: "69854712",
+        correo: "patricia.leon@gmail.com",
+        nivel: "VIP Platinum",
+        horaIngreso: "20:10",
+        area: "Sala VIP",
+        beneficio: "Atención preferencial",
+        estado: "Alerta",
+        responsable: "Operaciones",
+        observacion: "Cliente solicita revisión de beneficio no aplicado."
+    }
+];
+
+const tablaCheckinVip = document.getElementById("tablaCheckinVip");
+const buscarCheckin = document.getElementById("buscarCheckin");
+const filtroNivelVip = document.getElementById("filtroNivelVip");
+const filtroEstadoCheckin = document.getElementById("filtroEstadoCheckin");
+const btnNuevoCheckin = document.getElementById("btnNuevoCheckin");
+
+function claseNivelVip(nivel) {
+    if (nivel === "VIP Black") return "vip";
+    if (nivel === "VIP Platinum") return "warning";
+    if (nivel === "VIP Gold") return "success";
+    return "blue";
+}
+
+function claseEstadoCheckin(estado) {
+    if (estado === "En atención") return "warning";
+    if (estado === "Atendido") return "success";
+    if (estado === "Alerta") return "danger";
+    return "blue";
+}
+
+function cargarResumenCheckinVip() {
+    document.getElementById("vipHoy").textContent = checkinVipOperaciones.length;
+
+    document.getElementById("vipAtencion").textContent =
+        checkinVipOperaciones.filter(c => c.estado === "En atención").length;
+
+    document.getElementById("vipAtendidos").textContent =
+        checkinVipOperaciones.filter(c => c.estado === "Atendido").length;
+
+    document.getElementById("vipAlertas").textContent =
+        checkinVipOperaciones.filter(c => c.estado === "Alerta").length;
+}
+
+function cargarTablaCheckinVip(lista = checkinVipOperaciones) {
+    tablaCheckinVip.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaCheckinVip.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron check-in VIP con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(checkin => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${checkin.cliente}</strong>
+                    <span>${checkin.correo}</span>
+                </div>
+            </td>
+
+            <td>${checkin.dni}</td>
+
+            <td>
+                <span class="badge ${claseNivelVip(checkin.nivel)}">
+                    ${checkin.nivel}
+                </span>
+            </td>
+
+            <td>${checkin.horaIngreso}</td>
+
+            <td>${checkin.area}</td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${checkin.beneficio}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${claseEstadoCheckin(checkin.estado)}">
+                    ${checkin.estado}
+                </span>
+            </td>
+
+            <td>${checkin.responsable}</td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verCheckinVip(${checkin.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="marcarAtendido(${checkin.id})">Atender</button>
+                <button class="btn-action btn-delete" onclick="marcarAlerta(${checkin.id})">Alerta</button>
+            </td>
+        `;
+
+        tablaCheckinVip.appendChild(fila);
+    });
+}
+
+function filtrarCheckinVip() {
+    const texto = buscarCheckin.value.toLowerCase();
+    const nivel = filtroNivelVip.value;
+    const estado = filtroEstadoCheckin.value;
+
+    const resultado = checkinVipOperaciones.filter(checkin => {
+        const coincideTexto =
+            checkin.cliente.toLowerCase().includes(texto) ||
+            checkin.dni.includes(texto) ||
+            checkin.nivel.toLowerCase().includes(texto) ||
+            checkin.responsable.toLowerCase().includes(texto);
+
+        const coincideNivel =
+            nivel === "Todos" || checkin.nivel === nivel;
+
+        const coincideEstado =
+            estado === "Todos" || checkin.estado === estado;
+
+        return coincideTexto && coincideNivel && coincideEstado;
+    });
+
+    cargarTablaCheckinVip(resultado);
+}
+
+function verCheckinVip(id) {
+    const checkin = checkinVipOperaciones.find(c => c.id === id);
+
+    if (!checkin) return;
+
+    alert(
+        `Cliente: ${checkin.cliente}\n` +
+        `DNI: ${checkin.dni}\n` +
+        `Nivel: ${checkin.nivel}\n` +
+        `Área asignada: ${checkin.area}\n` +
+        `Beneficio: ${checkin.beneficio}\n` +
+        `Estado: ${checkin.estado}\n\n` +
+        `Observación: ${checkin.observacion}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function marcarAtendido(id) {
+    const checkin = checkinVipOperaciones.find(c => c.id === id);
+
+    if (!checkin) return;
+
+    checkin.estado = "Atendido";
+    checkin.observacion = "Check-in VIP atendido correctamente.";
+
+    cargarResumenCheckinVip();
+    cargarTablaCheckinVip();
+
+    alert(`Cliente VIP "${checkin.cliente}" marcado como atendido. Acción mockeada.`);
+}
+
+function marcarAlerta(id) {
+    const checkin = checkinVipOperaciones.find(c => c.id === id);
+
+    if (!checkin) return;
+
+    checkin.estado = "Alerta";
+    checkin.observacion = "Caso marcado como alerta operativa.";
+
+    cargarResumenCheckinVip();
+    cargarTablaCheckinVip();
+
+    alert(`Alerta generada para "${checkin.cliente}". Acción mockeada.`);
+}
+
+btnNuevoCheckin.addEventListener("click", () => {
+    const nuevo = {
+        id: checkinVipOperaciones.length + 1,
+        cliente: "Nuevo Cliente VIP",
+        dni: "00000000",
+        correo: "nuevo.vip@gmail.com",
+        nivel: "VIP Gold",
+        horaIngreso: "20:30",
+        area: "Sala VIP",
+        beneficio: "Atención preferencial",
+        estado: "En atención",
+        responsable: "Operaciones",
+        observacion: "Registro mockeado de nuevo check-in VIP."
+    };
+
+    checkinVipOperaciones.push(nuevo);
+
+    cargarResumenCheckinVip();
+    cargarTablaCheckinVip();
+
+    alert("Nuevo check-in VIP registrado correctamente. Acción mockeada.");
+});
+
+buscarCheckin.addEventListener("input", filtrarCheckinVip);
+filtroNivelVip.addEventListener("change", filtrarCheckinVip);
+filtroEstadoCheckin.addEventListener("change", filtrarCheckinVip);
+
+cargarResumenCheckinVip();
+cargarTablaCheckinVip();
+</script>
+<script src="../../js/app.js"></script></body></html>

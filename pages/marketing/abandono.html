@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Alertas de abandono</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head>
+<body data-role="MARKETING">
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html">
+        <span class="mark">AC</span>
+        <span>
+          <strong>ATLANTIC CITY</strong>
+          <small>Gestión de clientes</small>
+        </span>
+      </a>
+      <div class="user">
+        <strong data-user-name>Usuario</strong>
+        <span data-user-area>Marketing</span>
+      </div>
+      <p class="nav-label">MENÚ DEL ÁREA</p>
+      <nav class="nav">
+        <a href="index.html" class=""><i>⌂</i><span>Resumen</span></a>
+        <a href="segmentos.html" class=""><i>◫</i><span>Segmentos</span></a>
+        <a href="promociones.html" class=""><i>★</i><span>Promociones</span></a>
+        <a href="campanias.html" class=""><i>◆</i><span>Campañas</span></a>
+        <a href="categorias.html" class=""><i>♛</i><span>Categorías</span></a>
+        <a href="abandono.html" class="active"><i>!</i><span>Alertas de abandono</span></a>
+        <a href="canales.html" class=""><i>✉</i><span>Canales digitales</span></a>
+      </nav>
+      <button class="logout" data-logout>Cerrar sesión</button>
+    </aside>
+    <main class="main-content">
+
+    <section class="page-section">
+
+        <div class="section-header">
+            <div>
+                <span class="eyebrow">MARKETING</span>
+                <h1>Alertas de abandono</h1>
+                <p>Identificación de clientes con baja actividad para aplicar campañas de recuperación y fidelización.</p>
+            </div>
+
+            <button class="btn-primary" id="btnGenerarAlertas">
+                Generar alertas
+            </button>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card danger">
+                <span>Riesgo alto</span>
+                <h3 id="abandonoAlto">0</h3>
+                <p>Clientes sin visitas recientes y baja respuesta.</p>
+            </div>
+
+            <div class="card">
+                <span>Riesgo medio</span>
+                <h3 id="abandonoMedio">0</h3>
+                <p>Clientes que redujeron su frecuencia de visitas.</p>
+            </div>
+
+            <div class="card">
+                <span>En seguimiento</span>
+                <h3 id="abandonoSeguimiento">0</h3>
+                <p>Clientes con campaña de recuperación activa.</p>
+            </div>
+
+            <div class="card">
+                <span>Reactivados</span>
+                <h3 id="abandonoReactivados">0</h3>
+                <p>Clientes recuperados mediante promociones.</p>
+            </div>
+        </div>
+
+        <div class="filters-box">
+            <input type="text" id="buscarAbandono" placeholder="Buscar cliente, DNI o preferencia...">
+
+            <select id="filtroRiesgoAbandono">
+                <option value="Todos">Todos los riesgos</option>
+                <option value="Alto">Alto</option>
+                <option value="Medio">Medio</option>
+                <option value="Bajo">Bajo</option>
+            </select>
+
+            <select id="filtroEstadoAbandono">
+                <option value="Todos">Todos los estados</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="En seguimiento">En seguimiento</option>
+                <option value="Reactivado">Reactivado</option>
+            </select>
+        </div>
+
+        <div class="table-panel">
+            <table class="crm-table">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>DNI</th>
+                        <th>Última visita</th>
+                        <th>Días sin visita</th>
+                        <th>Preferencia</th>
+                        <th>Promoción sugerida</th>
+                        <th>Riesgo</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaAbandono">
+                    <!-- Se llena con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script>
+const clientesAbandono = [
+    {
+        id: 1,
+        nombre: "Jorge Salazar",
+        dni: "78965412",
+        correo: "jorge.salazar@gmail.com",
+        ultimaVisita: "02/06/2026",
+        diasSinVisita: 64,
+        preferencia: "Apuestas deportivas",
+        promocion: "Bono de retorno por apuesta deportiva",
+        riesgo: "Alto",
+        estado: "Pendiente"
+    },
+    {
+        id: 2,
+        nombre: "Luis Gómez",
+        dni: "65897412",
+        correo: "luis.gomez@gmail.com",
+        ultimaVisita: "18/07/2026",
+        diasSinVisita: 18,
+        preferencia: "Blackjack",
+        promocion: "Campaña de bienvenida extendida",
+        riesgo: "Medio",
+        estado: "En seguimiento"
+    },
+    {
+        id: 3,
+        nombre: "Ana Torres",
+        dni: "74258963",
+        correo: "ana.torres@gmail.com",
+        ultimaVisita: "25/07/2026",
+        diasSinVisita: 11,
+        preferencia: "Tragamonedas",
+        promocion: "Bono tragamonedas frecuente",
+        riesgo: "Bajo",
+        estado: "Reactivado"
+    },
+    {
+        id: 4,
+        nombre: "Ricardo Peña",
+        dni: "78541236",
+        correo: "ricardo.pena@gmail.com",
+        ultimaVisita: "10/06/2026",
+        diasSinVisita: 56,
+        preferencia: "Ruleta",
+        promocion: "Promoción ruleta noche especial",
+        riesgo: "Alto",
+        estado: "Pendiente"
+    },
+    {
+        id: 5,
+        nombre: "Claudia Rojas",
+        dni: "41258963",
+        correo: "claudia.rojas@gmail.com",
+        ultimaVisita: "15/07/2026",
+        diasSinVisita: 21,
+        preferencia: "Poker",
+        promocion: "Invitación Poker Premium",
+        riesgo: "Medio",
+        estado: "En seguimiento"
+    }
+];
+
+const tablaAbandono = document.getElementById("tablaAbandono");
+const buscarAbandono = document.getElementById("buscarAbandono");
+const filtroRiesgoAbandono = document.getElementById("filtroRiesgoAbandono");
+const filtroEstadoAbandono = document.getElementById("filtroEstadoAbandono");
+const btnGenerarAlertas = document.getElementById("btnGenerarAlertas");
+
+function claseRiesgoAbandono(riesgo) {
+    if (riesgo === "Alto") return "danger";
+    if (riesgo === "Medio") return "warning";
+    if (riesgo === "Bajo") return "success";
+    return "blue";
+}
+
+function claseEstadoAbandono(estado) {
+    if (estado === "Pendiente") return "danger";
+    if (estado === "En seguimiento") return "warning";
+    if (estado === "Reactivado") return "success";
+    return "blue";
+}
+
+function porcentajeRiesgo(dias) {
+    if (dias >= 60) return 95;
+    if (dias >= 30) return 70;
+    if (dias >= 15) return 45;
+    return 20;
+}
+
+function cargarResumenAbandono() {
+    document.getElementById("abandonoAlto").textContent =
+        clientesAbandono.filter(c => c.riesgo === "Alto").length;
+
+    document.getElementById("abandonoMedio").textContent =
+        clientesAbandono.filter(c => c.riesgo === "Medio").length;
+
+    document.getElementById("abandonoSeguimiento").textContent =
+        clientesAbandono.filter(c => c.estado === "En seguimiento").length;
+
+    document.getElementById("abandonoReactivados").textContent =
+        clientesAbandono.filter(c => c.estado === "Reactivado").length;
+}
+
+function cargarTablaAbandono(lista = clientesAbandono) {
+    tablaAbandono.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaAbandono.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron clientes con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(cliente => {
+        const fila = document.createElement("tr");
+        const riesgoPorcentaje = porcentajeRiesgo(cliente.diasSinVisita);
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${cliente.nombre}</strong>
+                    <span>${cliente.correo}</span>
+                </div>
+            </td>
+
+            <td>${cliente.dni}</td>
+
+            <td>${cliente.ultimaVisita}</td>
+
+            <td>
+                <strong>${cliente.diasSinVisita} días</strong>
+                <div class="effect-bar">
+                    <div class="effect-fill" style="width:${riesgoPorcentaje}%;"></div>
+                </div>
+            </td>
+
+            <td>${cliente.preferencia}</td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${cliente.promocion}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${claseRiesgoAbandono(cliente.riesgo)}">
+                    ${cliente.riesgo}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${claseEstadoAbandono(cliente.estado)}">
+                    ${cliente.estado}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verAlerta(${cliente.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="iniciarSeguimiento(${cliente.id})">Seguimiento</button>
+                <button class="btn-action btn-delete" onclick="marcarReactivado(${cliente.id})">Reactivar</button>
+            </td>
+        `;
+
+        tablaAbandono.appendChild(fila);
+    });
+}
+
+function filtrarAbandono() {
+    const texto = buscarAbandono.value.toLowerCase();
+    const riesgo = filtroRiesgoAbandono.value;
+    const estado = filtroEstadoAbandono.value;
+
+    const resultado = clientesAbandono.filter(cliente => {
+        const coincideTexto =
+            cliente.nombre.toLowerCase().includes(texto) ||
+            cliente.dni.includes(texto) ||
+            cliente.preferencia.toLowerCase().includes(texto) ||
+            cliente.promocion.toLowerCase().includes(texto);
+
+        const coincideRiesgo =
+            riesgo === "Todos" || cliente.riesgo === riesgo;
+
+        const coincideEstado =
+            estado === "Todos" || cliente.estado === estado;
+
+        return coincideTexto && coincideRiesgo && coincideEstado;
+    });
+
+    cargarTablaAbandono(resultado);
+}
+
+function verAlerta(id) {
+    const cliente = clientesAbandono.find(c => c.id === id);
+
+    if (!cliente) return;
+
+    alert(
+        `Cliente: ${cliente.nombre}\n` +
+        `Días sin visita: ${cliente.diasSinVisita}\n` +
+        `Preferencia: ${cliente.preferencia}\n` +
+        `Riesgo: ${cliente.riesgo}\n` +
+        `Promoción sugerida: ${cliente.promocion}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function iniciarSeguimiento(id) {
+    const cliente = clientesAbandono.find(c => c.id === id);
+
+    if (!cliente) return;
+
+    cliente.estado = "En seguimiento";
+
+    cargarResumenAbandono();
+    cargarTablaAbandono();
+
+    alert(`Cliente "${cliente.nombre}" enviado a seguimiento. Acción mockeada.`);
+}
+
+function marcarReactivado(id) {
+    const cliente = clientesAbandono.find(c => c.id === id);
+
+    if (!cliente) return;
+
+    const confirmar = confirm(`¿Deseas marcar a "${cliente.nombre}" como cliente reactivado?`);
+
+    if (confirmar) {
+        cliente.estado = "Reactivado";
+        cliente.riesgo = "Bajo";
+
+        cargarResumenAbandono();
+        cargarTablaAbandono();
+
+        alert("Cliente reactivado correctamente. Acción mockeada.");
+    }
+}
+
+btnGenerarAlertas.addEventListener("click", () => {
+    cargarResumenAbandono();
+    cargarTablaAbandono();
+
+    alert("Alertas de abandono generadas correctamente. Acción mockeada.");
+});
+
+buscarAbandono.addEventListener("input", filtrarAbandono);
+filtroRiesgoAbandono.addEventListener("change", filtrarAbandono);
+filtroEstadoAbandono.addEventListener("change", filtrarAbandono);
+
+cargarResumenAbandono();
+cargarTablaAbandono();
+</script>
+  <script src="../../js/app.js"></script>
+</body>
+</html>

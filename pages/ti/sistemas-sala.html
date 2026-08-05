@@ -1,0 +1,340 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Sistemas TI</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="TECNOLOGIA_INFORMACION"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Tecnología de la Información</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="usuarios-roles.html" class=""><i>♙</i><span>Usuarios y roles</span></a><a href="monitoreo.html" class=""><i>◇</i><span>Monitoreo</span></a><a href="telefonia.html" class=""><i>☎</i><span>Central telefónica</span></a><a href="sistemas-sala.html" class="active"><i>↔</i><span>Sistemas de sala</span></a><a href="auditoria.html" class=""><i>▣</i><span>Auditoría</span></a><a href="seguridad.html" class=""><i>⚿</i><span>Seguridad</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">TECNOLOGÍA DE LA INFORMACIÓN</span>
+            <h1>Sistemas internos</h1>
+            <p>Seguimiento de módulos, bases de datos, respaldos, integraciones futuras y estado técnico del CRM.</p>
+        </div>
+
+        <button class="btn-primary" id="btnActualizarSistemas">
+            Actualizar sistemas
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Sistemas activos</span>
+            <h3 id="sisActivos">0</h3>
+            <p>Sistemas o módulos disponibles para operación.</p>
+        </div>
+
+        <div class="card">
+            <span>Respaldos OK</span>
+            <h3 id="sisBackups">0</h3>
+            <p>Servicios con respaldo técnico registrado.</p>
+        </div>
+
+        <div class="card">
+            <span>Integraciones futuras</span>
+            <h3 id="sisFuturas">0</h3>
+            <p>Elementos proyectados para siguientes versiones.</p>
+        </div>
+
+        <div class="card danger">
+            <span>En revisión</span>
+            <h3 id="sisRevision">0</h3>
+            <p>Sistemas que requieren validación de TI.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarSistema" placeholder="Buscar sistema, módulo, tipo o responsable...">
+
+        <select id="filtroTipoSistema">
+            <option value="Todos">Todos los tipos</option>
+            <option value="CRM">CRM</option>
+            <option value="Base de datos">Base de datos</option>
+            <option value="Respaldo">Respaldo</option>
+            <option value="Integración futura">Integración futura</option>
+        </select>
+
+        <select id="filtroEstadoSistema">
+            <option value="Todos">Todos los estados</option>
+            <option value="Activo">Activo</option>
+            <option value="Operativo">Operativo</option>
+            <option value="En revisión">En revisión</option>
+            <option value="Futuro">Futuro</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Sistema / Módulo</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th>Disponibilidad</th>
+                    <th>Último respaldo</th>
+                    <th>Responsable</th>
+                    <th>Observación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaSistemas">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+<script>
+const sistemasTi = [
+    {
+        id: 1,
+        nombre: "CRM interno Atlantic City",
+        tipo: "CRM",
+        estado: "Activo",
+        disponibilidad: "99%",
+        ultimoRespaldo: "05/08/2026 02:00",
+        responsable: "Andrea Paredes",
+        observacion: "Sistema principal para gestión de clientes, promociones, incidencias y reportes."
+    },
+    {
+        id: 2,
+        nombre: "Base central de clientes",
+        tipo: "Base de datos",
+        estado: "Operativo",
+        disponibilidad: "99%",
+        ultimoRespaldo: "05/08/2026 02:10",
+        responsable: "TI",
+        observacion: "Base diseñada para centralizar información de clientes y relaciones del CRM."
+    },
+    {
+        id: 3,
+        nombre: "Servicio de respaldos",
+        tipo: "Respaldo",
+        estado: "Operativo",
+        disponibilidad: "98%",
+        ultimoRespaldo: "05/08/2026 02:30",
+        responsable: "Andrea Paredes",
+        observacion: "Respaldo técnico considerado para proteger la información del sistema."
+    },
+    {
+        id: 4,
+        nombre: "Integración con central telefónica",
+        tipo: "Integración futura",
+        estado: "Futuro",
+        disponibilidad: "0%",
+        ultimoRespaldo: "No aplica",
+        responsable: "TI",
+        observacion: "Funcionalidad futura. No implementada en esta versión del proyecto."
+    },
+    {
+        id: 5,
+        nombre: "Dashboard móvil ejecutivo",
+        tipo: "Integración futura",
+        estado: "Futuro",
+        disponibilidad: "0%",
+        ultimoRespaldo: "No aplica",
+        responsable: "Desarrollo de Negocios / TI",
+        observacion: "Considerado como mejora futura de diseño responsive, no como módulo implementado."
+    },
+    {
+        id: 6,
+        nombre: "Servicio de auditoría",
+        tipo: "CRM",
+        estado: "En revisión",
+        disponibilidad: "85%",
+        ultimoRespaldo: "05/08/2026 01:50",
+        responsable: "Andrea Paredes",
+        observacion: "Se revisa trazabilidad de sesiones, cambios y eventos críticos."
+    }
+];
+
+const tablaSistemas = document.getElementById("tablaSistemas");
+const buscarSistema = document.getElementById("buscarSistema");
+const filtroTipoSistema = document.getElementById("filtroTipoSistema");
+const filtroEstadoSistema = document.getElementById("filtroEstadoSistema");
+const btnActualizarSistemas = document.getElementById("btnActualizarSistemas");
+
+function claseTipoSistema(tipo) {
+    if (tipo === "CRM") return "blue";
+    if (tipo === "Base de datos") return "success";
+    if (tipo === "Respaldo") return "vip";
+    if (tipo === "Integración futura") return "warning";
+    return "blue";
+}
+
+function claseEstadoSistema(estado) {
+    if (estado === "Activo") return "success";
+    if (estado === "Operativo") return "success";
+    if (estado === "En revisión") return "warning";
+    if (estado === "Futuro") return "blue";
+    return "blue";
+}
+
+function cargarResumenSistemas() {
+    document.getElementById("sisActivos").textContent =
+        sistemasTi.filter(s => s.estado === "Activo" || s.estado === "Operativo").length;
+
+    document.getElementById("sisBackups").textContent =
+        sistemasTi.filter(s => s.ultimoRespaldo !== "No aplica").length;
+
+    document.getElementById("sisFuturas").textContent =
+        sistemasTi.filter(s => s.tipo === "Integración futura").length;
+
+    document.getElementById("sisRevision").textContent =
+        sistemasTi.filter(s => s.estado === "En revisión").length;
+}
+
+function cargarTablaSistemas(lista = sistemasTi) {
+    tablaSistemas.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaSistemas.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron sistemas con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(sistema => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${sistema.nombre}</strong>
+                    <span>ID sistema: ${sistema.id}</span>
+                </div>
+            </td>
+
+            <td>
+                <span class="badge ${claseTipoSistema(sistema.tipo)}">
+                    ${sistema.tipo}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${claseEstadoSistema(sistema.estado)}">
+                    ${sistema.estado}
+                </span>
+            </td>
+
+            <td>${sistema.disponibilidad}</td>
+
+            <td>${sistema.ultimoRespaldo}</td>
+
+            <td>${sistema.responsable}</td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${sistema.observacion}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verSistema(${sistema.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="marcarSistemaOperativo(${sistema.id})">Operativo</button>
+                <button class="btn-action btn-delete" onclick="marcarSistemaRevision(${sistema.id})">Revisar</button>
+            </td>
+        `;
+
+        tablaSistemas.appendChild(fila);
+    });
+}
+
+function filtrarSistemas() {
+    const texto = buscarSistema.value.toLowerCase();
+    const tipo = filtroTipoSistema.value;
+    const estado = filtroEstadoSistema.value;
+
+    const resultado = sistemasTi.filter(sistema => {
+        const coincideTexto =
+            sistema.nombre.toLowerCase().includes(texto) ||
+            sistema.tipo.toLowerCase().includes(texto) ||
+            sistema.estado.toLowerCase().includes(texto) ||
+            sistema.responsable.toLowerCase().includes(texto) ||
+            sistema.observacion.toLowerCase().includes(texto);
+
+        const coincideTipo =
+            tipo === "Todos" || sistema.tipo === tipo;
+
+        const coincideEstado =
+            estado === "Todos" || sistema.estado === estado;
+
+        return coincideTexto && coincideTipo && coincideEstado;
+    });
+
+    cargarTablaSistemas(resultado);
+}
+
+function verSistema(id) {
+    const sistema = sistemasTi.find(s => s.id === id);
+
+    if (!sistema) return;
+
+    alert(
+        `Sistema: ${sistema.nombre}\n` +
+        `Tipo: ${sistema.tipo}\n` +
+        `Estado: ${sistema.estado}\n` +
+        `Disponibilidad: ${sistema.disponibilidad}\n` +
+        `Último respaldo: ${sistema.ultimoRespaldo}\n` +
+        `Responsable: ${sistema.responsable}\n\n` +
+        `Observación: ${sistema.observacion}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function marcarSistemaOperativo(id) {
+    const sistema = sistemasTi.find(s => s.id === id);
+
+    if (!sistema) return;
+
+    if (sistema.tipo === "Integración futura") {
+        alert("Este elemento está marcado como integración futura. No se activa como función implementada.");
+        return;
+    }
+
+    sistema.estado = "Operativo";
+    sistema.disponibilidad = "99%";
+    sistema.observacion = "Sistema revisado y marcado como operativo por TI.";
+
+    cargarResumenSistemas();
+    cargarTablaSistemas();
+
+    alert(`"${sistema.nombre}" marcado como operativo. Acción mockeada.`);
+}
+
+function marcarSistemaRevision(id) {
+    const sistema = sistemasTi.find(s => s.id === id);
+
+    if (!sistema) return;
+
+    sistema.estado = "En revisión";
+    sistema.observacion = "Sistema enviado a revisión técnica por TI.";
+
+    cargarResumenSistemas();
+    cargarTablaSistemas();
+
+    alert(`"${sistema.nombre}" enviado a revisión. Acción mockeada.`);
+}
+
+btnActualizarSistemas.addEventListener("click", () => {
+    cargarResumenSistemas();
+    cargarTablaSistemas();
+
+    alert("Estado de sistemas actualizado correctamente. Acción mockeada.");
+});
+
+buscarSistema.addEventListener("input", filtrarSistemas);
+filtroTipoSistema.addEventListener("change", filtrarSistemas);
+filtroEstadoSistema.addEventListener("change", filtrarSistemas);
+
+cargarResumenSistemas();
+cargarTablaSistemas();
+</script>
+<script src="../../js/app.js"></script></body></html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro | Atlantic City V2</title>
+  <link rel="stylesheet" href="cliente/css/styles.css">
+</head>
+<body class="register-page">
+  <div class="academic-strip">DATOS GUARDADOS SOLO EN ESTE NAVEGADOR</div>
+  <main class="register-layout">
+    <section class="register-visual">
+      <img src="cliente/img/registro-visual.png" alt="Promoción Atlantic City">
+      <div class="register-promo-copy">
+        <h1>¡REGÍSTRATE Y APROVECHA NUESTROS TRES BONOS DE BIENVENIDA!</h1>
+        <ul><li>Casino Online: bono demostrativo de bienvenida.</li><li>Apuestas Deportivas: flujo visual para exposición académica.</li></ul>
+      </div>
+    </section>
+
+    <section class="register-form-area">
+      <header class="register-header"><a class="brand white" href="index.html"><strong>ATLANTIC CITY</strong><small>CASINO ◈ SPORTS</small></a></header>
+      <div class="register-body">
+        <form id="registerForm" novalidate>
+          <section class="step-pane active" data-step="1">
+            <div class="register-title-row"><div><h2>Datos personales</h2><p>Completa tus datos personales:</p></div><div class="stepper"><span class="active">1</span><i></i><span>2</span><i></i><span>3</span></div></div>
+            <div class="register-fields">
+              <input id="regNames" type="text" placeholder="Nombres" data-required>
+              <input id="regLastName1" type="text" placeholder="Primer apellido" data-required>
+              <input id="regLastName2" type="text" placeholder="Segundo apellido" data-required>
+              <select id="regNationality" data-required><option value="">Nacionalidad</option><option value="Peruana">Peruana</option><option value="Extranjera">Extranjera</option></select>
+              <div class="inline-fields document-fields"><select id="regDocType" data-required><option value="DNI">DNI</option><option value="CE">CE</option><option value="Pasaporte">Pasaporte</option></select><input id="regDocument" type="text" placeholder="Número de documento" data-required></div>
+              <label class="field-label">Fecha de nacimiento:</label>
+              <div class="inline-fields birth-fields"><select id="regDay" data-required><option value="">Día</option></select><select id="regMonth" data-required><option value="">Mes</option></select><select id="regYear" data-required><option value="">Año</option></select></div>
+              <div class="phone-field"><span>🇵🇪</span><input id="regPhone" type="tel" placeholder="Celular (Perú)" data-required></div>
+              <input id="regEmail" type="email" placeholder="Correo electrónico" data-required>
+            </div>
+          </section>
+
+          <section class="step-pane" data-step="2">
+            <div class="register-title-row"><div><h2>Datos de acceso</h2><p>Crea los datos para ingresar a tu cuenta:</p></div><div class="stepper"><span class="done">1</span><i></i><span class="active">2</span><i></i><span>3</span></div></div>
+            <div class="register-fields access-fields">
+              <input id="regUsername" type="text" placeholder="Nombre de usuario" data-required>
+              <div class="password-input"><input id="regPassword" type="password" placeholder="Contraseña" data-required><button type="button" data-toggle-password="#regPassword">◉</button></div>
+              <div class="password-rules"><b>La contraseña debe incluir:</b><span data-rule="length">• 8 caracteres</span><span data-rule="upper">• una mayúscula</span><span data-rule="number">• un número</span><span data-rule="symbol">• un símbolo</span></div>
+              <div class="password-input"><input id="regPasswordConfirm" type="password" placeholder="Confirmar contraseña" data-required><button type="button" data-toggle-password="#regPasswordConfirm">◉</button></div>
+              <p class="register-inline-message" aria-live="polite"></p>
+              <label class="check-line"><input id="regTerms" type="checkbox" data-required><span>Acepto los términos, condiciones y política de privacidad del prototipo.</span></label>
+              <label class="check-line"><input id="regMarketing" type="checkbox"><span>Deseo recibir promociones y novedades demostrativas.</span></label>
+            </div>
+          </section>
+
+          <section class="step-pane" data-step="3">
+            <div class="register-title-row"><div><h2>Confirmación</h2><p>Revisa y confirma la creación de tu cuenta:</p></div><div class="stepper"><span class="done">1</span><i></i><span class="done">2</span><i></i><span class="active">3</span></div></div>
+            <div class="confirmation-box"><div class="confirmation-icon">✓</div><h3>Tu registro está casi listo</h3><div id="registerSummary"></div><p>La cuenta se guardará localmente para la demostración y podrás iniciar sesión inmediatamente.</p></div>
+          </section>
+        </form>
+      </div>
+      <footer class="register-footer"><button class="register-back" type="button">ATRÁS</button><button class="register-next" type="button" disabled>SIGUIENTE</button><p>¿Ya tienes una cuenta? <a href="index.html?login=1">Inicia sesión</a></p></footer>
+    </section>
+  </main>
+  <script src="cliente/js/register.js"></script>
+</body>
+</html>

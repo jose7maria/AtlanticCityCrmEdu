@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Panel principal</title>
+  <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body data-role="MARKETING">
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html">
+        <span class="mark">AC</span>
+        <span>
+          <strong>ATLANTIC CITY</strong>
+          <small>Gestión de clientes</small>
+        </span>
+      </a>
+      <div class="user">
+        <strong data-user-name>Usuario</strong>
+        <span data-user-area>Marketing</span>
+      </div>
+      <p class="nav-label">MENÚ DEL ÁREA</p>
+      <nav class="nav">
+        <a href="index.html" class="active"><i>⌂</i><span>Resumen</span></a>
+        <a href="segmentos.html" class=""><i>◫</i><span>Segmentos</span></a>
+        <a href="promociones.html" class=""><i>★</i><span>Promociones</span></a>
+        <a href="campanias.html" class=""><i>◆</i><span>Campañas</span></a>
+        <a href="categorias.html" class=""><i>♛</i><span>Categorías</span></a>
+        <a href="abandono.html" class=""><i>!</i><span>Alertas de abandono</span></a>
+        <a href="canales.html" class=""><i>✉</i><span>Canales digitales</span></a>
+      </nav>
+      <button class="logout" data-logout>Cerrar sesión</button>
+    </aside>
+    <main>
+      <header class="topbar">
+        <div class="top-left">
+          <button class="hamb" data-menu>☰</button>
+          <div class="top-title">
+            <strong>Marketing</strong>
+            <span>Segmentación, campañas y promociones</span>
+          </div>
+        </div>
+        <span class="date" data-date></span>
+      </header>
+      <section class="content">
+        <header class="page-head">
+          <div>
+            <p class="kicker">PANEL INTERNO</p>
+            <h1>Panel principal</h1>
+            <p class="desc">Segmentación, campañas y promociones</p>
+          </div>
+          <div class="actions"></div>
+        </header>
+        <section class="metrics">
+          <article class="metric">
+            <div class="metric-top">
+              <label>Campañas activas</label>
+              <span class="micon">◆</span>
+            </div>
+            <strong>8</strong>
+            <small>3 terminan esta semana</small>
+          </article>
+          <article class="metric">
+            <div class="metric-top">
+              <label>Promociones usadas</label>
+              <span class="micon">★</span>
+            </div>
+            <strong>246</strong>
+            <small>Tasa de uso 38%</small>
+          </article>
+          <article class="metric">
+            <div class="metric-top">
+              <label>Segmentados</label>
+              <span class="micon">◫</span>
+            </div>
+            <strong>1,142</strong>
+            <small>Classic, Gold y Platinum</small>
+          </article>
+          <article class="metric">
+            <div class="metric-top">
+              <label>Alertas abandono</label>
+              <span class="micon">!</span>
+            </div>
+            <strong>27</strong>
+            <small>Clientes por reactivar</small>
+          </article>
+        </section>
+        <section class="grid2">
+          <article class="panel pad">
+            <div class="cardtop" style="margin-bottom:14px">
+              <h2 style="margin:0;font-size:.87rem">Resumen de actividad</h2>
+              <span class="badge blue">Últimos 7 días</span>
+            </div>
+            <div class="chart">
+              <span class="bar" style="height:31%"></span>
+              <span class="bar" style="height:47%"></span>
+              <span class="bar" style="height:64%"></span>
+              <span class="bar" style="height:52%"></span>
+              <span class="bar" style="height:72%"></span>
+              <span class="bar" style="height:68%"></span>
+              <span class="bar" style="height:85%"></span>
+              <span class="bar" style="height:79%"></span>
+              <span class="bar" style="height:91%"></span>
+              <span class="bar" style="height:88%"></span>
+            </div>
+          </article>
+          <article class="panel pad">
+            <div class="cardtop" style="margin-bottom:14px">
+              <h2 style="margin:0;font-size:.87rem">Actividad reciente</h2>
+              <span class="badge neutral">Hoy</span>
+            </div>
+            <div class="activity">
+              <article class="act">
+                <span class="dot blue"></span>
+                <div>
+                  <strong>Campaña programada</strong>
+                  <span>Beneficio listo para envío.</span>
+                </div>
+              </article>
+              <article class="act">
+                <span class="dot "></span>
+                <div>
+                  <strong>Segmento actualizado</strong>
+                  <span>Se recalculó Platinum.</span>
+                </div>
+              </article>
+              <article class="act">
+                <span class="dot yellow"></span>
+                <div>
+                  <strong>Promoción utilizada</strong>
+                  <span>Cliente Gold usó el beneficio.</span>
+                </div>
+              </article>
+            </div>
+          </article>
+        </section>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="../../js/app.js"></script>
+</body>
+</html>

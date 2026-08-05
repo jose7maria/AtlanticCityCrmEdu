@@ -1,0 +1,350 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Seguridad TI</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="TECNOLOGIA_INFORMACION"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Tecnología de la Información</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="usuarios-roles.html" class=""><i>♙</i><span>Usuarios y roles</span></a><a href="monitoreo.html" class=""><i>◇</i><span>Monitoreo</span></a><a href="telefonia.html" class=""><i>☎</i><span>Central telefónica</span></a><a href="sistemas-sala.html" class=""><i>↔</i><span>Sistemas de sala</span></a><a href="auditoria.html" class=""><i>▣</i><span>Auditoría</span></a><a href="seguridad.html" class="active"><i>⚿</i><span>Seguridad</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">TECNOLOGÍA DE LA INFORMACIÓN</span>
+            <h1>Seguridad del sistema</h1>
+            <p>Control de accesos, eventos de seguridad, intentos fallidos, usuarios bloqueados y medidas preventivas.</p>
+        </div>
+
+        <button class="btn-primary" id="btnActualizarSeguridad">
+            Actualizar seguridad
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Accesos correctos</span>
+            <h3 id="segAccesos">0</h3>
+            <p>Ingresos válidos registrados en el sistema.</p>
+        </div>
+
+        <div class="card">
+            <span>Usuarios protegidos</span>
+            <h3 id="segProtegidos">0</h3>
+            <p>Usuarios con control de seguridad activo.</p>
+        </div>
+
+        <div class="card">
+            <span>Revisiones activas</span>
+            <h3 id="segRevisiones">0</h3>
+            <p>Eventos que están siendo evaluados por TI.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Alertas críticas</span>
+            <h3 id="segAlertas">0</h3>
+            <p>Eventos que requieren atención inmediata.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarSeguridad" placeholder="Buscar usuario, evento, módulo o responsable...">
+
+        <select id="filtroTipoSeguridad">
+            <option value="Todos">Todos los tipos</option>
+            <option value="Acceso correcto">Acceso correcto</option>
+            <option value="Intento fallido">Intento fallido</option>
+            <option value="Usuario bloqueado">Usuario bloqueado</option>
+            <option value="Revisión de permisos">Revisión de permisos</option>
+        </select>
+
+        <select id="filtroNivelSeguridad">
+            <option value="Todos">Todos los niveles</option>
+            <option value="Bajo">Bajo</option>
+            <option value="Medio">Medio</option>
+            <option value="Alto">Alto</option>
+            <option value="Crítico">Crítico</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Evento</th>
+                    <th>Usuario</th>
+                    <th>Módulo</th>
+                    <th>Tipo</th>
+                    <th>Nivel</th>
+                    <th>Fecha y hora</th>
+                    <th>Estado</th>
+                    <th>Responsable</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaSeguridad">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+<script>
+const seguridadTi = [
+    {
+        id: 1,
+        evento: "Inicio de sesión correcto",
+        usuario: "diego.salazar",
+        modulo: "Marketing",
+        tipo: "Acceso correcto",
+        nivel: "Bajo",
+        fechaHora: "05/08/2026 13:55",
+        estado: "Registrado",
+        responsable: "Sistema",
+        detalle: "Acceso válido al módulo de Marketing."
+    },
+    {
+        id: 2,
+        evento: "Intento con usuario inactivo",
+        usuario: "pedro.salas",
+        modulo: "Login interno",
+        tipo: "Intento fallido",
+        nivel: "Alto",
+        fechaHora: "05/08/2026 15:10",
+        estado: "En revisión",
+        responsable: "Andrea Paredes",
+        detalle: "El sistema detectó intento de acceso con usuario inactivo."
+    },
+    {
+        id: 3,
+        evento: "Usuario bloqueado",
+        usuario: "pedro.salas",
+        modulo: "Usuarios y roles",
+        tipo: "Usuario bloqueado",
+        nivel: "Medio",
+        fechaHora: "05/08/2026 15:20",
+        estado: "Atendido",
+        responsable: "TI",
+        detalle: "Usuario bloqueado desde el panel de TI."
+    },
+    {
+        id: 4,
+        evento: "Revisión de permisos",
+        usuario: "andrea.paredes",
+        modulo: "Seguridad",
+        tipo: "Revisión de permisos",
+        nivel: "Medio",
+        fechaHora: "05/08/2026 15:40",
+        estado: "En revisión",
+        responsable: "Andrea Paredes",
+        detalle: "Validación de permisos para usuarios con nivel de acceso alto."
+    },
+    {
+        id: 5,
+        evento: "Alerta por múltiples intentos",
+        usuario: "usuario.desconocido",
+        modulo: "Login interno",
+        tipo: "Intento fallido",
+        nivel: "Crítico",
+        fechaHora: "05/08/2026 16:05",
+        estado: "Pendiente",
+        responsable: "TI",
+        detalle: "Se registraron varios intentos fallidos de acceso."
+    }
+];
+
+const tablaSeguridad = document.getElementById("tablaSeguridad");
+const buscarSeguridad = document.getElementById("buscarSeguridad");
+const filtroTipoSeguridad = document.getElementById("filtroTipoSeguridad");
+const filtroNivelSeguridad = document.getElementById("filtroNivelSeguridad");
+const btnActualizarSeguridad = document.getElementById("btnActualizarSeguridad");
+
+function claseTipoSeguridad(tipo) {
+    if (tipo === "Acceso correcto") return "success";
+    if (tipo === "Intento fallido") return "danger";
+    if (tipo === "Usuario bloqueado") return "warning";
+    if (tipo === "Revisión de permisos") return "blue";
+    return "blue";
+}
+
+function claseNivelSeguridad(nivel) {
+    if (nivel === "Bajo") return "success";
+    if (nivel === "Medio") return "warning";
+    if (nivel === "Alto") return "danger";
+    if (nivel === "Crítico") return "danger";
+    return "blue";
+}
+
+function claseEstadoSeguridad(estado) {
+    if (estado === "Registrado") return "success";
+    if (estado === "Atendido") return "blue";
+    if (estado === "En revisión") return "warning";
+    if (estado === "Pendiente") return "danger";
+    return "blue";
+}
+
+function cargarResumenSeguridad() {
+    document.getElementById("segAccesos").textContent =
+        seguridadTi.filter(s => s.tipo === "Acceso correcto").length;
+
+    document.getElementById("segProtegidos").textContent =
+        seguridadTi.filter(s => s.usuario !== "usuario.desconocido").length;
+
+    document.getElementById("segRevisiones").textContent =
+        seguridadTi.filter(s => s.estado === "En revisión").length;
+
+    document.getElementById("segAlertas").textContent =
+        seguridadTi.filter(s => s.nivel === "Alto" || s.nivel === "Crítico").length;
+}
+
+function cargarTablaSeguridad(lista = seguridadTi) {
+    tablaSeguridad.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaSeguridad.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron eventos de seguridad con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(item => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${item.evento}</strong>
+                    <span>ID evento: ${item.id}</span>
+                </div>
+            </td>
+
+            <td>${item.usuario}</td>
+
+            <td>${item.modulo}</td>
+
+            <td>
+                <span class="badge ${claseTipoSeguridad(item.tipo)}">
+                    ${item.tipo}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${claseNivelSeguridad(item.nivel)}">
+                    ${item.nivel}
+                </span>
+            </td>
+
+            <td>${item.fechaHora}</td>
+
+            <td>
+                <span class="badge ${claseEstadoSeguridad(item.estado)}">
+                    ${item.estado}
+                </span>
+            </td>
+
+            <td>${item.responsable}</td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verSeguridad(${item.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="revisarSeguridad(${item.id})">Revisar</button>
+                <button class="btn-action btn-delete" onclick="cerrarSeguridad(${item.id})">Cerrar</button>
+            </td>
+        `;
+
+        tablaSeguridad.appendChild(fila);
+    });
+}
+
+function filtrarSeguridad() {
+    const texto = buscarSeguridad.value.toLowerCase();
+    const tipo = filtroTipoSeguridad.value;
+    const nivel = filtroNivelSeguridad.value;
+
+    const resultado = seguridadTi.filter(item => {
+        const coincideTexto =
+            item.evento.toLowerCase().includes(texto) ||
+            item.usuario.toLowerCase().includes(texto) ||
+            item.modulo.toLowerCase().includes(texto) ||
+            item.responsable.toLowerCase().includes(texto) ||
+            item.detalle.toLowerCase().includes(texto);
+
+        const coincideTipo =
+            tipo === "Todos" || item.tipo === tipo;
+
+        const coincideNivel =
+            nivel === "Todos" || item.nivel === nivel;
+
+        return coincideTexto && coincideTipo && coincideNivel;
+    });
+
+    cargarTablaSeguridad(resultado);
+}
+
+function verSeguridad(id) {
+    const item = seguridadTi.find(s => s.id === id);
+
+    if (!item) return;
+
+    alert(
+        `Evento: ${item.evento}\n` +
+        `Usuario: ${item.usuario}\n` +
+        `Módulo: ${item.modulo}\n` +
+        `Tipo: ${item.tipo}\n` +
+        `Nivel: ${item.nivel}\n` +
+        `Estado: ${item.estado}\n` +
+        `Fecha: ${item.fechaHora}\n\n` +
+        `Detalle: ${item.detalle}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function revisarSeguridad(id) {
+    const item = seguridadTi.find(s => s.id === id);
+
+    if (!item) return;
+
+    item.estado = "En revisión";
+    item.responsable = "Andrea Paredes";
+
+    cargarResumenSeguridad();
+    cargarTablaSeguridad();
+
+    alert(`Evento "${item.evento}" enviado a revisión. Acción mockeada.`);
+}
+
+function cerrarSeguridad(id) {
+    const item = seguridadTi.find(s => s.id === id);
+
+    if (!item) return;
+
+    const confirmar = confirm(`¿Deseas cerrar el evento de seguridad "${item.evento}"?`);
+
+    if (confirmar) {
+        item.estado = "Atendido";
+        item.detalle = "Evento revisado y cerrado por TI.";
+
+        cargarResumenSeguridad();
+        cargarTablaSeguridad();
+
+        alert("Evento de seguridad cerrado correctamente. Acción mockeada.");
+    }
+}
+
+btnActualizarSeguridad.addEventListener("click", () => {
+    cargarResumenSeguridad();
+    cargarTablaSeguridad();
+
+    alert("Seguridad actualizada correctamente. Acción mockeada.");
+});
+
+buscarSeguridad.addEventListener("input", filtrarSeguridad);
+filtroTipoSeguridad.addEventListener("change", filtrarSeguridad);
+filtroNivelSeguridad.addEventListener("change", filtrarSeguridad);
+
+cargarResumenSeguridad();
+cargarTablaSeguridad();
+</script>
+<script src="../../js/app.js"></script></body></html>

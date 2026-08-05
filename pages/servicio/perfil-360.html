@@ -1,0 +1,593 @@
+<!doctype html><html lang="es">
+    
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Perfil 360° del cliente</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head>
+
+<body data-role="SERVICIO_CLIENTE"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Servicio al Cliente</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="clientes.html" class=""><i>♙</i><span>Clientes</span></a><a href="perfil-360.html" class="active"><i>◎</i><span>Perfil 360°</span></a><a href="interacciones.html" class=""><i>✉</i><span>Interacciones</span></a><a href="incidencias.html" class=""><i>!</i><span>Incidencias</span></a><a href="reservas.html" class=""><i>◈</i><span>Reservas y eventos</span></a><a href="preferencias.html" class=""><i>♡</i><span>Preferencias</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside>
+
+<main class="main-content">
+
+    <section class="page-section">
+
+        <div class="section-header">
+            <div>
+                <span class="eyebrow">SERVICIO AL CLIENTE</span>
+                <h1>Perfil 360° del cliente</h1>
+                <p>Vista completa del cliente: datos personales, visitas, preferencias, promociones, interacciones e incidencias.</p>
+            </div>
+
+            <button class="btn-primary" id="btnActualizarPerfil">
+                Actualizar vista
+            </button>
+        </div>
+
+        <div class="filters-box">
+            <input type="text" id="buscarPerfilCliente" placeholder="Buscar por nombre, DNI, correo o preferencia...">
+
+            <select id="selectPerfilCliente">
+                <option value="">Seleccionar cliente</option>
+            </select>
+
+            <select id="filtroPerfilCategoria">
+                <option value="Todos">Todas las categorías</option>
+                <option value="VIP">VIP</option>
+                <option value="Frecuente">Frecuente</option>
+                <option value="Nuevo">Nuevo</option>
+                <option value="Inactivo">Inactivo</option>
+            </select>
+        </div>
+
+        <div id="perfilResumen" class="cards-grid">
+            <div class="card">
+                <span>Categoría</span>
+                <h3 id="perfilCategoria">-</h3>
+                <p>Clasificación comercial del cliente.</p>
+            </div>
+
+            <div class="card">
+                <span>Visitas registradas</span>
+                <h3 id="perfilVisitas">0</h3>
+                <p>Historial de visitas del cliente.</p>
+            </div>
+
+            <div class="card">
+                <span>Promociones usadas</span>
+                <h3 id="perfilPromos">0</h3>
+                <p>Beneficios aplicados anteriormente.</p>
+            </div>
+
+            <div class="card danger">
+                <span>Incidencias</span>
+                <h3 id="perfilIncidencias">0</h3>
+                <p>Casos registrados por atención al cliente.</p>
+            </div>
+        </div>
+
+        <div class="profile-layout">
+
+            <div class="profile-panel">
+                <h2>Datos generales</h2>
+
+                <div id="datosGeneralesCliente" class="info-grid">
+                    <!-- Se llena con JavaScript -->
+                </div>
+            </div>
+
+            <div class="profile-panel">
+                <h2>Preferencias del cliente</h2>
+
+                <div id="preferenciasCliente" class="preference-list">
+                    <!-- Se llena con JavaScript -->
+                </div>
+            </div>
+
+        </div>
+
+        <div class="table-panel">
+            <h2 class="table-title">Historial de visitas</h2>
+
+            <table class="crm-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Área visitada</th>
+                        <th>Tiempo estimado</th>
+                        <th>Consumo</th>
+                        <th>Observación</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaVisitasPerfil">
+                    <!-- Se llena con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-panel mt-panel">
+            <h2 class="table-title">Interacciones e incidencias</h2>
+
+            <table class="crm-table">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Fecha</th>
+                        <th>Canal</th>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+                        <th>Responsable</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaInteraccionesPerfil">
+                    <!-- Se llena con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+
+
+
+
+
+
+
+
+
+</div><div class="toast" id="toast">
+
+</div>
+
+<script>
+const clientesPerfil360 = [
+    {
+        id: 1,
+        nombre: "Carlos Ramírez",
+        dni: "45678912",
+        telefono: "987654321",
+        correo: "carlos.ramirez@gmail.com",
+        categoria: "VIP",
+        preferencia: "Ruleta",
+        canalPreferido: "WhatsApp",
+        estado: "Activo",
+        fechaRegistro: "12/01/2026",
+        ultimaVisita: "04/08/2026",
+        promocionesUsadas: 5,
+        visitas: [
+            {
+                fecha: "04/08/2026",
+                area: "Ruleta",
+                tiempo: "2h 30min",
+                consumo: "S/ 850",
+                observacion: "Cliente con alta frecuencia"
+            },
+            {
+                fecha: "29/07/2026",
+                area: "Sala VIP",
+                tiempo: "3h 10min",
+                consumo: "S/ 1,200",
+                observacion: "Recibió atención preferencial"
+            }
+        ],
+        interacciones: [
+            {
+                tipo: "Interacción",
+                fecha: "04/08/2026",
+                canal: "WhatsApp",
+                descripcion: "Consulta sobre promoción VIP",
+                estado: "Atendido",
+                responsable: "Servicio al Cliente"
+            }
+        ]
+    },
+    {
+        id: 2,
+        nombre: "Ana Torres",
+        dni: "74258963",
+        telefono: "956874123",
+        correo: "ana.torres@gmail.com",
+        categoria: "Frecuente",
+        preferencia: "Tragamonedas",
+        canalPreferido: "Email",
+        estado: "Activo",
+        fechaRegistro: "20/02/2026",
+        ultimaVisita: "03/08/2026",
+        promocionesUsadas: 3,
+        visitas: [
+            {
+                fecha: "03/08/2026",
+                area: "Tragamonedas",
+                tiempo: "1h 45min",
+                consumo: "S/ 380",
+                observacion: "Cliente frecuente"
+            },
+            {
+                fecha: "25/07/2026",
+                area: "Tragamonedas",
+                tiempo: "2h",
+                consumo: "S/ 410",
+                observacion: "Usó bono promocional"
+            }
+        ],
+        interacciones: [
+            {
+                tipo: "Interacción",
+                fecha: "02/08/2026",
+                canal: "Email",
+                descripcion: "Recepción de promoción de tragamonedas",
+                estado: "Enviado",
+                responsable: "Marketing"
+            }
+        ]
+    },
+    {
+        id: 3,
+        nombre: "Luis Gómez",
+        dni: "65897412",
+        telefono: "945612378",
+        correo: "luis.gomez@gmail.com",
+        categoria: "Nuevo",
+        preferencia: "Blackjack",
+        canalPreferido: "SMS",
+        estado: "En seguimiento",
+        fechaRegistro: "10/07/2026",
+        ultimaVisita: "18/07/2026",
+        promocionesUsadas: 1,
+        visitas: [
+            {
+                fecha: "18/07/2026",
+                area: "Blackjack",
+                tiempo: "1h",
+                consumo: "S/ 240",
+                observacion: "Primera visita registrada"
+            }
+        ],
+        interacciones: [
+            {
+                tipo: "Incidencia",
+                fecha: "19/07/2026",
+                canal: "Presencial",
+                descripcion: "Solicitó orientación sobre beneficios",
+                estado: "En seguimiento",
+                responsable: "María Torres"
+            }
+        ]
+    },
+    {
+        id: 4,
+        nombre: "María Fernández",
+        dni: "48596712",
+        telefono: "998741256",
+        correo: "maria.fernandez@gmail.com",
+        categoria: "VIP",
+        preferencia: "Poker",
+        canalPreferido: "WhatsApp",
+        estado: "Activo",
+        fechaRegistro: "05/01/2026",
+        ultimaVisita: "01/08/2026",
+        promocionesUsadas: 6,
+        visitas: [
+            {
+                fecha: "01/08/2026",
+                area: "Poker",
+                tiempo: "4h",
+                consumo: "S/ 1,500",
+                observacion: "Cliente premium"
+            }
+        ],
+        interacciones: [
+            {
+                tipo: "Interacción",
+                fecha: "01/08/2026",
+                canal: "WhatsApp",
+                descripcion: "Confirmación de evento Poker Premium",
+                estado: "Atendido",
+                responsable: "Servicio al Cliente"
+            }
+        ]
+    },
+    {
+        id: 5,
+        nombre: "Jorge Salazar",
+        dni: "78965412",
+        telefono: "912345678",
+        correo: "jorge.salazar@gmail.com",
+        categoria: "Inactivo",
+        preferencia: "Apuestas deportivas",
+        canalPreferido: "SMS",
+        estado: "Con incidencia",
+        fechaRegistro: "15/03/2026",
+        ultimaVisita: "02/06/2026",
+        promocionesUsadas: 0,
+        visitas: [
+            {
+                fecha: "02/06/2026",
+                area: "Apuestas deportivas",
+                tiempo: "45min",
+                consumo: "S/ 120",
+                observacion: "No registra visitas recientes"
+            }
+        ],
+        interacciones: [
+            {
+                tipo: "Incidencia",
+                fecha: "05/06/2026",
+                canal: "Teléfono",
+                descripcion: "Reclamo por promoción no aplicada",
+                estado: "Pendiente",
+                responsable: "María Torres"
+            }
+        ]
+    }
+];
+
+const buscarPerfilCliente = document.getElementById("buscarPerfilCliente");
+const selectPerfilCliente = document.getElementById("selectPerfilCliente");
+const filtroPerfilCategoria = document.getElementById("filtroPerfilCategoria");
+const btnActualizarPerfil = document.getElementById("btnActualizarPerfil");
+
+const datosGeneralesCliente = document.getElementById("datosGeneralesCliente");
+const preferenciasCliente = document.getElementById("preferenciasCliente");
+const tablaVisitasPerfil = document.getElementById("tablaVisitasPerfil");
+const tablaInteraccionesPerfil = document.getElementById("tablaInteraccionesPerfil");
+
+function claseCategoriaPerfil(categoria) {
+    if (categoria === "VIP") return "vip";
+    if (categoria === "Frecuente") return "success";
+    if (categoria === "Nuevo") return "blue";
+    if (categoria === "Inactivo") return "danger";
+    return "blue";
+}
+
+function claseEstadoPerfil(estado) {
+    if (estado === "Activo" || estado === "Atendido" || estado === "Enviado") return "success";
+    if (estado === "En seguimiento") return "warning";
+    if (estado === "Con incidencia" || estado === "Pendiente") return "danger";
+    return "blue";
+}
+
+function cargarSelectClientes(lista = clientesPerfil360) {
+    selectPerfilCliente.innerHTML = `<option value="">Seleccionar cliente</option>`;
+
+    lista.forEach(cliente => {
+        const option = document.createElement("option");
+        option.value = cliente.id;
+        option.textContent = `${cliente.nombre} - ${cliente.dni}`;
+        selectPerfilCliente.appendChild(option);
+    });
+}
+
+function cargarPerfil(cliente) {
+    document.getElementById("perfilCategoria").textContent = cliente.categoria;
+    document.getElementById("perfilVisitas").textContent = cliente.visitas.length;
+    document.getElementById("perfilPromos").textContent = cliente.promocionesUsadas;
+    document.getElementById("perfilIncidencias").textContent =
+        cliente.interacciones.filter(i => i.tipo === "Incidencia").length;
+
+    datosGeneralesCliente.innerHTML = `
+        <div>
+            <span>Nombre completo</span>
+            <strong>${cliente.nombre}</strong>
+        </div>
+
+        <div>
+            <span>DNI</span>
+            <strong>${cliente.dni}</strong>
+        </div>
+
+        <div>
+            <span>Teléfono</span>
+            <strong>${cliente.telefono}</strong>
+        </div>
+
+        <div>
+            <span>Correo</span>
+            <strong>${cliente.correo}</strong>
+        </div>
+
+        <div>
+            <span>Categoría</span>
+            <strong>
+                <span class="badge ${claseCategoriaPerfil(cliente.categoria)}">${cliente.categoria}</span>
+            </strong>
+        </div>
+
+        <div>
+            <span>Estado</span>
+            <strong>
+                <span class="badge ${claseEstadoPerfil(cliente.estado)}">${cliente.estado}</span>
+            </strong>
+        </div>
+
+        <div>
+            <span>Fecha de registro</span>
+            <strong>${cliente.fechaRegistro}</strong>
+        </div>
+
+        <div>
+            <span>Última visita</span>
+            <strong>${cliente.ultimaVisita}</strong>
+        </div>
+    `;
+
+    preferenciasCliente.innerHTML = `
+        <div class="preference-item">
+            <span>Juego preferido</span>
+            <strong>${cliente.preferencia}</strong>
+        </div>
+
+        <div class="preference-item">
+            <span>Canal preferido</span>
+            <strong>${cliente.canalPreferido}</strong>
+        </div>
+
+        <div class="preference-item">
+            <span>Promociones usadas</span>
+            <strong>${cliente.promocionesUsadas}</strong>
+        </div>
+
+        <div class="preference-item">
+            <span>Acción recomendada</span>
+            <strong>${obtenerAccionRecomendada(cliente)}</strong>
+        </div>
+    `;
+
+    cargarTablaVisitas(cliente.visitas);
+    cargarTablaInteracciones(cliente.interacciones);
+}
+
+function obtenerAccionRecomendada(cliente) {
+    if (cliente.categoria === "VIP") return "Mantener beneficios exclusivos";
+    if (cliente.estado === "Con incidencia") return "Atender incidencia pendiente";
+    if (cliente.categoria === "Inactivo") return "Enviar campaña de recuperación";
+    if (cliente.categoria === "Nuevo") return "Enviar campaña de bienvenida";
+    return "Enviar promoción personalizada";
+}
+
+function cargarTablaVisitas(visitas) {
+    tablaVisitasPerfil.innerHTML = "";
+
+    visitas.forEach(visita => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>${visita.fecha}</td>
+            <td>${visita.area}</td>
+            <td>${visita.tiempo}</td>
+            <td>${visita.consumo}</td>
+            <td>
+                <span style="color:#9ca3af; font-size:12px;">
+                    ${visita.observacion}
+                </span>
+            </td>
+        `;
+
+        tablaVisitasPerfil.appendChild(fila);
+    });
+}
+
+function cargarTablaInteracciones(interacciones) {
+    tablaInteraccionesPerfil.innerHTML = "";
+
+    interacciones.forEach(item => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <span class="badge ${item.tipo === "Incidencia" ? "danger" : "blue"}">
+                    ${item.tipo}
+                </span>
+            </td>
+            <td>${item.fecha}</td>
+            <td>${item.canal}</td>
+            <td>
+                <span style="color:#9ca3af; font-size:12px;">
+                    ${item.descripcion}
+                </span>
+            </td>
+            <td>
+                <span class="badge ${claseEstadoPerfil(item.estado)}">
+                    ${item.estado}
+                </span>
+            </td>
+            <td>${item.responsable}</td>
+        `;
+
+        tablaInteraccionesPerfil.appendChild(fila);
+    });
+}
+
+function filtrarClientesPerfil() {
+    const texto = buscarPerfilCliente.value.toLowerCase();
+    const categoria = filtroPerfilCategoria.value;
+
+    const resultado = clientesPerfil360.filter(cliente => {
+        const coincideTexto =
+            cliente.nombre.toLowerCase().includes(texto) ||
+            cliente.dni.includes(texto) ||
+            cliente.correo.toLowerCase().includes(texto) ||
+            cliente.preferencia.toLowerCase().includes(texto);
+
+        const coincideCategoria =
+            categoria === "Todos" || cliente.categoria === categoria;
+
+        return coincideTexto && coincideCategoria;
+    });
+
+    cargarSelectClientes(resultado);
+
+    if (resultado.length > 0) {
+        selectPerfilCliente.value = resultado[0].id;
+        cargarPerfil(resultado[0]);
+    } else {
+        limpiarPerfil();
+    }
+}
+
+function limpiarPerfil() {
+    document.getElementById("perfilCategoria").textContent = "-";
+    document.getElementById("perfilVisitas").textContent = "0";
+    document.getElementById("perfilPromos").textContent = "0";
+    document.getElementById("perfilIncidencias").textContent = "0";
+
+    datosGeneralesCliente.innerHTML = `
+        <p style="color:#9ca3af;">No se encontró información del cliente.</p>
+    `;
+
+    preferenciasCliente.innerHTML = `
+        <p style="color:#9ca3af;">Selecciona un cliente para ver sus preferencias.</p>
+    `;
+
+    tablaVisitasPerfil.innerHTML = `
+        <tr>
+            <td colspan="5" style="text-align:center; padding:25px; color:#9ca3af;">
+                Sin visitas para mostrar.
+            </td>
+        </tr>
+    `;
+
+    tablaInteraccionesPerfil.innerHTML = `
+        <tr>
+            <td colspan="6" style="text-align:center; padding:25px; color:#9ca3af;">
+                Sin interacciones para mostrar.
+            </td>
+        </tr>
+    `;
+}
+
+selectPerfilCliente.addEventListener("change", () => {
+    const id = Number(selectPerfilCliente.value);
+    const cliente = clientesPerfil360.find(c => c.id === id);
+
+    if (cliente) {
+        cargarPerfil(cliente);
+    }
+});
+
+buscarPerfilCliente.addEventListener("input", filtrarClientesPerfil);
+filtroPerfilCategoria.addEventListener("change", filtrarClientesPerfil);
+
+btnActualizarPerfil.addEventListener("click", () => {
+    const id = Number(selectPerfilCliente.value);
+    const cliente = clientesPerfil360.find(c => c.id === id);
+
+    if (cliente) {
+        cargarPerfil(cliente);
+        alert("Vista 360° actualizada correctamente. Acción mockeada.");
+    }
+});
+
+cargarSelectClientes();
+selectPerfilCliente.value = clientesPerfil360[0].id;
+cargarPerfil(clientesPerfil360[0]);
+</script>
+
+<script src="../../js/app.js"></script></body></html>

@@ -1,0 +1,408 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Usuarios y Roles TI</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="TECNOLOGIA_INFORMACION"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Tecnología de la Información</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html"><i>⌂</i><span>Resumen</span></a><a href="usuarios-roles.html" class="active"><i>♙</i><span>Usuarios y roles</span></a><a href="monitoreo.html"><i>◇</i><span>Monitoreo</span></a><a href="telefonia.html"><i>☎</i><span>Central telefónica</span></a><a href="sistemas-sala.html"><i>↔</i><span>Sistemas de sala</span></a><a href="auditoria.html"><i>▣</i><span>Auditoría</span></a><a href="seguridad.html"><i>⚿</i><span>Seguridad</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">TECNOLOGÍA DE LA INFORMACIÓN</span>
+            <h1>Usuarios y roles del sistema</h1>
+            <p>Administración técnica de usuarios internos, roles, permisos, estado de acceso y nivel de seguridad.</p>
+        </div>
+
+        <button class="btn-primary" id="btnNuevoUsuarioTi">
+            Nuevo usuario TI
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Total usuarios</span>
+            <h3 id="tiTotalUsuarios">0</h3>
+            <p>Usuarios internos registrados en el sistema.</p>
+        </div>
+
+        <div class="card">
+            <span>Activos</span>
+            <h3 id="tiUsuariosActivos">0</h3>
+            <p>Usuarios con acceso habilitado.</p>
+        </div>
+
+        <div class="card">
+            <span>Roles activos</span>
+            <h3 id="tiRolesActivos">0</h3>
+            <p>Roles disponibles por gerencia.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Bloqueados</span>
+            <h3 id="tiUsuariosBloqueados">0</h3>
+            <p>Usuarios con acceso suspendido.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarUsuarioTi" placeholder="Buscar usuario, trabajador, rol o área...">
+
+        <select id="filtroRolTi">
+            <option value="Todos">Todos los roles</option>
+            <option value="Administrador General">Administrador General</option>
+            <option value="Servicio al Cliente">Servicio al Cliente</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Operaciones">Operaciones</option>
+            <option value="Recursos Humanos">Recursos Humanos</option>
+            <option value="Tecnología de la Información">Tecnología de la Información</option>
+            <option value="Desarrollo de Negocios">Desarrollo de Negocios</option>
+        </select>
+
+        <select id="filtroEstadoTi">
+            <option value="Todos">Todos los estados</option>
+            <option value="Activo">Activo</option>
+            <option value="Bloqueado">Bloqueado</option>
+            <option value="En revisión">En revisión</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Trabajador</th>
+                    <th>Usuario</th>
+                    <th>Rol</th>
+                    <th>Área</th>
+                    <th>Nivel acceso</th>
+                    <th>Último ingreso</th>
+                    <th>Estado</th>
+                    <th>Seguridad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaUsuariosTi">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+    
+    
+    
+    <script>
+const usuariosTi = [
+    {
+        id: 1,
+        trabajador: "Administrador General",
+        usuario: "admin.general",
+        rol: "Administrador General",
+        area: "Administración General",
+        nivel: "Alto",
+        ultimoIngreso: "05/08/2026 15:40",
+        estado: "Activo",
+        seguridad: "2FA activo"
+    },
+    {
+        id: 2,
+        trabajador: "María Torres",
+        usuario: "maria.torres",
+        rol: "Servicio al Cliente",
+        area: "Servicio al Cliente",
+        nivel: "Medio",
+        ultimoIngreso: "05/08/2026 14:20",
+        estado: "Activo",
+        seguridad: "Contraseña vigente"
+    },
+    {
+        id: 3,
+        trabajador: "Diego Salazar",
+        usuario: "diego.salazar",
+        rol: "Marketing",
+        area: "Marketing",
+        nivel: "Medio",
+        ultimoIngreso: "05/08/2026 13:55",
+        estado: "Activo",
+        seguridad: "Contraseña vigente"
+    },
+    {
+        id: 4,
+        trabajador: "Lucía Ramírez",
+        usuario: "lucia.ramirez",
+        rol: "Operaciones",
+        area: "Operaciones",
+        nivel: "Medio",
+        ultimoIngreso: "05/08/2026 12:30",
+        estado: "Activo",
+        seguridad: "Contraseña vigente"
+    },
+    {
+        id: 5,
+        trabajador: "Carlos Mendoza",
+        usuario: "carlos.mendoza",
+        rol: "Recursos Humanos",
+        area: "Recursos Humanos",
+        nivel: "Medio",
+        ultimoIngreso: "04/08/2026 18:10",
+        estado: "Activo",
+        seguridad: "Contraseña vigente"
+    },
+    {
+        id: 6,
+        trabajador: "Andrea Paredes",
+        usuario: "andrea.paredes",
+        rol: "Tecnología de la Información",
+        area: "Tecnología de la Información",
+        nivel: "Alto",
+        ultimoIngreso: "05/08/2026 16:05",
+        estado: "Activo",
+        seguridad: "2FA activo"
+    },
+    {
+        id: 7,
+        trabajador: "Fernando Ruiz",
+        usuario: "fernando.ruiz",
+        rol: "Desarrollo de Negocios",
+        area: "Desarrollo de Negocios",
+        nivel: "Medio",
+        ultimoIngreso: "05/08/2026 11:50",
+        estado: "Activo",
+        seguridad: "Contraseña vigente"
+    },
+    {
+        id: 8,
+        trabajador: "Pedro Salas",
+        usuario: "pedro.salas",
+        rol: "Operaciones",
+        area: "Operaciones",
+        nivel: "Bajo",
+        ultimoIngreso: "01/08/2026 09:20",
+        estado: "Bloqueado",
+        seguridad: "Acceso suspendido"
+    }
+];
+
+const tablaUsuariosTi = document.getElementById("tablaUsuariosTi");
+const buscarUsuarioTi = document.getElementById("buscarUsuarioTi");
+const filtroRolTi = document.getElementById("filtroRolTi");
+const filtroEstadoTi = document.getElementById("filtroEstadoTi");
+const btnNuevoUsuarioTi = document.getElementById("btnNuevoUsuarioTi");
+
+function claseRolTi(rol) {
+    if (rol === "Administrador General") return "vip";
+    if (rol === "Servicio al Cliente") return "blue";
+    if (rol === "Marketing") return "vip";
+    if (rol === "Operaciones") return "success";
+    if (rol === "Recursos Humanos") return "warning";
+    if (rol === "Tecnología de la Información") return "danger";
+    if (rol === "Desarrollo de Negocios") return "blue";
+    return "blue";
+}
+
+function claseNivelTi(nivel) {
+    if (nivel === "Alto") return "danger";
+    if (nivel === "Medio") return "warning";
+    if (nivel === "Bajo") return "blue";
+    return "blue";
+}
+
+function claseEstadoTi(estado) {
+    if (estado === "Activo") return "success";
+    if (estado === "Bloqueado") return "danger";
+    if (estado === "En revisión") return "warning";
+    return "blue";
+}
+
+function claseSeguridadTi(seguridad) {
+    if (seguridad === "2FA activo") return "success";
+    if (seguridad === "Contraseña vigente") return "blue";
+    if (seguridad === "Acceso suspendido") return "danger";
+    return "warning";
+}
+
+function cargarResumenUsuariosTi() {
+    document.getElementById("tiTotalUsuarios").textContent = usuariosTi.length;
+
+    document.getElementById("tiUsuariosActivos").textContent =
+        usuariosTi.filter(u => u.estado === "Activo").length;
+
+    const rolesUnicos = new Set(usuariosTi.map(u => u.rol));
+    document.getElementById("tiRolesActivos").textContent = rolesUnicos.size;
+
+    document.getElementById("tiUsuariosBloqueados").textContent =
+        usuariosTi.filter(u => u.estado === "Bloqueado").length;
+}
+
+function cargarTablaUsuariosTi(lista = usuariosTi) {
+    tablaUsuariosTi.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaUsuariosTi.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron usuarios con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(usuario => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${usuario.trabajador}</strong>
+                    <span>ID usuario: ${usuario.id}</span>
+                </div>
+            </td>
+
+            <td>${usuario.usuario}</td>
+
+            <td>
+                <span class="badge ${claseRolTi(usuario.rol)}">
+                    ${usuario.rol}
+                </span>
+            </td>
+
+            <td>${usuario.area}</td>
+
+            <td>
+                <span class="badge ${claseNivelTi(usuario.nivel)}">
+                    ${usuario.nivel}
+                </span>
+            </td>
+
+            <td>${usuario.ultimoIngreso}</td>
+
+            <td>
+                <span class="badge ${claseEstadoTi(usuario.estado)}">
+                    ${usuario.estado}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${claseSeguridadTi(usuario.seguridad)}">
+                    ${usuario.seguridad}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verUsuarioTi(${usuario.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="activarUsuarioTi(${usuario.id})">Activar</button>
+                <button class="btn-action btn-delete" onclick="bloquearUsuarioTi(${usuario.id})">Bloquear</button>
+            </td>
+        `;
+
+        tablaUsuariosTi.appendChild(fila);
+    });
+}
+
+function filtrarUsuariosTi() {
+    const texto = buscarUsuarioTi.value.toLowerCase();
+    const rol = filtroRolTi.value;
+    const estado = filtroEstadoTi.value;
+
+    const resultado = usuariosTi.filter(usuario => {
+        const coincideTexto =
+            usuario.trabajador.toLowerCase().includes(texto) ||
+            usuario.usuario.toLowerCase().includes(texto) ||
+            usuario.rol.toLowerCase().includes(texto) ||
+            usuario.area.toLowerCase().includes(texto);
+
+        const coincideRol =
+            rol === "Todos" || usuario.rol === rol;
+
+        const coincideEstado =
+            estado === "Todos" || usuario.estado === estado;
+
+        return coincideTexto && coincideRol && coincideEstado;
+    });
+
+    cargarTablaUsuariosTi(resultado);
+}
+
+function verUsuarioTi(id) {
+    const usuario = usuariosTi.find(u => u.id === id);
+
+    if (!usuario) return;
+
+    alert(
+        `Trabajador: ${usuario.trabajador}\n` +
+        `Usuario: ${usuario.usuario}\n` +
+        `Rol: ${usuario.rol}\n` +
+        `Área: ${usuario.area}\n` +
+        `Nivel: ${usuario.nivel}\n` +
+        `Último ingreso: ${usuario.ultimoIngreso}\n` +
+        `Estado: ${usuario.estado}\n` +
+        `Seguridad: ${usuario.seguridad}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function activarUsuarioTi(id) {
+    const usuario = usuariosTi.find(u => u.id === id);
+
+    if (!usuario) return;
+
+    usuario.estado = "Activo";
+    usuario.seguridad = "Contraseña vigente";
+
+    cargarResumenUsuariosTi();
+    cargarTablaUsuariosTi();
+
+    alert(`Usuario "${usuario.usuario}" activado correctamente. Acción mockeada.`);
+}
+
+function bloquearUsuarioTi(id) {
+    const usuario = usuariosTi.find(u => u.id === id);
+
+    if (!usuario) return;
+
+    const confirmar = confirm(`¿Deseas bloquear el acceso de "${usuario.trabajador}"?`);
+
+    if (confirmar) {
+        usuario.estado = "Bloqueado";
+        usuario.seguridad = "Acceso suspendido";
+
+        cargarResumenUsuariosTi();
+        cargarTablaUsuariosTi();
+
+        alert("Usuario bloqueado correctamente. Acción mockeada.");
+    }
+}
+
+btnNuevoUsuarioTi.addEventListener("click", () => {
+    const nuevo = {
+        id: usuariosTi.length + 1,
+        trabajador: "Nuevo Usuario TI",
+        usuario: "nuevo.usuario",
+        rol: "Tecnología de la Información",
+        area: "Tecnología de la Información",
+        nivel: "Bajo",
+        ultimoIngreso: "Sin ingreso",
+        estado: "En revisión",
+        seguridad: "Pendiente"
+    };
+
+    usuariosTi.push(nuevo);
+
+    cargarResumenUsuariosTi();
+    cargarTablaUsuariosTi();
+
+    alert("Nuevo usuario registrado correctamente. Acción mockeada.");
+});
+
+buscarUsuarioTi.addEventListener("input", filtrarUsuariosTi);
+filtroRolTi.addEventListener("change", filtrarUsuariosTi);
+filtroEstadoTi.addEventListener("change", filtrarUsuariosTi);
+
+cargarResumenUsuariosTi();
+cargarTablaUsuariosTi();
+</script>
+    
+    <script src="../../js/app.js"></script></body></html>

@@ -1,0 +1,428 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Perfil operativo del cliente</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="OPERACIONES"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Operaciones</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="perfil-cliente.html" class="active"><i>◎</i><span>Perfil del cliente</span></a><a href="visitas.html" class=""><i>↳</i><span>Visitas</span></a><a href="checkin-vip.html" class=""><i>♛</i><span>Check-in VIP</span></a><a href="reservas.html" class=""><i>◈</i><span>Reservas</span></a><a href="cortesias.html" class=""><i>◉</i><span>Cortesías</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">OPERACIONES</span>
+            <h1>Perfil operativo del cliente</h1>
+            <p>Consulta rápida del estado operativo del cliente: categoría, visita actual, reservas, área asignada y observaciones.</p>
+        </div>
+
+        <button class="btn-primary" id="btnActualizarPerfilOp">
+            Actualizar perfil
+        </button>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarPerfilOp" placeholder="Buscar cliente, DNI, categoría o área...">
+
+        <select id="selectClienteOp">
+            <option value="">Seleccionar cliente</option>
+        </select>
+
+        <select id="filtroCategoriaOp">
+            <option value="Todos">Todas las categorías</option>
+            <option value="VIP">VIP</option>
+            <option value="Frecuente">Frecuente</option>
+            <option value="Nuevo">Nuevo</option>
+            <option value="Inactivo">Inactivo</option>
+        </select>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Categoría</span>
+            <h3 id="opCategoria">-</h3>
+            <p>Nivel operativo del cliente.</p>
+        </div>
+
+        <div class="card">
+            <span>Estado actual</span>
+            <h3 id="opEstado">-</h3>
+            <p>Situación del cliente dentro del local.</p>
+        </div>
+
+        <div class="card">
+            <span>Reservas activas</span>
+            <h3 id="opReservas">0</h3>
+            <p>Reservas pendientes o confirmadas.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Observaciones</span>
+            <h3 id="opObservaciones">0</h3>
+            <p>Alertas u observaciones operativas.</p>
+        </div>
+    </div>
+
+    <div class="profile-layout">
+
+        <div class="profile-panel">
+            <h2>Datos operativos</h2>
+
+            <div id="datosOperativosCliente" class="info-grid">
+                <!-- Se llena con JavaScript -->
+            </div>
+        </div>
+
+        <div class="profile-panel">
+            <h2>Acción recomendada</h2>
+
+            <div id="accionOperativaCliente" class="preference-list">
+                <!-- Se llena con JavaScript -->
+            </div>
+        </div>
+
+    </div>
+
+    <div class="table-panel">
+        <h2 class="table-title">Historial operativo reciente</h2>
+
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Área</th>
+                    <th>Ingreso</th>
+                    <th>Salida</th>
+                    <th>Estado</th>
+                    <th>Observación</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaHistorialOperativo">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+
+<script>
+const perfilesOperativos = [
+    {
+        id: 1,
+        cliente: "Carlos Ramírez",
+        dni: "45678912",
+        correo: "carlos.ramirez@gmail.com",
+        telefono: "987654321",
+        categoria: "VIP",
+        estadoActual: "En sala",
+        areaActual: "Sala VIP",
+        reservaActiva: "Sala VIP - 08/08/2026 21:00",
+        reservas: 1,
+        observaciones: 1,
+        responsable: "Lucía Ramírez",
+        accion: "Mantener atención preferencial y confirmar beneficio VIP.",
+        historial: [
+            {
+                fecha: "05/08/2026",
+                area: "Sala VIP",
+                ingreso: "18:30",
+                salida: "-",
+                estado: "En sala",
+                observacion: "Cliente VIP en atención preferencial."
+            },
+            {
+                fecha: "29/07/2026",
+                area: "Ruleta",
+                ingreso: "20:00",
+                salida: "22:40",
+                estado: "Finalizada",
+                observacion: "Visita sin incidencias."
+            }
+        ]
+    },
+    {
+        id: 2,
+        cliente: "Ana Torres",
+        dni: "74258963",
+        correo: "ana.torres@gmail.com",
+        telefono: "956874123",
+        categoria: "Frecuente",
+        estadoActual: "Finalizada",
+        areaActual: "Tragamonedas",
+        reservaActiva: "Mesa de juego - 09/08/2026 22:00",
+        reservas: 1,
+        observaciones: 0,
+        responsable: "Operaciones",
+        accion: "Registrar continuidad de visitas y derivar beneficios a Marketing.",
+        historial: [
+            {
+                fecha: "05/08/2026",
+                area: "Tragamonedas",
+                ingreso: "16:10",
+                salida: "18:20",
+                estado: "Finalizada",
+                observacion: "Visita sin incidencias."
+            }
+        ]
+    },
+    {
+        id: 3,
+        cliente: "Luis Gómez",
+        dni: "65897412",
+        correo: "luis.gomez@gmail.com",
+        telefono: "945612378",
+        categoria: "Nuevo",
+        estadoActual: "Observada",
+        areaActual: "Ruleta",
+        reservaActiva: "Atención preferencial - 12/08/2026 19:00",
+        reservas: 1,
+        observaciones: 1,
+        responsable: "Lucía Ramírez",
+        accion: "Brindar orientación operativa y registrar seguimiento.",
+        historial: [
+            {
+                fecha: "05/08/2026",
+                area: "Ruleta",
+                ingreso: "15:20",
+                salida: "16:05",
+                estado: "Observada",
+                observacion: "Cliente solicitó orientación sobre beneficios."
+            }
+        ]
+    },
+    {
+        id: 4,
+        cliente: "María Fernández",
+        dni: "48596712",
+        correo: "maria.fernandez@gmail.com",
+        telefono: "998741256",
+        categoria: "VIP",
+        estadoActual: "En sala",
+        areaActual: "Poker Premium",
+        reservaActiva: "Poker Premium - 10/08/2026 20:30",
+        reservas: 1,
+        observaciones: 0,
+        responsable: "Operaciones",
+        accion: "Asignar mesa premium y mantener atención VIP.",
+        historial: [
+            {
+                fecha: "05/08/2026",
+                area: "Poker Premium",
+                ingreso: "19:00",
+                salida: "-",
+                estado: "En sala",
+                observacion: "Cliente asignado a mesa premium."
+            }
+        ]
+    },
+    {
+        id: 5,
+        cliente: "Jorge Salazar",
+        dni: "78965412",
+        correo: "jorge.salazar@gmail.com",
+        telefono: "912345678",
+        categoria: "Inactivo",
+        estadoActual: "Finalizada",
+        areaActual: "Apuestas deportivas",
+        reservaActiva: "Sin reserva activa",
+        reservas: 0,
+        observaciones: 1,
+        responsable: "Operaciones",
+        accion: "Registrar retorno y sugerir campaña de recuperación.",
+        historial: [
+            {
+                fecha: "05/08/2026",
+                area: "Apuestas deportivas",
+                ingreso: "14:00",
+                salida: "14:50",
+                estado: "Finalizada",
+                observacion: "Cliente retornó después de periodo inactivo."
+            }
+        ]
+    }
+];
+
+const buscarPerfilOp = document.getElementById("buscarPerfilOp");
+const selectClienteOp = document.getElementById("selectClienteOp");
+const filtroCategoriaOp = document.getElementById("filtroCategoriaOp");
+const btnActualizarPerfilOp = document.getElementById("btnActualizarPerfilOp");
+
+const datosOperativosCliente = document.getElementById("datosOperativosCliente");
+const accionOperativaCliente = document.getElementById("accionOperativaCliente");
+const tablaHistorialOperativo = document.getElementById("tablaHistorialOperativo");
+
+function claseCategoriaOp(categoria) {
+    if (categoria === "VIP") return "vip";
+    if (categoria === "Frecuente") return "success";
+    if (categoria === "Nuevo") return "blue";
+    if (categoria === "Inactivo") return "danger";
+    return "blue";
+}
+
+function claseEstadoOp(estado) {
+    if (estado === "En sala") return "success";
+    if (estado === "Finalizada") return "blue";
+    if (estado === "Observada") return "warning";
+    return "blue";
+}
+
+function cargarSelectPerfilOp(lista = perfilesOperativos) {
+    selectClienteOp.innerHTML = `<option value="">Seleccionar cliente</option>`;
+
+    lista.forEach(cliente => {
+        const option = document.createElement("option");
+        option.value = cliente.id;
+        option.textContent = `${cliente.cliente} - ${cliente.dni}`;
+        selectClienteOp.appendChild(option);
+    });
+}
+
+function cargarPerfilOperativo(cliente) {
+    document.getElementById("opCategoria").textContent = cliente.categoria;
+    document.getElementById("opEstado").textContent = cliente.estadoActual;
+    document.getElementById("opReservas").textContent = cliente.reservas;
+    document.getElementById("opObservaciones").textContent = cliente.observaciones;
+
+    datosOperativosCliente.innerHTML = `
+        <div>
+            <span>Cliente</span>
+            <strong>${cliente.cliente}</strong>
+        </div>
+
+        <div>
+            <span>DNI</span>
+            <strong>${cliente.dni}</strong>
+        </div>
+
+        <div>
+            <span>Teléfono</span>
+            <strong>${cliente.telefono}</strong>
+        </div>
+
+        <div>
+            <span>Correo</span>
+            <strong>${cliente.correo}</strong>
+        </div>
+
+        <div>
+            <span>Categoría</span>
+            <strong>
+                <span class="badge ${claseCategoriaOp(cliente.categoria)}">${cliente.categoria}</span>
+            </strong>
+        </div>
+
+        <div>
+            <span>Estado actual</span>
+            <strong>
+                <span class="badge ${claseEstadoOp(cliente.estadoActual)}">${cliente.estadoActual}</span>
+            </strong>
+        </div>
+
+        <div>
+            <span>Área actual</span>
+            <strong>${cliente.areaActual}</strong>
+        </div>
+
+        <div>
+            <span>Responsable</span>
+            <strong>${cliente.responsable}</strong>
+        </div>
+    `;
+
+    accionOperativaCliente.innerHTML = `
+        <div class="preference-item">
+            <span>Reserva activa</span>
+            <strong>${cliente.reservaActiva}</strong>
+        </div>
+
+        <div class="preference-item">
+            <span>Acción recomendada</span>
+            <strong>${cliente.accion}</strong>
+        </div>
+
+        <div class="preference-item">
+            <span>Prioridad operativa</span>
+            <strong>${cliente.categoria === "VIP" ? "Alta" : "Media"}</strong>
+        </div>
+    `;
+
+    cargarHistorialOperativo(cliente.historial);
+}
+
+function cargarHistorialOperativo(historial) {
+    tablaHistorialOperativo.innerHTML = "";
+
+    historial.forEach(item => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>${item.fecha}</td>
+            <td>${item.area}</td>
+            <td>${item.ingreso}</td>
+            <td>${item.salida}</td>
+            <td>
+                <span class="badge ${claseEstadoOp(item.estado)}">
+                    ${item.estado}
+                </span>
+            </td>
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${item.observacion}
+                </span>
+            </td>
+        `;
+
+        tablaHistorialOperativo.appendChild(fila);
+    });
+}
+
+function filtrarPerfilOperativo() {
+    const texto = buscarPerfilOp.value.toLowerCase();
+    const categoria = filtroCategoriaOp.value;
+
+    const resultado = perfilesOperativos.filter(cliente => {
+        const coincideTexto =
+            cliente.cliente.toLowerCase().includes(texto) ||
+            cliente.dni.includes(texto) ||
+            cliente.categoria.toLowerCase().includes(texto) ||
+            cliente.areaActual.toLowerCase().includes(texto);
+
+        const coincideCategoria =
+            categoria === "Todos" || cliente.categoria === categoria;
+
+        return coincideTexto && coincideCategoria;
+    });
+
+    cargarSelectPerfilOp(resultado);
+
+    if (resultado.length > 0) {
+        selectClienteOp.value = resultado[0].id;
+        cargarPerfilOperativo(resultado[0]);
+    }
+}
+
+selectClienteOp.addEventListener("change", () => {
+    const id = Number(selectClienteOp.value);
+    const cliente = perfilesOperativos.find(c => c.id === id);
+
+    if (cliente) {
+        cargarPerfilOperativo(cliente);
+    }
+});
+
+buscarPerfilOp.addEventListener("input", filtrarPerfilOperativo);
+filtroCategoriaOp.addEventListener("change", filtrarPerfilOperativo);
+
+btnActualizarPerfilOp.addEventListener("click", () => {
+    const id = Number(selectClienteOp.value);
+    const cliente = perfilesOperativos.find(c => c.id === id);
+
+    if (cliente) {
+        cargarPerfilOperativo(cliente);
+        alert("Perfil operativo actualizado correctamente. Acción mockeada.");
+    }
+});
+
+cargarSelectPerfilOp();
+selectClienteOp.value = perfilesOperativos[0].id;
+cargarPerfilOperativo(perfilesOperativos[0]);
+</script><script src="../../js/app.js"></script></body></html>

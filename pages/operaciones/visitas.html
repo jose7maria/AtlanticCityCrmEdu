@@ -1,0 +1,381 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Registro de visitas</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="OPERACIONES"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small>
+
+</span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Operaciones</span></div>
+<p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="perfil-cliente.html" class=""><i>◎</i><span>Perfil del cliente</span></a><a href="visitas.html" class="active"><i>↳</i><span>Visitas</span></a><a href="checkin-vip.html" class=""><i>♛</i><span>Check-in VIP</span></a><a href="reservas.html" class=""><i>◈</i><span>Reservas</span></a><a href="cortesias.html" class=""><i>◉</i><span>Cortesías</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">OPERACIONES</span>
+            <h1>Registro de visitas</h1>
+            <p>Control operativo de visitas de clientes, áreas utilizadas, horarios, estado de atención y observaciones.</p>
+        </div>
+
+        <button class="btn-primary" id="btnNuevaVisita">
+            Nueva visita
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Visitas de hoy</span>
+            <h3 id="visitasHoy">0</h3>
+            <p>Clientes registrados durante el día.</p>
+        </div>
+
+        <div class="card">
+            <span>Clientes VIP</span>
+            <h3 id="visitasVip">0</h3>
+            <p>Visitas de clientes con categoría preferencial.</p>
+        </div>
+
+        <div class="card">
+            <span>En sala</span>
+            <h3 id="visitasEnSala">0</h3>
+            <p>Clientes que permanecen dentro del local.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Con observación</span>
+            <h3 id="visitasObservadas">0</h3>
+            <p>Visitas que requieren seguimiento operativo.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarVisita" placeholder="Buscar cliente, DNI, área o responsable...">
+
+        <select id="filtroAreaVisita">
+            <option value="Todos">Todas las áreas</option>
+            <option value="Sala VIP">Sala VIP</option>
+            <option value="Tragamonedas">Tragamonedas</option>
+            <option value="Ruleta">Ruleta</option>
+            <option value="Poker">Poker</option>
+            <option value="Apuestas deportivas">Apuestas deportivas</option>
+        </select>
+
+        <select id="filtroEstadoVisita">
+            <option value="Todos">Todos los estados</option>
+            <option value="En sala">En sala</option>
+            <option value="Finalizada">Finalizada</option>
+            <option value="Observada">Observada</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>DNI</th>
+                    <th>Categoría</th>
+                    <th>Área</th>
+                    <th>Ingreso</th>
+                    <th>Salida</th>
+                    <th>Tiempo</th>
+                    <th>Estado</th>
+                    <th>Responsable</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaVisitas">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+    
+    
+    <script>
+const visitasOperaciones = [
+    {
+        id: 1,
+        cliente: "Carlos Ramírez",
+        dni: "45678912",
+        correo: "carlos.ramirez@gmail.com",
+        categoria: "VIP",
+        area: "Sala VIP",
+        ingreso: "18:30",
+        salida: "-",
+        tiempo: "En curso",
+        estado: "En sala",
+        responsable: "Lucía Ramírez",
+        observacion: "Cliente VIP en atención preferencial."
+    },
+    {
+        id: 2,
+        cliente: "Ana Torres",
+        dni: "74258963",
+        correo: "ana.torres@gmail.com",
+        categoria: "Frecuente",
+        area: "Tragamonedas",
+        ingreso: "16:10",
+        salida: "18:20",
+        tiempo: "2h 10min",
+        estado: "Finalizada",
+        responsable: "Operaciones",
+        observacion: "Visita sin incidencias."
+    },
+    {
+        id: 3,
+        cliente: "María Fernández",
+        dni: "48596712",
+        correo: "maria.fernandez@gmail.com",
+        categoria: "VIP",
+        area: "Poker",
+        ingreso: "19:00",
+        salida: "-",
+        tiempo: "En curso",
+        estado: "En sala",
+        responsable: "Lucía Ramírez",
+        observacion: "Cliente asignado a mesa premium."
+    },
+    {
+        id: 4,
+        cliente: "Luis Gómez",
+        dni: "65897412",
+        correo: "luis.gomez@gmail.com",
+        categoria: "Nuevo",
+        area: "Ruleta",
+        ingreso: "15:20",
+        salida: "16:05",
+        tiempo: "45min",
+        estado: "Observada",
+        responsable: "Operaciones",
+        observacion: "Cliente solicitó orientación sobre beneficios."
+    },
+    {
+        id: 5,
+        cliente: "Jorge Salazar",
+        dni: "78965412",
+        correo: "jorge.salazar@gmail.com",
+        categoria: "Inactivo",
+        area: "Apuestas deportivas",
+        ingreso: "14:00",
+        salida: "14:50",
+        tiempo: "50min",
+        estado: "Finalizada",
+        responsable: "Operaciones",
+        observacion: "Cliente retornó después de periodo inactivo."
+    }
+];
+
+const tablaVisitas = document.getElementById("tablaVisitas");
+const buscarVisita = document.getElementById("buscarVisita");
+const filtroAreaVisita = document.getElementById("filtroAreaVisita");
+const filtroEstadoVisita = document.getElementById("filtroEstadoVisita");
+const btnNuevaVisita = document.getElementById("btnNuevaVisita");
+
+function claseCategoriaVisita(categoria) {
+    if (categoria === "VIP") return "vip";
+    if (categoria === "Frecuente") return "success";
+    if (categoria === "Nuevo") return "blue";
+    if (categoria === "Inactivo") return "danger";
+    return "blue";
+}
+
+function claseEstadoVisita(estado) {
+    if (estado === "En sala") return "success";
+    if (estado === "Finalizada") return "blue";
+    if (estado === "Observada") return "warning";
+    return "blue";
+}
+
+function claseAreaVisita(area) {
+    if (area === "Sala VIP") return "vip";
+    if (area === "Tragamonedas") return "success";
+    if (area === "Ruleta") return "blue";
+    if (area === "Poker") return "warning";
+    if (area === "Apuestas deportivas") return "danger";
+    return "blue";
+}
+
+function cargarResumenVisitas() {
+    document.getElementById("visitasHoy").textContent = visitasOperaciones.length;
+
+    document.getElementById("visitasVip").textContent =
+        visitasOperaciones.filter(v => v.categoria === "VIP").length;
+
+    document.getElementById("visitasEnSala").textContent =
+        visitasOperaciones.filter(v => v.estado === "En sala").length;
+
+    document.getElementById("visitasObservadas").textContent =
+        visitasOperaciones.filter(v => v.estado === "Observada").length;
+}
+
+function cargarTablaVisitas(lista = visitasOperaciones) {
+    tablaVisitas.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaVisitas.innerHTML = `
+            <tr>
+                <td colspan="10" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron visitas con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(visita => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${visita.cliente}</strong>
+                    <span>${visita.correo}</span>
+                </div>
+            </td>
+
+            <td>${visita.dni}</td>
+
+            <td>
+                <span class="badge ${claseCategoriaVisita(visita.categoria)}">
+                    ${visita.categoria}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${claseAreaVisita(visita.area)}">
+                    ${visita.area}
+                </span>
+            </td>
+
+            <td>${visita.ingreso}</td>
+
+            <td>${visita.salida}</td>
+
+            <td>${visita.tiempo}</td>
+
+            <td>
+                <span class="badge ${claseEstadoVisita(visita.estado)}">
+                    ${visita.estado}
+                </span>
+            </td>
+
+            <td>${visita.responsable}</td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verVisita(${visita.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="cerrarVisita(${visita.id})">Cerrar</button>
+                <button class="btn-action btn-delete" onclick="observarVisita(${visita.id})">Observar</button>
+            </td>
+        `;
+
+        tablaVisitas.appendChild(fila);
+    });
+}
+
+function filtrarVisitas() {
+    const texto = buscarVisita.value.toLowerCase();
+    const area = filtroAreaVisita.value;
+    const estado = filtroEstadoVisita.value;
+
+    const resultado = visitasOperaciones.filter(visita => {
+        const coincideTexto =
+            visita.cliente.toLowerCase().includes(texto) ||
+            visita.dni.includes(texto) ||
+            visita.area.toLowerCase().includes(texto) ||
+            visita.responsable.toLowerCase().includes(texto);
+
+        const coincideArea =
+            area === "Todos" || visita.area === area;
+
+        const coincideEstado =
+            estado === "Todos" || visita.estado === estado;
+
+        return coincideTexto && coincideArea && coincideEstado;
+    });
+
+    cargarTablaVisitas(resultado);
+}
+
+function verVisita(id) {
+    const visita = visitasOperaciones.find(v => v.id === id);
+
+    if (!visita) return;
+
+    alert(
+        `Cliente: ${visita.cliente}\n` +
+        `DNI: ${visita.dni}\n` +
+        `Categoría: ${visita.categoria}\n` +
+        `Área: ${visita.area}\n` +
+        `Ingreso: ${visita.ingreso}\n` +
+        `Salida: ${visita.salida}\n` +
+        `Estado: ${visita.estado}\n\n` +
+        `Observación: ${visita.observacion}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function cerrarVisita(id) {
+    const visita = visitasOperaciones.find(v => v.id === id);
+
+    if (!visita) return;
+
+    visita.estado = "Finalizada";
+    visita.salida = "20:00";
+    visita.tiempo = "Calculado";
+
+    cargarResumenVisitas();
+    cargarTablaVisitas();
+
+    alert(`Visita de "${visita.cliente}" cerrada correctamente. Acción mockeada.`);
+}
+
+function observarVisita(id) {
+    const visita = visitasOperaciones.find(v => v.id === id);
+
+    if (!visita) return;
+
+    visita.estado = "Observada";
+    visita.observacion = "Visita marcada para seguimiento operativo.";
+
+    cargarResumenVisitas();
+    cargarTablaVisitas();
+
+    alert(`Visita de "${visita.cliente}" marcada como observada. Acción mockeada.`);
+}
+
+btnNuevaVisita.addEventListener("click", () => {
+    const nueva = {
+        id: visitasOperaciones.length + 1,
+        cliente: "Nuevo Cliente",
+        dni: "00000000",
+        correo: "nuevo.cliente@gmail.com",
+        categoria: "Nuevo",
+        area: "Recepción",
+        ingreso: "20:10",
+        salida: "-",
+        tiempo: "En curso",
+        estado: "En sala",
+        responsable: "Operaciones",
+        observacion: "Registro mockeado de nueva visita."
+    };
+
+    visitasOperaciones.push(nueva);
+
+    cargarResumenVisitas();
+    cargarTablaVisitas();
+
+    alert("Nueva visita registrada correctamente. Acción mockeada.");
+});
+
+buscarVisita.addEventListener("input", filtrarVisitas);
+filtroAreaVisita.addEventListener("change", filtrarVisitas);
+filtroEstadoVisita.addEventListener("change", filtrarVisitas);
+
+cargarResumenVisitas();
+cargarTablaVisitas();
+</script>
+    
+    <script src="../../js/app.js"></script></body></html>

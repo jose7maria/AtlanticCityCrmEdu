@@ -1,0 +1,364 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Reservas operativas</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="OPERACIONES"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Operaciones</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="perfil-cliente.html" class=""><i>◎</i><span>Perfil del cliente</span></a><a href="visitas.html" class=""><i>↳</i><span>Visitas</span></a><a href="checkin-vip.html" class=""><i>♛</i><span>Check-in VIP</span></a><a href="reservas.html" class="active"><i>◈</i><span>Reservas</span></a><a href="cortesias.html" class=""><i>◉</i><span>Cortesías</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">OPERACIONES</span>
+            <h1>Reservas operativas</h1>
+            <p>Control de reservas de salas, mesas, eventos y atenciones especiales solicitadas por clientes.</p>
+        </div>
+
+        <button class="btn-primary" id="btnNuevaReservaOp">
+            Nueva reserva
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Total reservas</span>
+            <h3 id="opResTotal">0</h3>
+            <p>Reservas registradas en operaciones.</p>
+        </div>
+
+        <div class="card">
+            <span>Confirmadas</span>
+            <h3 id="opResConfirmadas">0</h3>
+            <p>Reservas listas para atención.</p>
+        </div>
+
+        <div class="card">
+            <span>Pendientes</span>
+            <h3 id="opResPendientes">0</h3>
+            <p>Reservas que requieren validación operativa.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Canceladas</span>
+            <h3 id="opResCanceladas">0</h3>
+            <p>Reservas anuladas o no aprobadas.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarReservaOp" placeholder="Buscar cliente, DNI, área o responsable...">
+
+        <select id="filtroTipoReservaOp">
+            <option value="Todos">Todos los tipos</option>
+            <option value="Sala VIP">Sala VIP</option>
+            <option value="Mesa de poker">Mesa de poker</option>
+            <option value="Evento especial">Evento especial</option>
+            <option value="Atención preferencial">Atención preferencial</option>
+        </select>
+
+        <select id="filtroEstadoReservaOp">
+            <option value="Todos">Todos los estados</option>
+            <option value="Confirmada">Confirmada</option>
+            <option value="Pendiente">Pendiente</option>
+            <option value="Cancelada">Cancelada</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>DNI</th>
+                    <th>Tipo</th>
+                    <th>Área</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Estado</th>
+                    <th>Responsable</th>
+                    <th>Observación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaReservasOp">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+
+<script>
+const reservasOperaciones = [
+    {
+        id: 1,
+        cliente: "Carlos Ramírez",
+        dni: "45678912",
+        correo: "carlos.ramirez@gmail.com",
+        tipo: "Sala VIP",
+        area: "Zona VIP",
+        fecha: "08/08/2026",
+        hora: "21:00",
+        estado: "Confirmada",
+        responsable: "Lucía Ramírez",
+        observacion: "Cliente VIP con atención preferencial."
+    },
+    {
+        id: 2,
+        cliente: "María Fernández",
+        dni: "48596712",
+        correo: "maria.fernandez@gmail.com",
+        tipo: "Mesa de poker",
+        area: "Poker Premium",
+        fecha: "10/08/2026",
+        hora: "20:30",
+        estado: "Confirmada",
+        responsable: "Operaciones",
+        observacion: "Mesa premium reservada."
+    },
+    {
+        id: 3,
+        cliente: "Luis Gómez",
+        dni: "65897412",
+        correo: "luis.gomez@gmail.com",
+        tipo: "Atención preferencial",
+        area: "Recepción",
+        fecha: "12/08/2026",
+        hora: "19:00",
+        estado: "Pendiente",
+        responsable: "Lucía Ramírez",
+        observacion: "Pendiente de confirmación por capacidad."
+    },
+    {
+        id: 4,
+        cliente: "Ana Torres",
+        dni: "74258963",
+        correo: "ana.torres@gmail.com",
+        tipo: "Evento especial",
+        area: "Tragamonedas",
+        fecha: "09/08/2026",
+        hora: "22:00",
+        estado: "Pendiente",
+        responsable: "Operaciones",
+        observacion: "Reserva sujeta a disponibilidad."
+    },
+    {
+        id: 5,
+        cliente: "Jorge Salazar",
+        dni: "78965412",
+        correo: "jorge.salazar@gmail.com",
+        tipo: "Evento especial",
+        area: "Apuestas deportivas",
+        fecha: "06/08/2026",
+        hora: "18:00",
+        estado: "Cancelada",
+        responsable: "Lucía Ramírez",
+        observacion: "Cliente canceló la asistencia."
+    }
+];
+
+const tablaReservasOp = document.getElementById("tablaReservasOp");
+const buscarReservaOp = document.getElementById("buscarReservaOp");
+const filtroTipoReservaOp = document.getElementById("filtroTipoReservaOp");
+const filtroEstadoReservaOp = document.getElementById("filtroEstadoReservaOp");
+const btnNuevaReservaOp = document.getElementById("btnNuevaReservaOp");
+
+function claseTipoReservaOp(tipo) {
+    if (tipo === "Sala VIP") return "vip";
+    if (tipo === "Mesa de poker") return "warning";
+    if (tipo === "Evento especial") return "blue";
+    if (tipo === "Atención preferencial") return "success";
+    return "blue";
+}
+
+function claseEstadoReservaOp(estado) {
+    if (estado === "Confirmada") return "success";
+    if (estado === "Pendiente") return "warning";
+    if (estado === "Cancelada") return "danger";
+    return "blue";
+}
+
+function cargarResumenReservasOp() {
+    document.getElementById("opResTotal").textContent = reservasOperaciones.length;
+
+    document.getElementById("opResConfirmadas").textContent =
+        reservasOperaciones.filter(r => r.estado === "Confirmada").length;
+
+    document.getElementById("opResPendientes").textContent =
+        reservasOperaciones.filter(r => r.estado === "Pendiente").length;
+
+    document.getElementById("opResCanceladas").textContent =
+        reservasOperaciones.filter(r => r.estado === "Cancelada").length;
+}
+
+function cargarTablaReservasOp(lista = reservasOperaciones) {
+    tablaReservasOp.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaReservasOp.innerHTML = `
+            <tr>
+                <td colspan="10" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron reservas con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(reserva => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${reserva.cliente}</strong>
+                    <span>${reserva.correo}</span>
+                </div>
+            </td>
+
+            <td>${reserva.dni}</td>
+
+            <td>
+                <span class="badge ${claseTipoReservaOp(reserva.tipo)}">
+                    ${reserva.tipo}
+                </span>
+            </td>
+
+            <td>${reserva.area}</td>
+
+            <td>${reserva.fecha}</td>
+
+            <td>${reserva.hora}</td>
+
+            <td>
+                <span class="badge ${claseEstadoReservaOp(reserva.estado)}">
+                    ${reserva.estado}
+                </span>
+            </td>
+
+            <td>${reserva.responsable}</td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${reserva.observacion}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verReservaOp(${reserva.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="confirmarReservaOp(${reserva.id})">Confirmar</button>
+                <button class="btn-action btn-delete" onclick="cancelarReservaOp(${reserva.id})">Cancelar</button>
+            </td>
+        `;
+
+        tablaReservasOp.appendChild(fila);
+    });
+}
+
+function filtrarReservasOp() {
+    const texto = buscarReservaOp.value.toLowerCase();
+    const tipo = filtroTipoReservaOp.value;
+    const estado = filtroEstadoReservaOp.value;
+
+    const resultado = reservasOperaciones.filter(reserva => {
+        const coincideTexto =
+            reserva.cliente.toLowerCase().includes(texto) ||
+            reserva.dni.includes(texto) ||
+            reserva.area.toLowerCase().includes(texto) ||
+            reserva.responsable.toLowerCase().includes(texto);
+
+        const coincideTipo =
+            tipo === "Todos" || reserva.tipo === tipo;
+
+        const coincideEstado =
+            estado === "Todos" || reserva.estado === estado;
+
+        return coincideTexto && coincideTipo && coincideEstado;
+    });
+
+    cargarTablaReservasOp(resultado);
+}
+
+function verReservaOp(id) {
+    const reserva = reservasOperaciones.find(r => r.id === id);
+
+    if (!reserva) return;
+
+    alert(
+        `Cliente: ${reserva.cliente}\n` +
+        `DNI: ${reserva.dni}\n` +
+        `Tipo: ${reserva.tipo}\n` +
+        `Área: ${reserva.area}\n` +
+        `Fecha: ${reserva.fecha}\n` +
+        `Hora: ${reserva.hora}\n` +
+        `Estado: ${reserva.estado}\n\n` +
+        `Observación: ${reserva.observacion}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function confirmarReservaOp(id) {
+    const reserva = reservasOperaciones.find(r => r.id === id);
+
+    if (!reserva) return;
+
+    reserva.estado = "Confirmada";
+    reserva.observacion = "Reserva confirmada por Operaciones.";
+
+    cargarResumenReservasOp();
+    cargarTablaReservasOp();
+
+    alert(`Reserva de "${reserva.cliente}" confirmada correctamente. Acción mockeada.`);
+}
+
+function cancelarReservaOp(id) {
+    const reserva = reservasOperaciones.find(r => r.id === id);
+
+    if (!reserva) return;
+
+    const confirmar = confirm(`¿Deseas cancelar la reserva de "${reserva.cliente}"?`);
+
+    if (confirmar) {
+        reserva.estado = "Cancelada";
+        reserva.observacion = "Reserva cancelada desde Operaciones.";
+
+        cargarResumenReservasOp();
+        cargarTablaReservasOp();
+
+        alert("Reserva cancelada correctamente. Acción mockeada.");
+    }
+}
+
+btnNuevaReservaOp.addEventListener("click", () => {
+    const nueva = {
+        id: reservasOperaciones.length + 1,
+        cliente: "Nuevo Cliente",
+        dni: "00000000",
+        correo: "nuevo.cliente@gmail.com",
+        tipo: "Atención preferencial",
+        area: "Recepción",
+        fecha: "15/08/2026",
+        hora: "20:00",
+        estado: "Pendiente",
+        responsable: "Operaciones",
+        observacion: "Reserva mockeada pendiente de validación."
+    };
+
+    reservasOperaciones.push(nueva);
+
+    cargarResumenReservasOp();
+    cargarTablaReservasOp();
+
+    alert("Nueva reserva registrada correctamente. Acción mockeada.");
+});
+
+buscarReservaOp.addEventListener("input", filtrarReservasOp);
+filtroTipoReservaOp.addEventListener("change", filtrarReservasOp);
+filtroEstadoReservaOp.addEventListener("change", filtrarReservasOp);
+
+cargarResumenReservasOp();
+cargarTablaReservasOp();
+</script>
+
+<script src="../../js/app.js"></script></body></html>

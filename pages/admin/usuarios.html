@@ -1,0 +1,396 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Administración de usuarios</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head>><body data-role="ADMINISTRADOR"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Administración General</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html"><i>⌂</i><span>Resumen general</span></a><a href="usuarios.html" class="active"><i>♙</i><span>Usuarios y accesos</span></a><a href="auditoria.html"><i>▣</i><span>Auditoría</span></a><a href="configuracion.html"><i>⚙</i><span>Configuración</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">ADMINISTRACIÓN GENERAL</span>
+            <h1>Administración de usuarios</h1>
+            <p>Gestión general de usuarios internos, gerencias, roles, estados de acceso y control administrativo.</p>
+        </div>
+
+        <button class="btn-primary" id="btnNuevoUsuarioAdmin">
+            Nuevo usuario
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Total usuarios</span>
+            <h3 id="adminTotalUsuarios">0</h3>
+            <p>Usuarios registrados en el sistema interno.</p>
+        </div>
+
+        <div class="card">
+            <span>Usuarios activos</span>
+            <h3 id="adminUsuariosActivos">0</h3>
+            <p>Usuarios con acceso habilitado.</p>
+        </div>
+
+        <div class="card">
+            <span>Gerencias</span>
+            <h3 id="adminGerencias">0</h3>
+            <p>Áreas internas vinculadas al CRM.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Usuarios inactivos</span>
+            <h3 id="adminUsuariosInactivos">0</h3>
+            <p>Usuarios bloqueados o deshabilitados.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarUsuarioAdmin" placeholder="Buscar nombre, usuario, gerencia o rol...">
+
+        <select id="filtroGerenciaAdmin">
+            <option value="Todos">Todas las gerencias</option>
+            <option value="Administración General">Administración General</option>
+            <option value="Servicio al Cliente">Servicio al Cliente</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Operaciones">Operaciones</option>
+            <option value="Recursos Humanos">Recursos Humanos</option>
+            <option value="Tecnología de la Información">Tecnología de la Información</option>
+            <option value="Desarrollo de Negocios">Desarrollo de Negocios</option>
+        </select>
+
+        <select id="filtroEstadoAdmin">
+            <option value="Todos">Todos los estados</option>
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
+            <option value="En revisión">En revisión</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Nombre de acceso</th>
+                    <th>Gerencia</th>
+                    <th>Rol</th>
+                    <th>Nivel</th>
+                    <th>Estado</th>
+                    <th>Último acceso</th>
+                    <th>Observación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaUsuariosAdmin">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"><script>
+const usuariosAdmin = [
+    {
+        id: 1,
+        nombre: "Administrador General",
+        usuario: "admin.general",
+        gerencia: "Administración General",
+        rol: "Administrador",
+        nivel: "Alto",
+        estado: "Activo",
+        ultimoAcceso: "05/08/2026 16:20",
+        observacion: "Acceso general a todos los módulos del sistema."
+    },
+    {
+        id: 2,
+        nombre: "María Torres",
+        usuario: "maria.torres",
+        gerencia: "Servicio al Cliente",
+        rol: "Asesora de atención",
+        nivel: "Medio",
+        estado: "Activo",
+        ultimoAcceso: "05/08/2026 14:20",
+        observacion: "Gestiona clientes, interacciones, incidencias y reservas."
+    },
+    {
+        id: 3,
+        nombre: "Diego Salazar",
+        usuario: "diego.salazar",
+        gerencia: "Marketing",
+        rol: "Analista de marketing",
+        nivel: "Medio",
+        estado: "Activo",
+        ultimoAcceso: "05/08/2026 13:55",
+        observacion: "Gestiona segmentos, promociones, campañas y canales digitales."
+    },
+    {
+        id: 4,
+        nombre: "Lucía Ramírez",
+        usuario: "lucia.ramirez",
+        gerencia: "Operaciones",
+        rol: "Coordinadora operativa",
+        nivel: "Medio",
+        estado: "Activo",
+        ultimoAcceso: "05/08/2026 12:30",
+        observacion: "Controla visitas, reservas, check-in VIP y cortesías."
+    },
+    {
+        id: 5,
+        nombre: "Carlos Mendoza",
+        usuario: "carlos.mendoza",
+        gerencia: "Recursos Humanos",
+        rol: "Analista RR.HH.",
+        nivel: "Medio",
+        estado: "Activo",
+        ultimoAcceso: "04/08/2026 18:10",
+        observacion: "Consulta usuarios internos, capacitaciones y roles."
+    },
+    {
+        id: 6,
+        nombre: "Andrea Paredes",
+        usuario: "andrea.paredes",
+        gerencia: "Tecnología de la Información",
+        rol: "Soporte TI",
+        nivel: "Alto",
+        estado: "Activo",
+        ultimoAcceso: "05/08/2026 16:05",
+        observacion: "Administra seguridad, auditoría, monitoreo y sistemas."
+    },
+    {
+        id: 7,
+        nombre: "Fernando Ruiz",
+        usuario: "fernando.ruiz",
+        gerencia: "Desarrollo de Negocios",
+        rol: "Analista de indicadores",
+        nivel: "Medio",
+        estado: "Activo",
+        ultimoAcceso: "05/08/2026 11:50",
+        observacion: "Consulta reportes, indicadores, dashboard y fidelización."
+    },
+    {
+        id: 8,
+        nombre: "Pedro Salas",
+        usuario: "pedro.salas",
+        gerencia: "Operaciones",
+        rol: "Auxiliar operativo",
+        nivel: "Bajo",
+        estado: "Inactivo",
+        ultimoAcceso: "01/08/2026 09:20",
+        observacion: "Usuario inactivo usado para demostrar validación de acceso."
+    }
+];
+
+const tablaUsuariosAdmin = document.getElementById("tablaUsuariosAdmin");
+const buscarUsuarioAdmin = document.getElementById("buscarUsuarioAdmin");
+const filtroGerenciaAdmin = document.getElementById("filtroGerenciaAdmin");
+const filtroEstadoAdmin = document.getElementById("filtroEstadoAdmin");
+const btnNuevoUsuarioAdmin = document.getElementById("btnNuevoUsuarioAdmin");
+
+function claseGerenciaAdmin(gerencia) {
+    if (gerencia === "Administración General") return "vip";
+    if (gerencia === "Servicio al Cliente") return "blue";
+    if (gerencia === "Marketing") return "vip";
+    if (gerencia === "Operaciones") return "success";
+    if (gerencia === "Recursos Humanos") return "warning";
+    if (gerencia === "Tecnología de la Información") return "danger";
+    if (gerencia === "Desarrollo de Negocios") return "blue";
+    return "blue";
+}
+
+function claseNivelAdmin(nivel) {
+    if (nivel === "Alto") return "danger";
+    if (nivel === "Medio") return "warning";
+    if (nivel === "Bajo") return "blue";
+    return "blue";
+}
+
+function claseEstadoAdmin(estado) {
+    if (estado === "Activo") return "success";
+    if (estado === "Inactivo") return "danger";
+    if (estado === "En revisión") return "warning";
+    return "blue";
+}
+
+function cargarResumenAdmin() {
+    document.getElementById("adminTotalUsuarios").textContent = usuariosAdmin.length;
+
+    document.getElementById("adminUsuariosActivos").textContent =
+        usuariosAdmin.filter(u => u.estado === "Activo").length;
+
+    const gerenciasUnicas = new Set(usuariosAdmin.map(u => u.gerencia));
+    document.getElementById("adminGerencias").textContent = gerenciasUnicas.size;
+
+    document.getElementById("adminUsuariosInactivos").textContent =
+        usuariosAdmin.filter(u => u.estado === "Inactivo").length;
+}
+
+function cargarTablaUsuariosAdmin(lista = usuariosAdmin) {
+    tablaUsuariosAdmin.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaUsuariosAdmin.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron usuarios con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(usuario => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${usuario.nombre}</strong>
+                    <span>ID usuario: ${usuario.id}</span>
+                </div>
+            </td>
+
+            <td>${usuario.usuario}</td>
+
+            <td>
+                <span class="badge ${claseGerenciaAdmin(usuario.gerencia)}">
+                    ${usuario.gerencia}
+                </span>
+            </td>
+
+            <td>${usuario.rol}</td>
+
+            <td>
+                <span class="badge ${claseNivelAdmin(usuario.nivel)}">
+                    ${usuario.nivel}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${claseEstadoAdmin(usuario.estado)}">
+                    ${usuario.estado}
+                </span>
+            </td>
+
+            <td>${usuario.ultimoAcceso}</td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${usuario.observacion}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verUsuarioAdmin(${usuario.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="activarUsuarioAdmin(${usuario.id})">Activar</button>
+                <button class="btn-action btn-delete" onclick="inactivarUsuarioAdmin(${usuario.id})">Inactivar</button>
+            </td>
+        `;
+
+        tablaUsuariosAdmin.appendChild(fila);
+    });
+}
+
+function filtrarUsuariosAdmin() {
+    const texto = buscarUsuarioAdmin.value.toLowerCase();
+    const gerencia = filtroGerenciaAdmin.value;
+    const estado = filtroEstadoAdmin.value;
+
+    const resultado = usuariosAdmin.filter(usuario => {
+        const coincideTexto =
+            usuario.nombre.toLowerCase().includes(texto) ||
+            usuario.usuario.toLowerCase().includes(texto) ||
+            usuario.gerencia.toLowerCase().includes(texto) ||
+            usuario.rol.toLowerCase().includes(texto) ||
+            usuario.observacion.toLowerCase().includes(texto);
+
+        const coincideGerencia =
+            gerencia === "Todos" || usuario.gerencia === gerencia;
+
+        const coincideEstado =
+            estado === "Todos" || usuario.estado === estado;
+
+        return coincideTexto && coincideGerencia && coincideEstado;
+    });
+
+    cargarTablaUsuariosAdmin(resultado);
+}
+
+function verUsuarioAdmin(id) {
+    const usuario = usuariosAdmin.find(u => u.id === id);
+
+    if (!usuario) return;
+
+    alert(
+        `Usuario: ${usuario.nombre}\n` +
+        `Nombre de acceso: ${usuario.usuario}\n` +
+        `Gerencia: ${usuario.gerencia}\n` +
+        `Rol: ${usuario.rol}\n` +
+        `Nivel: ${usuario.nivel}\n` +
+        `Estado: ${usuario.estado}\n` +
+        `Último acceso: ${usuario.ultimoAcceso}\n\n` +
+        `Observación: ${usuario.observacion}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function activarUsuarioAdmin(id) {
+    const usuario = usuariosAdmin.find(u => u.id === id);
+
+    if (!usuario) return;
+
+    usuario.estado = "Activo";
+    usuario.observacion = "Usuario activado desde Administración General.";
+
+    cargarResumenAdmin();
+    cargarTablaUsuariosAdmin();
+
+    alert(`Usuario "${usuario.usuario}" activado correctamente. Acción mockeada.`);
+}
+
+function inactivarUsuarioAdmin(id) {
+    const usuario = usuariosAdmin.find(u => u.id === id);
+
+    if (!usuario) return;
+
+    const confirmar = confirm(`¿Deseas inactivar el usuario "${usuario.usuario}"?`);
+
+    if (confirmar) {
+        usuario.estado = "Inactivo";
+        usuario.observacion = "Usuario inactivado desde Administración General.";
+
+        cargarResumenAdmin();
+        cargarTablaUsuariosAdmin();
+
+        alert("Usuario inactivado correctamente. Acción mockeada.");
+    }
+}
+
+btnNuevoUsuarioAdmin.addEventListener("click", () => {
+    const nuevo = {
+        id: usuariosAdmin.length + 1,
+        nombre: "Nuevo Usuario",
+        usuario: "nuevo.usuario",
+        gerencia: "Administración General",
+        rol: "Rol por definir",
+        nivel: "Bajo",
+        estado: "En revisión",
+        ultimoAcceso: "Sin acceso",
+        observacion: "Usuario mockeado pendiente de configuración."
+    };
+
+    usuariosAdmin.push(nuevo);
+
+    cargarResumenAdmin();
+    cargarTablaUsuariosAdmin();
+
+    alert("Nuevo usuario registrado correctamente. Acción mockeada.");
+});
+
+buscarUsuarioAdmin.addEventListener("input", filtrarUsuariosAdmin);
+filtroGerenciaAdmin.addEventListener("change", filtrarUsuariosAdmin);
+filtroEstadoAdmin.addEventListener("change", filtrarUsuariosAdmin);
+
+cargarResumenAdmin();
+cargarTablaUsuariosAdmin();
+</script></div><script src="../../js/app.js"></script></body></html>

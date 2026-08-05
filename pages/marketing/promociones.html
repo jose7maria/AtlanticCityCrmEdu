@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Promociones personalizadas</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head>
+<body data-role="MARKETING">
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html">
+        <span class="mark">AC</span>
+        <span>
+          <strong>ATLANTIC CITY</strong>
+          <small>Gestión de clientes</small>
+        </span>
+      </a>
+      <div class="user">
+        <strong data-user-name>Usuario</strong>
+        <span data-user-area>Marketing</span>
+      </div>
+      <p class="nav-label">MENÚ DEL ÁREA</p>
+      <nav class="nav">
+        <a href="index.html" class=""><i>⌂</i><span>Resumen</span></a>
+        <a href="segmentos.html" class=""><i>◫</i><span>Segmentos</span></a>
+        <a href="promociones.html" class="active"><i>★</i><span>Promociones</span></a>
+        <a href="campanias.html" class=""><i>◆</i><span>Campañas</span></a>
+        <a href="categorias.html" class=""><i>♛</i><span>Categorías</span></a>
+        <a href="abandono.html" class=""><i>!</i><span>Alertas de abandono</span></a>
+        <a href="canales.html" class=""><i>✉</i><span>Canales digitales</span></a>
+      </nav>
+      <button class="logout" data-logout>Cerrar sesión</button>
+    </aside>
+ <section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">MARKETING</span>
+            <h1>Promociones personalizadas</h1>
+            <p>Gestión de promociones según segmento, preferencia, canal digital y efectividad.</p>
+        </div>
+
+        <button class="btn-primary" id="btnNuevaPromocion">
+            Nueva promoción
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Total promociones</span>
+            <h3 id="promoTotal">0</h3>
+            <p>Promociones registradas para campañas activas.</p>
+        </div>
+
+        <div class="card">
+            <span>Enviadas</span>
+            <h3 id="promoEnviadas">0</h3>
+            <p>Promociones enviadas a clientes o segmentos.</p>
+        </div>
+
+        <div class="card">
+            <span>Programadas</span>
+            <h3 id="promoProgramadas">0</h3>
+            <p>Promociones listas para envío posterior.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Pendientes</span>
+            <h3 id="promoPendientes">0</h3>
+            <p>Promociones todavía no ejecutadas.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarPromocion" placeholder="Buscar promoción, segmento o canal...">
+
+        <select id="filtroEstadoPromo">
+            <option value="Todos">Todos los estados</option>
+            <option value="Enviado">Enviado</option>
+            <option value="Programado">Programado</option>
+            <option value="Pendiente">Pendiente</option>
+        </select>
+
+        <select id="filtroCanalPromo">
+            <option value="Todos">Todos los canales</option>
+            <option value="WhatsApp">WhatsApp</option>
+            <option value="Email">Email</option>
+            <option value="SMS">SMS</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Promoción</th>
+                    <th>Segmento dirigido</th>
+                    <th>Canal</th>
+                    <th>Estado</th>
+                    <th>Efectividad</th>
+                    <th>Objetivo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaPromociones">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+
+
+
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script>
+const promocionesMarketing = [
+    {
+        id: 1,
+        nombre: "Bono cumpleaños",
+        segmento: "Clientes VIP",
+        canal: "WhatsApp",
+        estado: "Enviado",
+        efectividad: "78%",
+        objetivo: "Fidelizar clientes VIP con beneficios personalizados."
+    },
+    {
+        id: 2,
+        nombre: "Noche de ruleta",
+        segmento: "Clientes frecuentes",
+        canal: "Email",
+        estado: "Programado",
+        efectividad: "64%",
+        objetivo: "Aumentar la participación de clientes frecuentes."
+    },
+    {
+        id: 3,
+        nombre: "Recuperación de clientes",
+        segmento: "Clientes inactivos",
+        canal: "SMS",
+        estado: "Pendiente",
+        efectividad: "41%",
+        objetivo: "Reactivar clientes que no registran visitas recientes."
+    },
+    {
+        id: 4,
+        nombre: "Promoción Poker Premium",
+        segmento: "Promociones premium",
+        canal: "WhatsApp",
+        estado: "Enviado",
+        efectividad: "82%",
+        objetivo: "Impulsar participación de clientes con preferencia por Poker."
+    },
+    {
+        id: 5,
+        nombre: "Bono tragamonedas",
+        segmento: "Cliente frecuente",
+        canal: "Email",
+        estado: "Programado",
+        efectividad: "59%",
+        objetivo: "Reforzar campañas para clientes frecuentes de tragamonedas."
+    }
+];
+
+const tablaPromociones = document.getElementById("tablaPromociones");
+const buscarPromocion = document.getElementById("buscarPromocion");
+const filtroEstadoPromo = document.getElementById("filtroEstadoPromo");
+const filtroCanalPromo = document.getElementById("filtroCanalPromo");
+const btnNuevaPromocion = document.getElementById("btnNuevaPromocion");
+
+function claseEstadoPromo(estado) {
+    if (estado === "Enviado") return "success";
+    if (estado === "Programado") return "warning";
+    if (estado === "Pendiente") return "danger";
+    return "blue";
+}
+
+function numeroPorcentaje(valor) {
+    return parseInt(valor.replace("%", ""));
+}
+
+function cargarResumenPromociones() {
+    document.getElementById("promoTotal").textContent = promocionesMarketing.length;
+
+    document.getElementById("promoEnviadas").textContent =
+        promocionesMarketing.filter(p => p.estado === "Enviado").length;
+
+    document.getElementById("promoProgramadas").textContent =
+        promocionesMarketing.filter(p => p.estado === "Programado").length;
+
+    document.getElementById("promoPendientes").textContent =
+        promocionesMarketing.filter(p => p.estado === "Pendiente").length;
+}
+
+function cargarTablaPromociones(lista = promocionesMarketing) {
+    tablaPromociones.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaPromociones.innerHTML = `
+            <tr>
+                <td colspan="7" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron promociones con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(promo => {
+        const fila = document.createElement("tr");
+        const porcentaje = numeroPorcentaje(promo.efectividad);
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${promo.nombre}</strong>
+                    <span>ID promoción: ${promo.id}</span>
+                </div>
+            </td>
+
+            <td>${promo.segmento}</td>
+
+            <td>
+                <span class="badge blue">${promo.canal}</span>
+            </td>
+
+            <td>
+                <span class="badge ${claseEstadoPromo(promo.estado)}">
+                    ${promo.estado}
+                </span>
+            </td>
+
+            <td>
+                <strong>${promo.efectividad}</strong>
+                <div class="effect-bar">
+                    <div class="effect-fill" style="width:${porcentaje}%;"></div>
+                </div>
+            </td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${promo.objetivo}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verPromocion(${promo.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="programarPromocion(${promo.id})">Programar</button>
+                <button class="btn-action btn-delete" onclick="pausarPromocion(${promo.id})">Pausar</button>
+            </td>
+        `;
+
+        tablaPromociones.appendChild(fila);
+    });
+}
+
+function filtrarPromociones() {
+    const texto = buscarPromocion.value.toLowerCase();
+    const estado = filtroEstadoPromo.value;
+    const canal = filtroCanalPromo.value;
+
+    const resultado = promocionesMarketing.filter(promo => {
+        const coincideTexto =
+            promo.nombre.toLowerCase().includes(texto) ||
+            promo.segmento.toLowerCase().includes(texto) ||
+            promo.canal.toLowerCase().includes(texto);
+
+        const coincideEstado =
+            estado === "Todos" || promo.estado === estado;
+
+        const coincideCanal =
+            canal === "Todos" || promo.canal === canal;
+
+        return coincideTexto && coincideEstado && coincideCanal;
+    });
+
+    cargarTablaPromociones(resultado);
+}
+
+function verPromocion(id) {
+    const promo = promocionesMarketing.find(p => p.id === id);
+
+    if (!promo) return;
+
+    alert(
+        `Promoción: ${promo.nombre}\n` +
+        `Segmento: ${promo.segmento}\n` +
+        `Canal: ${promo.canal}\n` +
+        `Estado: ${promo.estado}\n` +
+        `Efectividad: ${promo.efectividad}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function programarPromocion(id) {
+    const promo = promocionesMarketing.find(p => p.id === id);
+
+    if (!promo) return;
+
+    promo.estado = "Programado";
+
+    cargarResumenPromociones();
+    cargarTablaPromociones();
+
+    alert(`Promoción "${promo.nombre}" programada correctamente. Acción mockeada.`);
+}
+
+function pausarPromocion(id) {
+    const promo = promocionesMarketing.find(p => p.id === id);
+
+    if (!promo) return;
+
+    const confirmar = confirm(`¿Deseas pausar la promoción "${promo.nombre}"?`);
+
+    if (confirmar) {
+        promo.estado = "Pendiente";
+
+        cargarResumenPromociones();
+        cargarTablaPromociones();
+
+        alert("Promoción pausada correctamente. Acción mockeada.");
+    }
+}
+
+btnNuevaPromocion.addEventListener("click", () => {
+    const nueva = {
+        id: promocionesMarketing.length + 1,
+        nombre: "Nueva campaña personalizada",
+        segmento: "Clientes frecuentes",
+        canal: "WhatsApp",
+        estado: "Pendiente",
+        efectividad: "0%",
+        objetivo: "Promoción creada para simular una campaña personalizada."
+    };
+
+    promocionesMarketing.push(nueva);
+
+    cargarResumenPromociones();
+    cargarTablaPromociones();
+
+    alert("Nueva promoción creada correctamente. Acción mockeada.");
+});
+
+buscarPromocion.addEventListener("input", filtrarPromociones);
+filtroEstadoPromo.addEventListener("change", filtrarPromociones);
+filtroCanalPromo.addEventListener("change", filtrarPromociones);
+
+cargarResumenPromociones();
+cargarTablaPromociones();
+</script>
+  <script src="../../js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Configuración general</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="ADMINISTRADOR"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Administración General</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen general</span></a><a href="usuarios.html" class=""><i>♙</i><span>Usuarios y accesos</span></a><a href="auditoria.html" class=""><i>▣</i><span>Auditoría</span></a><a href="configuracion.html" class="active"><i>⚙</i><span>Configuración</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">ADMINISTRACIÓN GENERAL</span>
+            <h1>Configuración general</h1>
+            <p>Administración de parámetros del sistema, seguridad, notificaciones, respaldos y reglas generales del CRM.</p>
+        </div>
+
+        <button class="btn-primary" id="btnGuardarConfiguracion">
+            Guardar configuración
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Parámetros activos</span>
+            <h3 id="confActivos">0</h3>
+            <p>Configuraciones habilitadas actualmente.</p>
+        </div>
+
+        <div class="card">
+            <span>Notificaciones</span>
+            <h3 id="confNotificaciones">0</h3>
+            <p>Alertas y avisos configurados.</p>
+        </div>
+
+        <div class="card">
+            <span>Respaldos</span>
+            <h3 id="confRespaldos">0</h3>
+            <p>Parámetros vinculados a copias de seguridad.</p>
+        </div>
+
+        <div class="card danger">
+            <span>En revisión</span>
+            <h3 id="confRevision">0</h3>
+            <p>Configuraciones pendientes de validación.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarConfiguracion" placeholder="Buscar parámetro, categoría o responsable...">
+
+        <select id="filtroCategoriaConfig">
+            <option value="Todos">Todas las categorías</option>
+            <option value="Sistema">Sistema</option>
+            <option value="Seguridad">Seguridad</option>
+            <option value="Notificaciones">Notificaciones</option>
+            <option value="Respaldos">Respaldos</option>
+        </select>
+
+        <select id="filtroEstadoConfig">
+            <option value="Todos">Todos los estados</option>
+            <option value="Activo">Activo</option>
+            <option value="En revisión">En revisión</option>
+            <option value="Inactivo">Inactivo</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Parámetro</th>
+                    <th>Categoría</th>
+                    <th>Valor actual</th>
+                    <th>Estado</th>
+                    <th>Responsable</th>
+                    <th>Última actualización</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaConfiguracion">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+<script>
+const configuracionesAdmin = [
+    {
+        id: 1,
+        parametro: "Nombre del sistema",
+        categoria: "Sistema",
+        valor: "Atlantic City CRM",
+        estado: "Activo",
+        responsable: "Administrador General",
+        ultimaActualizacion: "05/08/2026 16:50",
+        descripcion: "Nombre visible del sistema interno para trabajadores."
+    },
+    {
+        id: 2,
+        parametro: "Tiempo de sesión",
+        categoria: "Seguridad",
+        valor: "30 minutos",
+        estado: "Activo",
+        responsable: "TI",
+        ultimaActualizacion: "05/08/2026 16:30",
+        descripcion: "Tiempo máximo de sesión inactiva antes de solicitar nuevo acceso."
+    },
+    {
+        id: 3,
+        parametro: "Alertas de incidencias",
+        categoria: "Notificaciones",
+        valor: "Activadas",
+        estado: "Activo",
+        responsable: "Servicio al Cliente",
+        ultimaActualizacion: "05/08/2026 15:45",
+        descripcion: "Notifica incidencias pendientes o críticas dentro del CRM."
+    },
+    {
+        id: 4,
+        parametro: "Alertas de abandono",
+        categoria: "Notificaciones",
+        valor: "Activadas",
+        estado: "Activo",
+        responsable: "Marketing",
+        ultimaActualizacion: "05/08/2026 15:20",
+        descripcion: "Permite identificar clientes con baja frecuencia de visitas."
+    },
+    {
+        id: 5,
+        parametro: "Respaldo automático",
+        categoria: "Respaldos",
+        valor: "Diario 02:00 AM",
+        estado: "Activo",
+        responsable: "TI",
+        ultimaActualizacion: "05/08/2026 02:00",
+        descripcion: "Configuración mockeada para copias de seguridad de la base central."
+    },
+    {
+        id: 6,
+        parametro: "Integración telefónica",
+        categoria: "Sistema",
+        valor: "Futura versión",
+        estado: "En revisión",
+        responsable: "TI",
+        ultimaActualizacion: "05/08/2026 16:10",
+        descripcion: "Integración futura con central telefónica. No implementada en esta versión."
+    }
+];
+
+const tablaConfiguracion = document.getElementById("tablaConfiguracion");
+const buscarConfiguracion = document.getElementById("buscarConfiguracion");
+const filtroCategoriaConfig = document.getElementById("filtroCategoriaConfig");
+const filtroEstadoConfig = document.getElementById("filtroEstadoConfig");
+const btnGuardarConfiguracion = document.getElementById("btnGuardarConfiguracion");
+
+function claseCategoriaConfig(categoria) {
+    if (categoria === "Sistema") return "blue";
+    if (categoria === "Seguridad") return "danger";
+    if (categoria === "Notificaciones") return "warning";
+    if (categoria === "Respaldos") return "success";
+    return "blue";
+}
+
+function claseEstadoConfig(estado) {
+    if (estado === "Activo") return "success";
+    if (estado === "En revisión") return "warning";
+    if (estado === "Inactivo") return "danger";
+    return "blue";
+}
+
+function cargarResumenConfiguracion() {
+    document.getElementById("confActivos").textContent =
+        configuracionesAdmin.filter(c => c.estado === "Activo").length;
+
+    document.getElementById("confNotificaciones").textContent =
+        configuracionesAdmin.filter(c => c.categoria === "Notificaciones").length;
+
+    document.getElementById("confRespaldos").textContent =
+        configuracionesAdmin.filter(c => c.categoria === "Respaldos").length;
+
+    document.getElementById("confRevision").textContent =
+        configuracionesAdmin.filter(c => c.estado === "En revisión").length;
+}
+
+function cargarTablaConfiguracion(lista = configuracionesAdmin) {
+    tablaConfiguracion.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaConfiguracion.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron configuraciones con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(config => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${config.parametro}</strong>
+                    <span>ID configuración: ${config.id}</span>
+                </div>
+            </td>
+
+            <td>
+                <span class="badge ${claseCategoriaConfig(config.categoria)}">
+                    ${config.categoria}
+                </span>
+            </td>
+
+            <td>${config.valor}</td>
+
+            <td>
+                <span class="badge ${claseEstadoConfig(config.estado)}">
+                    ${config.estado}
+                </span>
+            </td>
+
+            <td>${config.responsable}</td>
+
+            <td>${config.ultimaActualizacion}</td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${config.descripcion}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verConfiguracion(${config.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="activarConfiguracion(${config.id})">Activar</button>
+                <button class="btn-action btn-delete" onclick="revisarConfiguracion(${config.id})">Revisar</button>
+            </td>
+        `;
+
+        tablaConfiguracion.appendChild(fila);
+    });
+}
+
+function filtrarConfiguracion() {
+    const texto = buscarConfiguracion.value.toLowerCase();
+    const categoria = filtroCategoriaConfig.value;
+    const estado = filtroEstadoConfig.value;
+
+    const resultado = configuracionesAdmin.filter(config => {
+        const coincideTexto =
+            config.parametro.toLowerCase().includes(texto) ||
+            config.categoria.toLowerCase().includes(texto) ||
+            config.valor.toLowerCase().includes(texto) ||
+            config.responsable.toLowerCase().includes(texto) ||
+            config.descripcion.toLowerCase().includes(texto);
+
+        const coincideCategoria =
+            categoria === "Todos" || config.categoria === categoria;
+
+        const coincideEstado =
+            estado === "Todos" || config.estado === estado;
+
+        return coincideTexto && coincideCategoria && coincideEstado;
+    });
+
+    cargarTablaConfiguracion(resultado);
+}
+
+function verConfiguracion(id) {
+    const config = configuracionesAdmin.find(c => c.id === id);
+
+    if (!config) return;
+
+    alert(
+        `Parámetro: ${config.parametro}\n` +
+        `Categoría: ${config.categoria}\n` +
+        `Valor actual: ${config.valor}\n` +
+        `Estado: ${config.estado}\n` +
+        `Responsable: ${config.responsable}\n` +
+        `Última actualización: ${config.ultimaActualizacion}\n\n` +
+        `Descripción: ${config.descripcion}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function activarConfiguracion(id) {
+    const config = configuracionesAdmin.find(c => c.id === id);
+
+    if (!config) return;
+
+    config.estado = "Activo";
+    config.ultimaActualizacion = "05/08/2026 16:57";
+    config.descripcion = "Configuración activada desde Administración General.";
+
+    cargarResumenConfiguracion();
+    cargarTablaConfiguracion();
+
+    alert(`Configuración "${config.parametro}" activada correctamente. Acción mockeada.`);
+}
+
+function revisarConfiguracion(id) {
+    const config = configuracionesAdmin.find(c => c.id === id);
+
+    if (!config) return;
+
+    config.estado = "En revisión";
+    config.ultimaActualizacion = "05/08/2026 16:57";
+    config.descripcion = "Configuración enviada a revisión administrativa.";
+
+    cargarResumenConfiguracion();
+    cargarTablaConfiguracion();
+
+    alert(`Configuración "${config.parametro}" enviada a revisión. Acción mockeada.`);
+}
+
+btnGuardarConfiguracion.addEventListener("click", () => {
+    const nueva = {
+        id: configuracionesAdmin.length + 1,
+        parametro: "Nuevo parámetro general",
+        categoria: "Sistema",
+        valor: "Pendiente",
+        estado: "En revisión",
+        responsable: "Administrador General",
+        ultimaActualizacion: "05/08/2026 16:57",
+        descripcion: "Configuración mockeada creada para demostrar mantenimiento del sistema."
+    };
+
+    configuracionesAdmin.push(nueva);
+
+    cargarResumenConfiguracion();
+    cargarTablaConfiguracion();
+
+    alert("Configuración guardada correctamente. Acción mockeada.");
+});
+
+buscarConfiguracion.addEventListener("input", filtrarConfiguracion);
+filtroCategoriaConfig.addEventListener("change", filtrarConfiguracion);
+filtroEstadoConfig.addEventListener("change", filtrarConfiguracion);
+
+cargarResumenConfiguracion();
+cargarTablaConfiguracion();
+</script>
+
+<script src="../../js/app.js"></script></body></html>

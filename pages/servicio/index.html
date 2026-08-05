@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Panel principal</title>
+  <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body data-role="SERVICIO_CLIENTE">
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html">
+        <span class="mark">AC</span>
+        <span>
+          <strong>ATLANTIC CITY</strong>
+          <small>Gestión de clientes</small>
+        </span>
+      </a>
+      <div class="user">
+        <strong data-user-name>Usuario</strong>
+        <span data-user-area>Servicio al Cliente</span>
+      </div>
+      <p class="nav-label">MENÚ DEL ÁREA</p>
+      <nav class="nav">
+        <a href="index.html" class="active"><i>⌂</i><span>Panel</span></a>
+        <a href="clientes.html" class=""><i>♙</i><span>Clientes</span></a>
+        <a href="perfil-360.html" class=""><i>◎</i><span>Perfil 360°</span></a>
+        <a href="interacciones.html" class=""><i>✉</i><span>Interacciones</span></a>
+        <a href="incidencias.html" class=""><i>!</i><span>Incidencias</span></a>
+        <a href="reservas.html" class=""><i>◈</i><span>Reservas y eventos</span></a>
+        <a href="preferencias.html" class=""><i>♡</i><span>Preferencias</span></a>
+      </nav>
+      <button class="logout" data-logout>Cerrar sesión</button>
+    </aside>
+    <main>
+      <header class="topbar">
+        <div class="top-left">
+          <button class="hamb" data-menu>☰</button>
+          <div class="top-title">
+            <strong>Servicio al Cliente</strong>
+            <span>Atención y seguimiento del cliente</span>
+          </div>
+        </div>
+        <span class="date" data-date></span>
+      </header>
+      <section class="content">
+        <header class="page-head">
+          <div>
+            <p class="kicker">PANEL INTERNO</p>
+            <h1>Panel principal</h1>
+            <p class="desc">Atención y seguimiento del cliente</p>
+          </div>
+          <div class="actions"></div>
+        </header>
+        <section class="metrics">
+          <article class="metric">
+            <div class="metric-top">
+              <label>Clientes atendidos</label>
+              <span class="micon">♙</span>
+            </div>
+            <strong>86</strong>
+            <small>Durante el día</small>
+          </article>
+          <article class="metric">
+            <div class="metric-top">
+              <label>Incidencias abiertas</label>
+              <span class="micon">!</span>
+            </div>
+            <strong>14</strong>
+            <small>3 de criticidad alta</small>
+          </article>
+          <article class="metric">
+            <div class="metric-top">
+              <label>Seguimientos</label>
+              <span class="micon">✉</span>
+            </div>
+            <strong>9</strong>
+            <small>Requieren contacto</small>
+          </article>
+          <article class="metric">
+            <div class="metric-top">
+              <label>Atenciones cerradas</label>
+              <span class="micon">✓</span>
+            </div>
+            <strong>31</strong>
+            <small>Últimas 24 horas</small>
+          </article>
+        </section>
+        <section class="grid2">
+          <article class="panel pad">
+            <div class="cardtop" style="margin-bottom:14px">
+              <h2 style="margin:0;font-size:.87rem">Resumen de actividad</h2>
+              <span class="badge blue">Últimos 7 días</span>
+            </div>
+            <div class="chart">
+              <span class="bar" style="height:42%"></span>
+              <span class="bar" style="height:58%"></span>
+              <span class="bar" style="height:51%"></span>
+              <span class="bar" style="height:69%"></span>
+              <span class="bar" style="height:63%"></span>
+              <span class="bar" style="height:81%"></span>
+              <span class="bar" style="height:76%"></span>
+              <span class="bar" style="height:87%"></span>
+              <span class="bar" style="height:73%"></span>
+              <span class="bar" style="height:91%"></span>
+            </div>
+          </article>
+          <article class="panel pad">
+            <div class="cardtop" style="margin-bottom:14px">
+              <h2 style="margin:0;font-size:.87rem">Actividad reciente</h2>
+              <span class="badge neutral">Hoy</span>
+            </div>
+            <div class="activity">
+              <article class="act">
+                <span class="dot red"></span>
+                <div>
+                  <strong>Incidencia priorizada</strong>
+                  <span>Cliente Platinum requiere seguimiento.</span>
+                </div>
+              </article>
+              <article class="act">
+                <span class="dot blue"></span>
+                <div>
+                  <strong>Interacción registrada</strong>
+                  <span>Consulta añadida al historial.</span>
+                </div>
+              </article>
+              <article class="act">
+                <span class="dot "></span>
+                <div>
+                  <strong>Caso solucionado</strong>
+                  <span>Solicitud de datos cerrada.</span>
+                </div>
+              </article>
+            </div>
+          </article>
+        </section>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="../../js/app.js"></script>
+</body>
+</html>

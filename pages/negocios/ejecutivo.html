@@ -1,0 +1,360 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Dashboard ejecutivo</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="DESARROLLO_NEGOCIOS"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Desarrollo de Negocios</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="reportes.html" class=""><i>▥</i><span>Reportes</span></a><a href="indicadores.html" class=""><i>↗</i><span>Indicadores</span></a><a href="fidelizacion.html" class=""><i>◎</i><span>Fidelización</span></a><a href="ejecutivo.html" class="active"><i>▤</i><span>Dashboard ejecutivo</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">DESARROLLO DE NEGOCIOS</span>
+            <h1>Dashboard ejecutivo</h1>
+            <p>Vista gerencial consolidada para analizar clientes, campañas, visitas, incidencias y oportunidades de mejora.</p>
+        </div>
+
+        <button class="btn-primary" id="btnActualizarDashboard">
+            Actualizar dashboard
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Clientes activos</span>
+            <h3 id="dashClientes">0</h3>
+            <p>Clientes con actividad reciente en el CRM.</p>
+        </div>
+
+        <div class="card">
+            <span>Efectividad comercial</span>
+            <h3 id="dashEfectividad">0%</h3>
+            <p>Resultado promedio de promociones y campañas.</p>
+        </div>
+
+        <div class="card">
+            <span>Visitas del periodo</span>
+            <h3 id="dashVisitas">0</h3>
+            <p>Visitas registradas por operaciones.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Alertas gerenciales</span>
+            <h3 id="dashAlertas">0</h3>
+            <p>Indicadores que requieren atención.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarDashboard" placeholder="Buscar indicador, área, estado o responsable...">
+
+        <select id="filtroAreaDashboard">
+            <option value="Todos">Todas las áreas</option>
+            <option value="Servicio al Cliente">Servicio al Cliente</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Operaciones">Operaciones</option>
+            <option value="TI">TI</option>
+            <option value="Desarrollo de Negocios">Desarrollo de Negocios</option>
+        </select>
+
+        <select id="filtroEstadoDashboard">
+            <option value="Todos">Todos los estados</option>
+            <option value="Óptimo">Óptimo</option>
+            <option value="En observación">En observación</option>
+            <option value="Crítico">Crítico</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Indicador ejecutivo</th>
+                    <th>Área</th>
+                    <th>Valor</th>
+                    <th>Meta</th>
+                    <th>Cumplimiento</th>
+                    <th>Estado</th>
+                    <th>Responsable</th>
+                    <th>Decisión sugerida</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaDashboardEjecutivo">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section></div><div class="toast" id="toast"></div>
+<script>
+const dashboardEjecutivo = [
+    {
+        id: 1,
+        indicador: "Crecimiento de clientes activos",
+        area: "Servicio al Cliente",
+        valor: "420",
+        meta: "500",
+        cumplimiento: "84%",
+        estado: "En observación",
+        responsable: "Fernando Ruiz",
+        decision: "Reforzar seguimiento a clientes frecuentes e inactivos."
+    },
+    {
+        id: 2,
+        indicador: "Efectividad de promociones",
+        area: "Marketing",
+        valor: "78%",
+        meta: "75%",
+        cumplimiento: "104%",
+        estado: "Óptimo",
+        responsable: "Diego Salazar",
+        decision: "Mantener campañas personalizadas por segmento."
+    },
+    {
+        id: 3,
+        indicador: "Registro de visitas operativas",
+        area: "Operaciones",
+        valor: "315",
+        meta: "350",
+        cumplimiento: "90%",
+        estado: "Óptimo",
+        responsable: "Lucía Ramírez",
+        decision: "Continuar control de visitas y atención VIP."
+    },
+    {
+        id: 4,
+        indicador: "Incidencias pendientes",
+        area: "Servicio al Cliente",
+        valor: "18",
+        meta: "5",
+        cumplimiento: "28%",
+        estado: "Crítico",
+        responsable: "María Torres",
+        decision: "Priorizar resolución de reclamos pendientes."
+    },
+    {
+        id: 5,
+        indicador: "Clientes en riesgo de abandono",
+        area: "Marketing",
+        valor: "32%",
+        meta: "15%",
+        cumplimiento: "47%",
+        estado: "Crítico",
+        responsable: "Fernando Ruiz",
+        decision: "Ejecutar campaña de recuperación inmediata."
+    },
+    {
+        id: 6,
+        indicador: "Disponibilidad del sistema CRM",
+        area: "TI",
+        valor: "99%",
+        meta: "98%",
+        cumplimiento: "101%",
+        estado: "Óptimo",
+        responsable: "Andrea Paredes",
+        decision: "Mantener monitoreo y respaldos técnicos."
+    }
+];
+
+const tablaDashboardEjecutivo = document.getElementById("tablaDashboardEjecutivo");
+const buscarDashboard = document.getElementById("buscarDashboard");
+const filtroAreaDashboard = document.getElementById("filtroAreaDashboard");
+const filtroEstadoDashboard = document.getElementById("filtroEstadoDashboard");
+const btnActualizarDashboard = document.getElementById("btnActualizarDashboard");
+
+function claseAreaDashboard(area) {
+    if (area === "Servicio al Cliente") return "blue";
+    if (area === "Marketing") return "vip";
+    if (area === "Operaciones") return "success";
+    if (area === "TI") return "danger";
+    if (area === "Desarrollo de Negocios") return "warning";
+    return "blue";
+}
+
+function claseEstadoDashboard(estado) {
+    if (estado === "Óptimo") return "success";
+    if (estado === "En observación") return "warning";
+    if (estado === "Crítico") return "danger";
+    return "blue";
+}
+
+function numeroCumplimientoDashboard(valor) {
+    return parseInt(valor.replace("%", ""));
+}
+
+function cargarResumenDashboard() {
+    document.getElementById("dashClientes").textContent = "420";
+
+    const marketing = dashboardEjecutivo.filter(i => i.area === "Marketing");
+
+    const promedioMarketing = Math.round(
+        marketing.reduce((total, item) => total + numeroCumplimientoDashboard(item.cumplimiento), 0) / marketing.length
+    );
+
+    document.getElementById("dashEfectividad").textContent = promedioMarketing + "%";
+    document.getElementById("dashVisitas").textContent = "315";
+
+    document.getElementById("dashAlertas").textContent =
+        dashboardEjecutivo.filter(i => i.estado === "Crítico").length;
+}
+
+function cargarTablaDashboard(lista = dashboardEjecutivo) {
+    tablaDashboardEjecutivo.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaDashboardEjecutivo.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron indicadores ejecutivos con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(item => {
+        const fila = document.createElement("tr");
+        const porcentaje = numeroCumplimientoDashboard(item.cumplimiento);
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${item.indicador}</strong>
+                    <span>ID ejecutivo: ${item.id}</span>
+                </div>
+            </td>
+
+            <td>
+                <span class="badge ${claseAreaDashboard(item.area)}">
+                    ${item.area}
+                </span>
+            </td>
+
+            <td>${item.valor}</td>
+
+            <td>${item.meta}</td>
+
+            <td>
+                <strong>${item.cumplimiento}</strong>
+                <div class="effect-bar">
+                    <div class="effect-fill" style="width:${porcentaje > 100 ? 100 : porcentaje}%;"></div>
+                </div>
+            </td>
+
+            <td>
+                <span class="badge ${claseEstadoDashboard(item.estado)}">
+                    ${item.estado}
+                </span>
+            </td>
+
+            <td>${item.responsable}</td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${item.decision}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verDashboard(${item.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="observarDashboard(${item.id})">Observar</button>
+                <button class="btn-action btn-delete" onclick="criticoDashboard(${item.id})">Crítico</button>
+            </td>
+        `;
+
+        tablaDashboardEjecutivo.appendChild(fila);
+    });
+}
+
+function filtrarDashboard() {
+    const texto = buscarDashboard.value.toLowerCase();
+    const area = filtroAreaDashboard.value;
+    const estado = filtroEstadoDashboard.value;
+
+    const resultado = dashboardEjecutivo.filter(item => {
+        const coincideTexto =
+            item.indicador.toLowerCase().includes(texto) ||
+            item.area.toLowerCase().includes(texto) ||
+            item.estado.toLowerCase().includes(texto) ||
+            item.responsable.toLowerCase().includes(texto) ||
+            item.decision.toLowerCase().includes(texto);
+
+        const coincideArea =
+            area === "Todos" || item.area === area;
+
+        const coincideEstado =
+            estado === "Todos" || item.estado === estado;
+
+        return coincideTexto && coincideArea && coincideEstado;
+    });
+
+    cargarTablaDashboard(resultado);
+}
+
+function verDashboard(id) {
+    const item = dashboardEjecutivo.find(i => i.id === id);
+
+    if (!item) return;
+
+    alert(
+        `Indicador: ${item.indicador}\n` +
+        `Área: ${item.area}\n` +
+        `Valor actual: ${item.valor}\n` +
+        `Meta: ${item.meta}\n` +
+        `Cumplimiento: ${item.cumplimiento}\n` +
+        `Estado: ${item.estado}\n` +
+        `Responsable: ${item.responsable}\n\n` +
+        `Decisión sugerida: ${item.decision}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function observarDashboard(id) {
+    const item = dashboardEjecutivo.find(i => i.id === id);
+
+    if (!item) return;
+
+    item.estado = "En observación";
+    item.decision = "Indicador enviado a observación para seguimiento ejecutivo.";
+
+    cargarResumenDashboard();
+    cargarTablaDashboard();
+
+    alert(`Indicador "${item.indicador}" enviado a observación. Acción mockeada.`);
+}
+
+function criticoDashboard(id) {
+    const item = dashboardEjecutivo.find(i => i.id === id);
+
+    if (!item) return;
+
+    const confirmar = confirm(`¿Deseas marcar como crítico el indicador "${item.indicador}"?`);
+
+    if (confirmar) {
+        item.estado = "Crítico";
+        item.decision = "Indicador marcado como crítico para decisión gerencial.";
+
+        cargarResumenDashboard();
+        cargarTablaDashboard();
+
+        alert("Indicador marcado como crítico. Acción mockeada.");
+    }
+}
+
+btnActualizarDashboard.addEventListener("click", () => {
+    cargarResumenDashboard();
+    cargarTablaDashboard();
+
+    alert("Dashboard ejecutivo actualizado correctamente. Acción mockeada.");
+});
+
+buscarDashboard.addEventListener("input", filtrarDashboard);
+filtroAreaDashboard.addEventListener("change", filtrarDashboard);
+filtroEstadoDashboard.addEventListener("change", filtrarDashboard);
+
+cargarResumenDashboard();
+cargarTablaDashboard();
+</script>
+<script src="../../js/app.js"></script></body></html>

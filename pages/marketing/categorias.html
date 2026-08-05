@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Categorías de clientes</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head>
+<body data-role="MARKETING">
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html">
+        <span class="mark">AC</span>
+        <span>
+          <strong>ATLANTIC CITY</strong>
+          <small>Gestión de clientes</small>
+        </span>
+      </a>
+      <div class="user">
+        <strong data-user-name>Usuario</strong>
+        <span data-user-area>Marketing</span>
+      </div>
+      <p class="nav-label">MENÚ DEL ÁREA</p>
+      <nav class="nav">
+        <a href="index.html" class=""><i>⌂</i><span>Resumen</span></a>
+        <a href="segmentos.html" class=""><i>◫</i><span>Segmentos</span></a>
+        <a href="promociones.html" class=""><i>★</i><span>Promociones</span></a>
+        <a href="campanias.html" class=""><i>◆</i><span>Campañas</span></a>
+        <a href="categorias.html" class="active"><i>♛</i><span>Categorías</span></a>
+        <a href="abandono.html" class=""><i>!</i><span>Alertas de abandono</span></a>
+        <a href="canales.html" class=""><i>✉</i><span>Canales digitales</span></a>
+      </nav>
+      <button class="logout" data-logout>Cerrar sesión</button>
+    </aside>
+    <main class="main-content">
+
+    <section class="page-section">
+
+        <div class="section-header">
+            <div>
+                <span class="eyebrow">MARKETING</span>
+                <h1>Categorías de clientes</h1>
+                <p>Clasificación comercial de clientes para campañas, beneficios y promociones personalizadas.</p>
+            </div>
+
+            <button class="btn-primary" id="btnNuevaCategoria">
+                Nueva categoría
+            </button>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <span>Total categorías</span>
+                <h3 id="catTotal">0</h3>
+                <p>Categorías registradas para clasificación comercial.</p>
+            </div>
+
+            <div class="card">
+                <span>Clientes VIP</span>
+                <h3 id="catVip">0</h3>
+                <p>Clientes con mayor valor para la empresa.</p>
+            </div>
+
+            <div class="card">
+                <span>Clientes frecuentes</span>
+                <h3 id="catFrecuentes">0</h3>
+                <p>Clientes con visitas recurrentes.</p>
+            </div>
+
+            <div class="card danger">
+                <span>Clientes inactivos</span>
+                <h3 id="catInactivos">0</h3>
+                <p>Clientes que requieren campañas de recuperación.</p>
+            </div>
+        </div>
+
+        <div class="filters-box">
+            <input type="text" id="buscarCategoria" placeholder="Buscar categoría, descripción o beneficio...">
+
+            <select id="filtroEstadoCategoria">
+                <option value="Todos">Todos los estados</option>
+                <option value="Activa">Activa</option>
+                <option value="En revisión">En revisión</option>
+                <option value="Inactiva">Inactiva</option>
+            </select>
+
+            <select id="filtroTipoCategoria">
+                <option value="Todos">Todos los tipos</option>
+                <option value="Valor alto">Valor alto</option>
+                <option value="Frecuencia">Frecuencia</option>
+                <option value="Nuevo cliente">Nuevo cliente</option>
+                <option value="Recuperación">Recuperación</option>
+            </select>
+        </div>
+
+        <div class="table-panel">
+            <table class="crm-table">
+                <thead>
+                    <tr>
+                        <th>Categoría</th>
+                        <th>Tipo</th>
+                        <th>Clientes asociados</th>
+                        <th>Criterio</th>
+                        <th>Beneficio sugerido</th>
+                        <th>Estado</th>
+                        <th>Prioridad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaCategorias">
+                    <!-- Se llena con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script>
+const categoriasMarketing = [
+    {
+        id: 1,
+        nombre: "VIP",
+        tipo: "Valor alto",
+        clientes: 2,
+        criterio: "Alto gasto y visitas frecuentes",
+        beneficio: "Bonos premium, atención preferencial y promociones exclusivas",
+        estado: "Activa",
+        prioridad: "Alta"
+    },
+    {
+        id: 2,
+        nombre: "Frecuente",
+        tipo: "Frecuencia",
+        clientes: 1,
+        criterio: "Visitas constantes durante el mes",
+        beneficio: "Promociones por frecuencia y campañas de fidelización",
+        estado: "Activa",
+        prioridad: "Media"
+    },
+    {
+        id: 3,
+        nombre: "Nuevo",
+        tipo: "Nuevo cliente",
+        clientes: 1,
+        criterio: "Cliente registrado recientemente",
+        beneficio: "Campaña de bienvenida y primera promoción personalizada",
+        estado: "Activa",
+        prioridad: "Media"
+    },
+    {
+        id: 4,
+        nombre: "Inactivo",
+        tipo: "Recuperación",
+        clientes: 1,
+        criterio: "Sin visitas recientes",
+        beneficio: "Campaña de recuperación por SMS o Email",
+        estado: "En revisión",
+        prioridad: "Alta"
+    }
+];
+
+const tablaCategorias = document.getElementById("tablaCategorias");
+const buscarCategoria = document.getElementById("buscarCategoria");
+const filtroEstadoCategoria = document.getElementById("filtroEstadoCategoria");
+const filtroTipoCategoria = document.getElementById("filtroTipoCategoria");
+const btnNuevaCategoria = document.getElementById("btnNuevaCategoria");
+
+function claseEstadoCategoria(estado) {
+    if (estado === "Activa") return "success";
+    if (estado === "En revisión") return "warning";
+    if (estado === "Inactiva") return "danger";
+    return "blue";
+}
+
+function clasePrioridadCategoria(prioridad) {
+    if (prioridad === "Alta") return "danger";
+    if (prioridad === "Media") return "warning";
+    return "blue";
+}
+
+function claseTipoCategoria(tipo) {
+    if (tipo === "Valor alto") return "vip";
+    if (tipo === "Frecuencia") return "success";
+    if (tipo === "Nuevo cliente") return "blue";
+    if (tipo === "Recuperación") return "danger";
+    return "blue";
+}
+
+function cargarResumenCategorias() {
+    document.getElementById("catTotal").textContent = categoriasMarketing.length;
+
+    document.getElementById("catVip").textContent =
+        categoriasMarketing.find(c => c.nombre === "VIP")?.clientes || 0;
+
+    document.getElementById("catFrecuentes").textContent =
+        categoriasMarketing.find(c => c.nombre === "Frecuente")?.clientes || 0;
+
+    document.getElementById("catInactivos").textContent =
+        categoriasMarketing.find(c => c.nombre === "Inactivo")?.clientes || 0;
+}
+
+function cargarTablaCategorias(lista = categoriasMarketing) {
+    tablaCategorias.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaCategorias.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron categorías con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(categoria => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${categoria.nombre}</strong>
+                    <span>ID categoría: ${categoria.id}</span>
+                </div>
+            </td>
+
+            <td>
+                <span class="badge ${claseTipoCategoria(categoria.tipo)}">
+                    ${categoria.tipo}
+                </span>
+            </td>
+
+            <td>${categoria.clientes}</td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${categoria.criterio}
+                </span>
+            </td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${categoria.beneficio}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${claseEstadoCategoria(categoria.estado)}">
+                    ${categoria.estado}
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${clasePrioridadCategoria(categoria.prioridad)}">
+                    ${categoria.prioridad}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verCategoria(${categoria.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="activarCategoria(${categoria.id})">Activar</button>
+                <button class="btn-action btn-delete" onclick="revisarCategoria(${categoria.id})">Revisar</button>
+            </td>
+        `;
+
+        tablaCategorias.appendChild(fila);
+    });
+}
+
+function filtrarCategorias() {
+    const texto = buscarCategoria.value.toLowerCase();
+    const estado = filtroEstadoCategoria.value;
+    const tipo = filtroTipoCategoria.value;
+
+    const resultado = categoriasMarketing.filter(categoria => {
+        const coincideTexto =
+            categoria.nombre.toLowerCase().includes(texto) ||
+            categoria.descripcion?.toLowerCase().includes(texto) ||
+            categoria.criterio.toLowerCase().includes(texto) ||
+            categoria.beneficio.toLowerCase().includes(texto);
+
+        const coincideEstado =
+            estado === "Todos" || categoria.estado === estado;
+
+        const coincideTipo =
+            tipo === "Todos" || categoria.tipo === tipo;
+
+        return coincideTexto && coincideEstado && coincideTipo;
+    });
+
+    cargarTablaCategorias(resultado);
+}
+
+function verCategoria(id) {
+    const categoria = categoriasMarketing.find(c => c.id === id);
+
+    if (!categoria) return;
+
+    alert(
+        `Categoría: ${categoria.nombre}\n` +
+        `Tipo: ${categoria.tipo}\n` +
+        `Clientes asociados: ${categoria.clientes}\n` +
+        `Criterio: ${categoria.criterio}\n` +
+        `Beneficio: ${categoria.beneficio}\n` +
+        `Estado: ${categoria.estado}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function activarCategoria(id) {
+    const categoria = categoriasMarketing.find(c => c.id === id);
+
+    if (!categoria) return;
+
+    categoria.estado = "Activa";
+
+    cargarResumenCategorias();
+    cargarTablaCategorias();
+
+    alert(`Categoría "${categoria.nombre}" activada correctamente. Acción mockeada.`);
+}
+
+function revisarCategoria(id) {
+    const categoria = categoriasMarketing.find(c => c.id === id);
+
+    if (!categoria) return;
+
+    categoria.estado = "En revisión";
+
+    cargarResumenCategorias();
+    cargarTablaCategorias();
+
+    alert(`Categoría "${categoria.nombre}" enviada a revisión. Acción mockeada.`);
+}
+
+btnNuevaCategoria.addEventListener("click", () => {
+    const nueva = {
+        id: categoriasMarketing.length + 1,
+        nombre: "Categoría personalizada",
+        tipo: "Frecuencia",
+        clientes: 0,
+        criterio: "Criterio definido por el área de Marketing",
+        beneficio: "Beneficio personalizado según campaña",
+        estado: "En revisión",
+        prioridad: "Media"
+    };
+
+    categoriasMarketing.push(nueva);
+
+    cargarResumenCategorias();
+    cargarTablaCategorias();
+
+    alert("Nueva categoría creada correctamente. Acción mockeada.");
+});
+
+buscarCategoria.addEventListener("input", filtrarCategorias);
+filtroEstadoCategoria.addEventListener("change", filtrarCategorias);
+filtroTipoCategoria.addEventListener("change", filtrarCategorias);
+
+cargarResumenCategorias();
+cargarTablaCategorias();
+</script>
+  <script src="../../js/app.js"></script>
+</body>
+</html>

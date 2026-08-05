@@ -1,0 +1,357 @@
+<!doctype html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Capacitaciones</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head><body data-role="RECURSOS_HUMANOS"><div class="shell"><aside class="sidebar"><a class="brand" href="index.html"><span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Recursos Humanos</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="usuarios.html" class=""><i>♙</i><span>Usuarios internos</span></a><a href="capacitaciones.html" class="active"><i>▤</i><span>Capacitaciones</span></a><a href="consulta-roles.html" class=""><i>◌</i><span>Consulta por área y rol</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside>
+
+<section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">RECURSOS HUMANOS</span>
+            <h1>Capacitaciones del personal</h1>
+            <p>Registro y seguimiento de capacitaciones internas por área, estado, asistencia y responsable.</p>
+        </div>
+
+        <button class="btn-primary" id="btnNuevaCapacitacion">
+            Nueva capacitación
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Total capacitaciones</span>
+            <h3 id="capTotal">0</h3>
+            <p>Capacitaciones registradas para el personal.</p>
+        </div>
+
+        <div class="card">
+            <span>Programadas</span>
+            <h3 id="capProgramadas">0</h3>
+            <p>Capacitaciones pendientes de ejecución.</p>
+        </div>
+
+        <div class="card">
+            <span>Finalizadas</span>
+            <h3 id="capFinalizadas">0</h3>
+            <p>Capacitaciones realizadas correctamente.</p>
+        </div>
+
+        <div class="card danger">
+            <span>En revisión</span>
+            <h3 id="capRevision">0</h3>
+            <p>Capacitaciones que requieren ajuste o validación.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarCapacitacion" placeholder="Buscar capacitación, área, responsable o tema...">
+
+        <select id="filtroAreaCapacitacion">
+            <option value="Todos">Todas las áreas</option>
+            <option value="Servicio al Cliente">Servicio al Cliente</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Operaciones">Operaciones</option>
+            <option value="Recursos Humanos">Recursos Humanos</option>
+            <option value="Tecnología de la Información">Tecnología de la Información</option>
+        </select>
+
+        <select id="filtroEstadoCapacitacion">
+            <option value="Todos">Todos los estados</option>
+            <option value="Programada">Programada</option>
+            <option value="Finalizada">Finalizada</option>
+            <option value="En revisión">En revisión</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Capacitación</th>
+                    <th>Área</th>
+                    <th>Tema</th>
+                    <th>Fecha</th>
+                    <th>Participantes</th>
+                    <th>Asistencia</th>
+                    <th>Estado</th>
+                    <th>Responsable</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaCapacitaciones">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+
+
+
+</div><div class="toast" id="toast"></div>
+<script>
+const capacitacionesRrhh = [
+    {
+        id: 1,
+        nombre: "Atención al cliente y manejo de reclamos",
+        area: "Servicio al Cliente",
+        tema: "Calidad de atención",
+        fecha: "08/08/2026",
+        participantes: 12,
+        asistencia: "85%",
+        estado: "Programada",
+        responsable: "Carlos Mendoza"
+    },
+    {
+        id: 2,
+        nombre: "Uso del CRM interno",
+        area: "Tecnología de la Información",
+        tema: "Sistema CRM",
+        fecha: "10/08/2026",
+        participantes: 18,
+        asistencia: "0%",
+        estado: "Programada",
+        responsable: "Andrea Paredes"
+    },
+    {
+        id: 3,
+        nombre: "Segmentación y campañas personalizadas",
+        area: "Marketing",
+        tema: "Promociones",
+        fecha: "25/07/2026",
+        participantes: 8,
+        asistencia: "100%",
+        estado: "Finalizada",
+        responsable: "Diego Salazar"
+    },
+    {
+        id: 4,
+        nombre: "Protocolo de atención VIP",
+        area: "Operaciones",
+        tema: "Clientes VIP",
+        fecha: "28/07/2026",
+        participantes: 10,
+        asistencia: "90%",
+        estado: "Finalizada",
+        responsable: "Lucía Ramírez"
+    },
+    {
+        id: 5,
+        nombre: "Actualización de roles y permisos",
+        area: "Recursos Humanos",
+        tema: "Gestión de usuarios",
+        fecha: "12/08/2026",
+        participantes: 6,
+        asistencia: "0%",
+        estado: "En revisión",
+        responsable: "Carlos Mendoza"
+    }
+];
+
+const tablaCapacitaciones = document.getElementById("tablaCapacitaciones");
+const buscarCapacitacion = document.getElementById("buscarCapacitacion");
+const filtroAreaCapacitacion = document.getElementById("filtroAreaCapacitacion");
+const filtroEstadoCapacitacion = document.getElementById("filtroEstadoCapacitacion");
+const btnNuevaCapacitacion = document.getElementById("btnNuevaCapacitacion");
+
+function claseAreaCapacitacion(area) {
+    if (area === "Servicio al Cliente") return "blue";
+    if (area === "Marketing") return "vip";
+    if (area === "Operaciones") return "success";
+    if (area === "Recursos Humanos") return "warning";
+    if (area === "Tecnología de la Información") return "danger";
+    return "blue";
+}
+
+function claseEstadoCapacitacion(estado) {
+    if (estado === "Programada") return "warning";
+    if (estado === "Finalizada") return "success";
+    if (estado === "En revisión") return "danger";
+    return "blue";
+}
+
+function porcentajeAsistencia(valor) {
+    return parseInt(valor.replace("%", ""));
+}
+
+function cargarResumenCapacitaciones() {
+    document.getElementById("capTotal").textContent = capacitacionesRrhh.length;
+
+    document.getElementById("capProgramadas").textContent =
+        capacitacionesRrhh.filter(c => c.estado === "Programada").length;
+
+    document.getElementById("capFinalizadas").textContent =
+        capacitacionesRrhh.filter(c => c.estado === "Finalizada").length;
+
+    document.getElementById("capRevision").textContent =
+        capacitacionesRrhh.filter(c => c.estado === "En revisión").length;
+}
+
+function cargarTablaCapacitaciones(lista = capacitacionesRrhh) {
+    tablaCapacitaciones.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaCapacitaciones.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron capacitaciones con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(cap => {
+        const fila = document.createElement("tr");
+        const porcentaje = porcentajeAsistencia(cap.asistencia);
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${cap.nombre}</strong>
+                    <span>ID capacitación: ${cap.id}</span>
+                </div>
+            </td>
+
+            <td>
+                <span class="badge ${claseAreaCapacitacion(cap.area)}">
+                    ${cap.area}
+                </span>
+            </td>
+
+            <td>${cap.tema}</td>
+
+            <td>${cap.fecha}</td>
+
+            <td>${cap.participantes}</td>
+
+            <td>
+                <strong>${cap.asistencia}</strong>
+                <div class="effect-bar">
+                    <div class="effect-fill" style="width:${porcentaje}%;"></div>
+                </div>
+            </td>
+
+            <td>
+                <span class="badge ${claseEstadoCapacitacion(cap.estado)}">
+                    ${cap.estado}
+                </span>
+            </td>
+
+            <td>${cap.responsable}</td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verCapacitacion(${cap.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="finalizarCapacitacion(${cap.id})">Finalizar</button>
+                <button class="btn-action btn-delete" onclick="revisarCapacitacion(${cap.id})">Revisar</button>
+            </td>
+        `;
+
+        tablaCapacitaciones.appendChild(fila);
+    });
+}
+
+function filtrarCapacitaciones() {
+    const texto = buscarCapacitacion.value.toLowerCase();
+    const area = filtroAreaCapacitacion.value;
+    const estado = filtroEstadoCapacitacion.value;
+
+    const resultado = capacitacionesRrhh.filter(cap => {
+        const coincideTexto =
+            cap.nombre.toLowerCase().includes(texto) ||
+            cap.area.toLowerCase().includes(texto) ||
+            cap.tema.toLowerCase().includes(texto) ||
+            cap.responsable.toLowerCase().includes(texto);
+
+        const coincideArea =
+            area === "Todos" || cap.area === area;
+
+        const coincideEstado =
+            estado === "Todos" || cap.estado === estado;
+
+        return coincideTexto && coincideArea && coincideEstado;
+    });
+
+    cargarTablaCapacitaciones(resultado);
+}
+
+function verCapacitacion(id) {
+    const cap = capacitacionesRrhh.find(c => c.id === id);
+
+    if (!cap) return;
+
+    alert(
+        `Capacitación: ${cap.nombre}\n` +
+        `Área: ${cap.area}\n` +
+        `Tema: ${cap.tema}\n` +
+        `Fecha: ${cap.fecha}\n` +
+        `Participantes: ${cap.participantes}\n` +
+        `Asistencia: ${cap.asistencia}\n` +
+        `Estado: ${cap.estado}\n` +
+        `Responsable: ${cap.responsable}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function finalizarCapacitacion(id) {
+    const cap = capacitacionesRrhh.find(c => c.id === id);
+
+    if (!cap) return;
+
+    cap.estado = "Finalizada";
+    cap.asistencia = "100%";
+
+    cargarResumenCapacitaciones();
+    cargarTablaCapacitaciones();
+
+    alert(`Capacitación "${cap.nombre}" finalizada correctamente. Acción mockeada.`);
+}
+
+function revisarCapacitacion(id) {
+    const cap = capacitacionesRrhh.find(c => c.id === id);
+
+    if (!cap) return;
+
+    cap.estado = "En revisión";
+
+    cargarResumenCapacitaciones();
+    cargarTablaCapacitaciones();
+
+    alert(`Capacitación "${cap.nombre}" enviada a revisión. Acción mockeada.`);
+}
+
+btnNuevaCapacitacion.addEventListener("click", () => {
+    const nueva = {
+        id: capacitacionesRrhh.length + 1,
+        nombre: "Nueva capacitación interna",
+        area: "Recursos Humanos",
+        tema: "Tema por definir",
+        fecha: "15/08/2026",
+        participantes: 0,
+        asistencia: "0%",
+        estado: "Programada",
+        responsable: "Carlos Mendoza"
+    };
+
+    capacitacionesRrhh.push(nueva);
+
+    cargarResumenCapacitaciones();
+    cargarTablaCapacitaciones();
+
+    alert("Nueva capacitación registrada correctamente. Acción mockeada.");
+});
+
+buscarCapacitacion.addEventListener("input", filtrarCapacitaciones);
+filtroAreaCapacitacion.addEventListener("change", filtrarCapacitaciones);
+filtroEstadoCapacitacion.addEventListener("change", filtrarCapacitaciones);
+
+cargarResumenCapacitaciones();
+cargarTablaCapacitaciones();
+</script>
+<script src="../../js/app.js"></script></body></html>

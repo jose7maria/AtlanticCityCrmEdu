@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Gestión de clientes</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head>
+
+<body data-role="SERVICIO_CLIENTE">
+    <div class="shell"><aside class="sidebar"><a class="brand" href="index.html">
+        <span class="mark">AC</span><span><strong>ATLANTIC CITY</strong><small>Gestión de clientes</small></span></a><div class="user"><strong data-user-name>Usuario</strong><span data-user-area>Servicio al Cliente</span></div><p class="nav-label">MENÚ DEL ÁREA</p><nav class="nav"><a href="index.html" class=""><i>⌂</i><span>Resumen</span></a><a href="clientes.html" class="active"><i>♙</i><span>Clientes</span></a><a href="perfil-360.html" class=""><i>◎</i><span>Perfil 360°</span></a><a href="interacciones.html" class=""><i>✉</i><span>Interacciones</span></a><a href="incidencias.html" class=""><i>!</i><span>Incidencias</span></a><a href="reservas.html" class=""><i>◈</i><span>Reservas y eventos</span></a><a href="preferencias.html" class=""><i>♡</i><span>Preferencias</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside><main class="main-content">
+
+    <section class="page-section">
+
+        <div class="section-header">
+            <div>
+                <span class="eyebrow">SERVICIO AL CLIENTE</span>
+                <h1>Gestión de clientes</h1>
+                <p>Registro, consulta y seguimiento de clientes con datos de contacto, categoría, preferencias y estado.</p>
+            </div>
+
+            <button class="btn-primary" id="btnNuevoCliente">
+                Nuevo cliente
+            </button>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <span>Total clientes</span>
+                <h3 id="cliTotal">0</h3>
+                <p>Clientes registrados en el CRM.</p>
+            </div>
+
+            <div class="card">
+                <span>Clientes VIP</span>
+                <h3 id="cliVip">0</h3>
+                <p>Clientes con alto valor para la empresa.</p>
+            </div>
+
+            <div class="card">
+                <span>Activos</span>
+                <h3 id="cliActivos">0</h3>
+                <p>Clientes con actividad reciente.</p>
+            </div>
+
+            <div class="card danger">
+                <span>Con incidencia</span>
+                <h3 id="cliIncidencia">0</h3>
+                <p>Clientes que requieren atención o seguimiento.</p>
+            </div>
+        </div>
+
+        <div class="filters-box">
+            <input type="text" id="buscarCliente" placeholder="Buscar cliente, DNI, correo o preferencia...">
+
+            <select id="filtroCategoriaCliente">
+                <option value="Todos">Todas las categorías</option>
+                <option value="VIP">VIP</option>
+                <option value="Frecuente">Frecuente</option>
+                <option value="Nuevo">Nuevo</option>
+                <option value="Inactivo">Inactivo</option>
+            </select>
+
+            <select id="filtroEstadoCliente">
+                <option value="Todos">Todos los estados</option>
+                <option value="Activo">Activo</option>
+                <option value="En seguimiento">En seguimiento</option>
+                <option value="Con incidencia">Con incidencia</option>
+                <option value="Inactivo">Inactivo</option>
+            </select>
+        </div>
+
+        <div class="table-panel">
+            <table class="crm-table">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>DNI</th>
+                        <th>Teléfono</th>
+                        <th>Categoría</th>
+                        <th>Preferencia</th>
+                        <th>Última visita</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaClientes">
+                    <!-- Se llena con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+
+
+
+
+
+
+    </div><div class="toast" id="toast"></div>
+    <script>
+const clientesServicio = [
+    {
+        id: 1,
+        nombre: "Carlos Ramírez",
+        dni: "45678912",
+        telefono: "987654321",
+        correo: "carlos.ramirez@gmail.com",
+        categoria: "VIP",
+        preferencia: "Ruleta",
+        ultimaVisita: "04/08/2026",
+        estado: "Activo"
+    },
+    {
+        id: 2,
+        nombre: "Ana Torres",
+        dni: "74258963",
+        telefono: "956874123",
+        correo: "ana.torres@gmail.com",
+        categoria: "Frecuente",
+        preferencia: "Tragamonedas",
+        ultimaVisita: "03/08/2026",
+        estado: "Activo"
+    },
+    {
+        id: 3,
+        nombre: "Luis Gómez",
+        dni: "65897412",
+        telefono: "945612378",
+        correo: "luis.gomez@gmail.com",
+        categoria: "Nuevo",
+        preferencia: "Blackjack",
+        ultimaVisita: "18/07/2026",
+        estado: "En seguimiento"
+    },
+    {
+        id: 4,
+        nombre: "María Fernández",
+        dni: "48596712",
+        telefono: "998741256",
+        correo: "maria.fernandez@gmail.com",
+        categoria: "VIP",
+        preferencia: "Poker",
+        ultimaVisita: "01/08/2026",
+        estado: "Activo"
+    },
+    {
+        id: 5,
+        nombre: "Jorge Salazar",
+        dni: "78965412",
+        telefono: "912345678",
+        correo: "jorge.salazar@gmail.com",
+        categoria: "Inactivo",
+        preferencia: "Apuestas deportivas",
+        ultimaVisita: "02/06/2026",
+        estado: "Con incidencia"
+    }
+];
+
+const tablaClientes = document.getElementById("tablaClientes");
+const buscarCliente = document.getElementById("buscarCliente");
+const filtroCategoriaCliente = document.getElementById("filtroCategoriaCliente");
+const filtroEstadoCliente = document.getElementById("filtroEstadoCliente");
+const btnNuevoCliente = document.getElementById("btnNuevoCliente");
+
+function claseCategoriaCliente(categoria) {
+    if (categoria === "VIP") return "vip";
+    if (categoria === "Frecuente") return "success";
+    if (categoria === "Nuevo") return "blue";
+    if (categoria === "Inactivo") return "danger";
+    return "blue";
+}
+
+function claseEstadoCliente(estado) {
+    if (estado === "Activo") return "success";
+    if (estado === "En seguimiento") return "warning";
+    if (estado === "Con incidencia") return "danger";
+    if (estado === "Inactivo") return "blue";
+    return "blue";
+}
+
+function cargarResumenClientes() {
+    document.getElementById("cliTotal").textContent = clientesServicio.length;
+
+    document.getElementById("cliVip").textContent =
+        clientesServicio.filter(c => c.categoria === "VIP").length;
+
+    document.getElementById("cliActivos").textContent =
+        clientesServicio.filter(c => c.estado === "Activo").length;
+
+    document.getElementById("cliIncidencia").textContent =
+        clientesServicio.filter(c => c.estado === "Con incidencia").length;
+}
+
+function cargarTablaClientes(lista = clientesServicio) {
+    tablaClientes.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaClientes.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron clientes con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(cliente => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${cliente.nombre}</strong>
+                    <span>${cliente.correo}</span>
+                </div>
+            </td>
+
+            <td>${cliente.dni}</td>
+
+            <td>${cliente.telefono}</td>
+
+            <td>
+                <span class="badge ${claseCategoriaCliente(cliente.categoria)}">
+                    ${cliente.categoria}
+                </span>
+            </td>
+
+            <td>${cliente.preferencia}</td>
+
+            <td>${cliente.ultimaVisita}</td>
+
+            <td>
+                <span class="badge ${claseEstadoCliente(cliente.estado)}">
+                    ${cliente.estado}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verCliente(${cliente.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="editarCliente(${cliente.id})">Editar</button>
+                <button class="btn-action btn-delete" onclick="eliminarCliente(${cliente.id})">Eliminar</button>
+            </td>
+        `;
+
+        tablaClientes.appendChild(fila);
+    });
+}
+
+function filtrarClientes() {
+    const texto = buscarCliente.value.toLowerCase();
+    const categoria = filtroCategoriaCliente.value;
+    const estado = filtroEstadoCliente.value;
+
+    const resultado = clientesServicio.filter(cliente => {
+        const coincideTexto =
+            cliente.nombre.toLowerCase().includes(texto) ||
+            cliente.dni.includes(texto) ||
+            cliente.correo.toLowerCase().includes(texto) ||
+            cliente.preferencia.toLowerCase().includes(texto);
+
+        const coincideCategoria =
+            categoria === "Todos" || cliente.categoria === categoria;
+
+        const coincideEstado =
+            estado === "Todos" || cliente.estado === estado;
+
+        return coincideTexto && coincideCategoria && coincideEstado;
+    });
+
+    cargarTablaClientes(resultado);
+}
+
+function verCliente(id) {
+    const cliente = clientesServicio.find(c => c.id === id);
+
+    if (!cliente) return;
+
+    alert(
+        `Cliente: ${cliente.nombre}\n` +
+        `DNI: ${cliente.dni}\n` +
+        `Teléfono: ${cliente.telefono}\n` +
+        `Correo: ${cliente.correo}\n` +
+        `Categoría: ${cliente.categoria}\n` +
+        `Preferencia: ${cliente.preferencia}\n` +
+        `Última visita: ${cliente.ultimaVisita}\n` +
+        `Estado: ${cliente.estado}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function editarCliente(id) {
+    const cliente = clientesServicio.find(c => c.id === id);
+
+    if (!cliente) return;
+
+    alert(`Editar cliente "${cliente.nombre}". Acción mockeada.`);
+}
+
+function eliminarCliente(id) {
+    const cliente = clientesServicio.find(c => c.id === id);
+
+    if (!cliente) return;
+
+    const confirmar = confirm(`¿Deseas eliminar al cliente "${cliente.nombre}"?`);
+
+    if (confirmar) {
+        const posicion = clientesServicio.findIndex(c => c.id === id);
+        clientesServicio.splice(posicion, 1);
+
+        cargarResumenClientes();
+        cargarTablaClientes();
+
+        alert("Cliente eliminado correctamente. Acción mockeada.");
+    }
+}
+
+btnNuevoCliente.addEventListener("click", () => {
+    const nuevo = {
+        id: clientesServicio.length + 1,
+        nombre: "Nuevo Cliente",
+        dni: "00000000",
+        telefono: "999999999",
+        correo: "nuevo.cliente@gmail.com",
+        categoria: "Nuevo",
+        preferencia: "Tragamonedas",
+        ultimaVisita: "05/08/2026",
+        estado: "Activo"
+    };
+
+    clientesServicio.push(nuevo);
+
+    cargarResumenClientes();
+    cargarTablaClientes();
+
+    alert("Nuevo cliente registrado correctamente. Acción mockeada.");
+});
+
+buscarCliente.addEventListener("input", filtrarClientes);
+filtroCategoriaCliente.addEventListener("change", filtrarClientes);
+filtroEstadoCliente.addEventListener("change", filtrarClientes);
+
+cargarResumenClientes();
+cargarTablaClientes();
+</script>
+    
+    
+    <script src="../../js/app.js"></script>
+</body>
+</html>

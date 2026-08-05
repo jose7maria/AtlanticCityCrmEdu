@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Segmentación de clientes</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head>
+<body data-role="MARKETING">
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html">
+        <span class="mark">AC</span>
+        <span>
+          <strong>ATLANTIC CITY</strong>
+          <small>Gestión de clientes</small>
+        </span>
+      </a>
+      <div class="user">
+        <strong data-user-name>Usuario</strong>
+        <span data-user-area>Marketing</span>
+      </div>
+      <p class="nav-label">MENÚ DEL ÁREA</p>
+      <nav class="nav">
+        <a href="index.html" class=""><i>⌂</i><span>Resumen</span></a>
+        <a href="segmentos.html" class="active"><i>◫</i><span>Segmentos</span></a>
+        <a href="promociones.html" class=""><i>★</i><span>Promociones</span></a>
+        <a href="campanias.html" class=""><i>◆</i><span>Campañas</span></a>
+        <a href="categorias.html" class=""><i>♛</i><span>Categorías</span></a>
+        <a href="abandono.html" class=""><i>!</i><span>Alertas de abandono</span></a>
+        <a href="canales.html" class=""><i>✉</i><span>Canales digitales</span></a>
+      </nav>
+      <button class="logout" data-logout>Cerrar sesión</button>
+    </aside>
+<section class="page-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">MARKETING</span>
+            <h1>Segmentación de clientes</h1>
+            <p>Clasificación de clientes según frecuencia de visitas, nivel de gasto, preferencias y promociones usadas.</p>
+        </div>
+
+        <button class="btn-primary" id="btnGenerarSegmentos">
+            Generar segmentación
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card">
+            <span>Clientes VIP</span>
+            <h3 id="segVip">0</h3>
+            <p>Clientes de alto valor para campañas premium.</p>
+        </div>
+
+        <div class="card">
+            <span>Clientes frecuentes</span>
+            <h3 id="segFrecuentes">0</h3>
+            <p>Clientes con visitas constantes.</p>
+        </div>
+
+        <div class="card">
+            <span>Alto gasto</span>
+            <h3 id="segAltoGasto">0</h3>
+            <p>Clientes con mayor nivel de consumo.</p>
+        </div>
+
+        <div class="card danger">
+            <span>Riesgo de abandono</span>
+            <h3 id="segRiesgo">0</h3>
+            <p>Clientes que requieren recuperación.</p>
+        </div>
+    </div>
+
+    <div class="filters-box">
+        <input type="text" id="buscarSegmento" placeholder="Buscar cliente, DNI, segmento o preferencia...">
+
+        <select id="filtroSegmento">
+            <option value="Todos">Todos los segmentos</option>
+            <option value="Alto gasto">Alto gasto</option>
+            <option value="Cliente frecuente">Cliente frecuente</option>
+            <option value="Nuevo cliente">Nuevo cliente</option>
+            <option value="Promociones premium">Promociones premium</option>
+            <option value="Recuperación">Recuperación</option>
+        </select>
+
+        <select id="filtroPreferencia">
+            <option value="Todos">Todas las preferencias</option>
+            <option value="Ruleta">Ruleta</option>
+            <option value="Tragamonedas">Tragamonedas</option>
+            <option value="Blackjack">Blackjack</option>
+            <option value="Poker">Poker</option>
+            <option value="Apuestas deportivas">Apuestas deportivas</option>
+        </select>
+    </div>
+
+    <div class="table-panel">
+        <table class="crm-table">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>DNI</th>
+                    <th>Segmento</th>
+                    <th>Frecuencia</th>
+                    <th>Nivel de gasto</th>
+                    <th>Preferencia</th>
+                    <th>Promociones usadas</th>
+                    <th>Riesgo</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaSegmentos">
+                <!-- Se llena con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+</section>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="../../js/app.js"></script>
+
+
+  <script>
+const clientesSegmentados = [
+    {
+        id: 1,
+        nombre: "Carlos Ramírez",
+        dni: "45678912",
+        correo: "carlos.ramirez@gmail.com",
+        segmento: "Alto gasto",
+        categoria: "VIP",
+        frecuencia: "Alta",
+        visitasMes: 12,
+        nivelGasto: "Alto",
+        gastoEstimado: "S/ 2,850",
+        preferencia: "Ruleta",
+        promocionesUsadas: 5,
+        riesgo: "Bajo",
+        accion: "Mantener beneficios VIP"
+    },
+    {
+        id: 2,
+        nombre: "Ana Torres",
+        dni: "74258963",
+        correo: "ana.torres@gmail.com",
+        segmento: "Cliente frecuente",
+        categoria: "Frecuente",
+        frecuencia: "Media",
+        visitasMes: 7,
+        nivelGasto: "Medio",
+        gastoEstimado: "S/ 1,120",
+        preferencia: "Tragamonedas",
+        promocionesUsadas: 3,
+        riesgo: "Bajo",
+        accion: "Enviar promoción personalizada"
+    },
+    {
+        id: 3,
+        nombre: "Luis Gómez",
+        dni: "65897412",
+        correo: "luis.gomez@gmail.com",
+        segmento: "Nuevo cliente",
+        categoria: "Nuevo",
+        frecuencia: "Baja",
+        visitasMes: 2,
+        nivelGasto: "Bajo",
+        gastoEstimado: "S/ 240",
+        preferencia: "Blackjack",
+        promocionesUsadas: 1,
+        riesgo: "Medio",
+        accion: "Campaña de bienvenida"
+    },
+    {
+        id: 4,
+        nombre: "María Fernández",
+        dni: "48596712",
+        correo: "maria.fernandez@gmail.com",
+        segmento: "Promociones premium",
+        categoria: "VIP",
+        frecuencia: "Alta",
+        visitasMes: 10,
+        nivelGasto: "Alto",
+        gastoEstimado: "S/ 3,400",
+        preferencia: "Poker",
+        promocionesUsadas: 6,
+        riesgo: "Bajo",
+        accion: "Promoción premium"
+    },
+    {
+        id: 5,
+        nombre: "Jorge Salazar",
+        dni: "78965412",
+        correo: "jorge.salazar@gmail.com",
+        segmento: "Recuperación",
+        categoria: "Inactivo",
+        frecuencia: "Muy baja",
+        visitasMes: 0,
+        nivelGasto: "Bajo",
+        gastoEstimado: "S/ 0",
+        preferencia: "Apuestas deportivas",
+        promocionesUsadas: 0,
+        riesgo: "Alto",
+        accion: "Campaña de recuperación"
+    }
+];
+
+const tablaSegmentos = document.getElementById("tablaSegmentos");
+const buscarSegmento = document.getElementById("buscarSegmento");
+const filtroSegmento = document.getElementById("filtroSegmento");
+const filtroPreferencia = document.getElementById("filtroPreferencia");
+const btnGenerarSegmentos = document.getElementById("btnGenerarSegmentos");
+
+function claseBadge(valor) {
+    if (valor === "VIP" || valor === "Alto") return "vip";
+    if (valor === "Bajo") return "blue";
+    if (valor === "Medio") return "warning";
+    if (valor === "Alto gasto") return "vip";
+    if (valor === "Recuperación") return "danger";
+    if (valor === "Bajo") return "blue";
+    return "blue";
+}
+
+function claseRiesgo(riesgo) {
+    if (riesgo === "Alto") return "danger";
+    if (riesgo === "Medio") return "warning";
+    return "success";
+}
+
+function cargarResumenSegmentos() {
+    document.getElementById("segVip").textContent =
+        clientesSegmentados.filter(c => c.categoria === "VIP").length;
+
+    document.getElementById("segFrecuentes").textContent =
+        clientesSegmentados.filter(c => c.frecuencia === "Alta" || c.frecuencia === "Media").length;
+
+    document.getElementById("segAltoGasto").textContent =
+        clientesSegmentados.filter(c => c.nivelGasto === "Alto").length;
+
+    document.getElementById("segRiesgo").textContent =
+        clientesSegmentados.filter(c => c.riesgo === "Alto" || c.riesgo === "Medio").length;
+}
+
+function cargarTablaSegmentos(lista = clientesSegmentados) {
+    tablaSegmentos.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaSegmentos.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron clientes con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(cliente => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${cliente.nombre}</strong>
+                    <span>${cliente.correo}</span>
+                </div>
+            </td>
+
+            <td>${cliente.dni}</td>
+
+            <td>
+                <span class="badge ${claseBadge(cliente.segmento)}">
+                    ${cliente.segmento}
+                </span>
+            </td>
+
+            <td>
+                ${cliente.frecuencia}<br>
+                <span style="color:#9ca3af; font-size:12px;">
+                    ${cliente.visitasMes} visitas/mes
+                </span>
+            </td>
+
+            <td>
+                <span class="badge ${claseBadge(cliente.nivelGasto)}">
+                    ${cliente.nivelGasto}
+                </span>
+                <br>
+                <span style="color:#9ca3af; font-size:12px;">
+                    ${cliente.gastoEstimado}
+                </span>
+            </td>
+
+            <td>${cliente.preferencia}</td>
+
+            <td>${cliente.promocionesUsadas}</td>
+
+            <td>
+                <span class="badge ${claseRiesgo(cliente.riesgo)}">
+                    ${cliente.riesgo}
+                </span>
+            </td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="generarPromocion('${cliente.nombre}', '${cliente.segmento}')">
+                    ${cliente.accion}
+                </button>
+            </td>
+        `;
+
+        tablaSegmentos.appendChild(fila);
+    });
+}
+
+function filtrarSegmentos() {
+    const texto = buscarSegmento.value.toLowerCase();
+    const segmento = filtroSegmento.value;
+    const preferencia = filtroPreferencia.value;
+
+    const resultado = clientesSegmentados.filter(cliente => {
+        const coincideTexto =
+            cliente.nombre.toLowerCase().includes(texto) ||
+            cliente.dni.includes(texto) ||
+            cliente.segmento.toLowerCase().includes(texto) ||
+            cliente.preferencia.toLowerCase().includes(texto);
+
+        const coincideSegmento =
+            segmento === "Todos" || cliente.segmento === segmento;
+
+        const coincidePreferencia =
+            preferencia === "Todos" || cliente.preferencia === preferencia;
+
+        return coincideTexto && coincideSegmento && coincidePreferencia;
+    });
+
+    cargarTablaSegmentos(resultado);
+}
+
+function generarPromocion(nombre, segmento) {
+    alert(`Acción mockeada: se generaría una promoción personalizada para ${nombre}, según el segmento ${segmento}.`);
+}
+
+buscarSegmento.addEventListener("input", filtrarSegmentos);
+filtroSegmento.addEventListener("change", filtrarSegmentos);
+filtroPreferencia.addEventListener("change", filtrarSegmentos);
+
+btnGenerarSegmentos.addEventListener("click", () => {
+    cargarResumenSegmentos();
+    cargarTablaSegmentos();
+    alert("Segmentación generada correctamente. Acción mockeada.");
+});
+
+cargarResumenSegmentos();
+cargarTablaSegmentos();
+</script>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!doctype html><html lang="es">
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atlantic City | Canales digitales</title>
+
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/crm-modulos.css">
+</head>
+    <body data-role="MARKETING">
+        <div class="shell">
+            <aside class="sidebar">
+                <a class="brand" href="index.html">
+                    <span class="mark">AC</span>
+                    <span><strong>ATLANTIC CITY</strong>
+                        <small>Gestión de clientes</small>
+                    </span></a><div class="user">
+                        <strong data-user-name>Usuario</strong>
+                        <span data-user-area>Marketing</span>
+                    </div><p class="nav-label">MENÚ DEL ÁREA</p>
+                    <nav class="nav"><a href="index.html" class="">
+                        <i>⌂</i><span>Resumen</span></a><a href="segmentos.html" class="">
+                            <i>◫</i><span>Segmentos</span></a><a href="promociones.html" class=""><i>★</i><span>Promociones</span></a><a href="campanias.html" class=""><i>◆</i><span>Campañas</span></a><a href="categorias.html" class=""><i>♛</i><span>Categorías</span></a><a href="abandono.html" class=""><i>!</i><span>Alertas de abandono</span></a><a href="canales.html" class="active"><i>✉</i><span>Canales digitales</span></a></nav><button class="logout" data-logout>Cerrar sesión</button></aside>
+<main class="main-content">
+
+    <section class="page-section">
+
+        <div class="section-header">
+            <div>
+                <span class="eyebrow">MARKETING</span>
+                <h1>Canales digitales</h1>
+                <p>Control de canales usados para enviar promociones, alertas y campañas personalizadas a los clientes.</p>
+            </div>
+
+            <button class="btn-primary" id="btnNuevoCanal">
+                Nuevo canal
+            </button>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <span>Canales activos</span>
+                <h3 id="canalesActivos">0</h3>
+                <p>Canales disponibles para comunicación con clientes.</p>
+            </div>
+
+            <div class="card">
+                <span>Mensajes enviados</span>
+                <h3 id="mensajesEnviados">0</h3>
+                <p>Total de comunicaciones enviadas en campañas.</p>
+            </div>
+
+            <div class="card">
+                <span>Mejor efectividad</span>
+                <h3 id="mejorCanal">-</h3>
+                <p>Canal con mejor respuesta de clientes.</p>
+            </div>
+
+            <div class="card danger">
+                <span>Canales en revisión</span>
+                <h3 id="canalesRevision">0</h3>
+                <p>Canales que requieren ajuste o validación.</p>
+            </div>
+        </div>
+
+        <div class="filters-box">
+            <input type="text" id="buscarCanal" placeholder="Buscar canal, uso o responsable...">
+
+            <select id="filtroTipoCanal">
+                <option value="Todos">Todos los tipos</option>
+                <option value="WhatsApp">WhatsApp</option>
+                <option value="Email">Email</option>
+                <option value="SMS">SMS</option>
+                <option value="Web">Web</option>
+            </select>
+
+            <select id="filtroEstadoCanal">
+                <option value="Todos">Todos los estados</option>
+                <option value="Activo">Activo</option>
+                <option value="Programado">Programado</option>
+                <option value="En revisión">En revisión</option>
+                <option value="Inactivo">Inactivo</option>
+            </select>
+        </div>
+
+        <div class="table-panel">
+            <table class="crm-table">
+                <thead>
+                    <tr>
+                        <th>Canal</th>
+                        <th>Tipo</th>
+                        <th>Uso principal</th>
+                        <th>Mensajes enviados</th>
+                        <th>Efectividad</th>
+                        <th>Estado</th>
+                        <th>Responsable</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaCanales">
+                    <!-- Se llena con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+
+
+
+                
+                
+                </div><div class="toast" id="toast"></div>
+
+                <script>
+const canalesMarketing = [
+    {
+        id: 1,
+        nombre: "WhatsApp Promocional",
+        tipo: "WhatsApp",
+        uso: "Envío de promociones personalizadas y alertas rápidas",
+        mensajes: 1280,
+        efectividad: "82%",
+        estado: "Activo",
+        responsable: "Diego Salazar"
+    },
+    {
+        id: 2,
+        nombre: "Email Marketing",
+        tipo: "Email",
+        uso: "Campañas informativas, beneficios y eventos",
+        mensajes: 950,
+        efectividad: "64%",
+        estado: "Activo",
+        responsable: "Marketing"
+    },
+    {
+        id: 3,
+        nombre: "SMS Recuperación",
+        tipo: "SMS",
+        uso: "Recuperación de clientes inactivos",
+        mensajes: 430,
+        efectividad: "41%",
+        estado: "En revisión",
+        responsable: "Marketing"
+    },
+    {
+        id: 4,
+        nombre: "Portal Web Cliente",
+        tipo: "Web",
+        uso: "Publicación de beneficios, promociones y novedades",
+        mensajes: 600,
+        efectividad: "58%",
+        estado: "Programado",
+        responsable: "Marketing Digital"
+    },
+    {
+        id: 5,
+        nombre: "Email VIP",
+        tipo: "Email",
+        uso: "Comunicación dirigida a clientes de alto valor",
+        mensajes: 320,
+        efectividad: "76%",
+        estado: "Activo",
+        responsable: "Diego Salazar"
+    }
+];
+
+const tablaCanales = document.getElementById("tablaCanales");
+const buscarCanal = document.getElementById("buscarCanal");
+const filtroTipoCanal = document.getElementById("filtroTipoCanal");
+const filtroEstadoCanal = document.getElementById("filtroEstadoCanal");
+const btnNuevoCanal = document.getElementById("btnNuevoCanal");
+
+function claseEstadoCanal(estado) {
+    if (estado === "Activo") return "success";
+    if (estado === "Programado") return "warning";
+    if (estado === "En revisión") return "danger";
+    if (estado === "Inactivo") return "blue";
+    return "blue";
+}
+
+function claseTipoCanal(tipo) {
+    if (tipo === "WhatsApp") return "success";
+    if (tipo === "Email") return "blue";
+    if (tipo === "SMS") return "warning";
+    if (tipo === "Web") return "vip";
+    return "blue";
+}
+
+function obtenerPorcentaje(valor) {
+    return parseInt(valor.replace("%", ""));
+}
+
+function cargarResumenCanales() {
+    document.getElementById("canalesActivos").textContent =
+        canalesMarketing.filter(c => c.estado === "Activo").length;
+
+    document.getElementById("mensajesEnviados").textContent =
+        canalesMarketing.reduce((total, c) => total + c.mensajes, 0);
+
+    const mejor = canalesMarketing.reduce((max, canal) => {
+        return obtenerPorcentaje(canal.efectividad) > obtenerPorcentaje(max.efectividad)
+            ? canal
+            : max;
+    }, canalesMarketing[0]);
+
+    document.getElementById("mejorCanal").textContent = mejor.tipo;
+
+    document.getElementById("canalesRevision").textContent =
+        canalesMarketing.filter(c => c.estado === "En revisión").length;
+}
+
+function cargarTablaCanales(lista = canalesMarketing) {
+    tablaCanales.innerHTML = "";
+
+    if (lista.length === 0) {
+        tablaCanales.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center; padding:25px; color:#9ca3af;">
+                    No se encontraron canales con ese criterio.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach(canal => {
+        const fila = document.createElement("tr");
+        const porcentaje = obtenerPorcentaje(canal.efectividad);
+
+        fila.innerHTML = `
+            <td>
+                <div class="client-name">
+                    <strong>${canal.nombre}</strong>
+                    <span>ID canal: ${canal.id}</span>
+                </div>
+            </td>
+
+            <td>
+                <span class="badge ${claseTipoCanal(canal.tipo)}">
+                    ${canal.tipo}
+                </span>
+            </td>
+
+            <td>
+                <span style="color:#9ca3af; font-size:12px; line-height:1.4;">
+                    ${canal.uso}
+                </span>
+            </td>
+
+            <td>${canal.mensajes}</td>
+
+            <td>
+                <strong>${canal.efectividad}</strong>
+                <div class="effect-bar">
+                    <div class="effect-fill" style="width:${porcentaje}%;"></div>
+                </div>
+            </td>
+
+            <td>
+                <span class="badge ${claseEstadoCanal(canal.estado)}">
+                    ${canal.estado}
+                </span>
+            </td>
+
+            <td>${canal.responsable}</td>
+
+            <td>
+                <button class="btn-action btn-view" onclick="verCanal(${canal.id})">Ver</button>
+                <button class="btn-action btn-edit" onclick="activarCanal(${canal.id})">Activar</button>
+                <button class="btn-action btn-delete" onclick="revisarCanal(${canal.id})">Revisar</button>
+            </td>
+        `;
+
+        tablaCanales.appendChild(fila);
+    });
+}
+
+function filtrarCanales() {
+    const texto = buscarCanal.value.toLowerCase();
+    const tipo = filtroTipoCanal.value;
+    const estado = filtroEstadoCanal.value;
+
+    const resultado = canalesMarketing.filter(canal => {
+        const coincideTexto =
+            canal.nombre.toLowerCase().includes(texto) ||
+            canal.tipo.toLowerCase().includes(texto) ||
+            canal.uso.toLowerCase().includes(texto) ||
+            canal.responsable.toLowerCase().includes(texto);
+
+        const coincideTipo =
+            tipo === "Todos" || canal.tipo === tipo;
+
+        const coincideEstado =
+            estado === "Todos" || canal.estado === estado;
+
+        return coincideTexto && coincideTipo && coincideEstado;
+    });
+
+    cargarTablaCanales(resultado);
+}
+
+function verCanal(id) {
+    const canal = canalesMarketing.find(c => c.id === id);
+
+    if (!canal) return;
+
+    alert(
+        `Canal: ${canal.nombre}\n` +
+        `Tipo: ${canal.tipo}\n` +
+        `Uso: ${canal.uso}\n` +
+        `Mensajes enviados: ${canal.mensajes}\n` +
+        `Efectividad: ${canal.efectividad}\n` +
+        `Estado: ${canal.estado}\n\n` +
+        `Acción mockeada.`
+    );
+}
+
+function activarCanal(id) {
+    const canal = canalesMarketing.find(c => c.id === id);
+
+    if (!canal) return;
+
+    canal.estado = "Activo";
+
+    cargarResumenCanales();
+    cargarTablaCanales();
+
+    alert(`Canal "${canal.nombre}" activado correctamente. Acción mockeada.`);
+}
+
+function revisarCanal(id) {
+    const canal = canalesMarketing.find(c => c.id === id);
+
+    if (!canal) return;
+
+    canal.estado = "En revisión";
+
+    cargarResumenCanales();
+    cargarTablaCanales();
+
+    alert(`Canal "${canal.nombre}" enviado a revisión. Acción mockeada.`);
+}
+
+btnNuevoCanal.addEventListener("click", () => {
+    const nuevo = {
+        id: canalesMarketing.length + 1,
+        nombre: "Nuevo canal digital",
+        tipo: "WhatsApp",
+        uso: "Canal creado para futuras campañas personalizadas",
+        mensajes: 0,
+        efectividad: "0%",
+        estado: "Programado",
+        responsable: "Marketing"
+    };
+
+    canalesMarketing.push(nuevo);
+
+    cargarResumenCanales();
+    cargarTablaCanales();
+
+    alert("Nuevo canal creado correctamente. Acción mockeada.");
+});
+
+buscarCanal.addEventListener("input", filtrarCanales);
+filtroTipoCanal.addEventListener("change", filtrarCanales);
+filtroEstadoCanal.addEventListener("change", filtrarCanales);
+
+cargarResumenCanales();
+cargarTablaCanales();
+</script>
+
+                <script src="../../js/app.js"></script>
+    </body>
+</html>
